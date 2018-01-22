@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.gui.controllers;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;

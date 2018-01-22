@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="768" prefWidth="1024" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.gui.controllers.ClinicalTrialClient">
+<AnchorPane id="AnchorPane" prefHeight="500" prefWidth="700" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.controllers.ClinicalTrialClient">
    <children>
       <BorderPane prefHeight="500.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -50,7 +50,7 @@
          <center>
             <Pane prefHeight="743.0" prefWidth="863.0" style="-fx-background-color: violet;" BorderPane.alignment="CENTER">
                <children>
-                  <Label alignment="CENTER" layoutX="310.0" layoutY="333.0" text="Hello, That Group!">
+                  <Label alignment="CENTER" layoutX="100.0" layoutY="203.0" text="Hello, That Group!">
                      <font>
                         <Font size="48.0" />
                      </font>
