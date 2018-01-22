@@ -12,7 +12,7 @@ public enum ReadingType {
 		this.type = type;
 	}
 	
-	public String Get() {
+	public String get() {
 		return type;
 	}
 }

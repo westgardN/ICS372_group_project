@@ -10,9 +10,9 @@ public class ClinicalTrialTests {
 
 	@Test
 	public void testReadingTypeEnum() {
-		assertEquals("weight", ReadingType.WEIGHT.Get());
-		assertEquals("steps", ReadingType.STEPS.Get());
-		assertEquals("temp", ReadingType.TEMP.Get());
-		assertEquals("blood_press", ReadingType.BLOOD_PRESS.Get());
+		assertEquals("weight", ReadingType.WEIGHT.get());
+		assertEquals("steps", ReadingType.STEPS.get());
+		assertEquals("temp", ReadingType.TEMP.get());
+		assertEquals("blood_press", ReadingType.BLOOD_PRESS.get());
 	}
 }
