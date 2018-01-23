@@ -10,8 +10,8 @@
 		{
 			"patient_id": "15566",
 			"reading_type": "steps",
-			"item_id": "1adf4",
-			"Reading_value": 6958,
+			"reading_id": "1adf4",
+			"reading_value": 6958,
 			"reading_date": 1515354694451
 		},
 		{
@@ -24,7 +24,7 @@
 		{
 			"patient_id": "336558",
 			"reading_type": "blood_press",
-			"Reading_id": "85545",
+			"reading_id": "85545",
 			"reading_value": "120/60",
 			"reading_date": 1515354694451
 		}

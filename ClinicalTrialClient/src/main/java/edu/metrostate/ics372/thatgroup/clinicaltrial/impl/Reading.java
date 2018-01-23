@@ -7,9 +7,8 @@ public class Reading {
 	private ReadingType reading_type;
 	private String reading_value;
 	private String reading_id;
-	private String item_id;
 	private LocalDateTime reading_date;
-
+	
 	public Reading() {
 	}
 
@@ -29,13 +28,11 @@ public class Reading {
 	 * @param reading_date
 	 *            the reading_date to be used
 	 */
-	public Reading(String patient_id, ReadingType reading_type, String reading_value, String reading_id, String item_id,
-			LocalDateTime reading_date) {
+	public Reading(String patient_id, ReadingType reading_type, String reading_id, String reading_value, LocalDateTime reading_date) {
 		this.patient_id = patient_id;
 		this.reading_type = reading_type;
 		this.reading_value = reading_value;
 		this.reading_id = reading_id;
-		this.item_id = item_id;
 		this.reading_date = reading_date;
 	}
 
@@ -116,25 +113,6 @@ public class Reading {
 	}
 
 	/**
-	 * Returns this Reading's item ID
-	 * 
-	 * @return the item_id
-	 */
-	public String getItem_id() {
-		return item_id;
-	}
-
-	/**
-	 * Sets this Reading's item ID
-	 * 
-	 * @param item_id
-	 *            the item_id to set
-	 */
-	public void setItem_id(String item_id) {
-		this.item_id = item_id;
-	}
-
-	/**
 	 * Returns this Reading's reading date
 	 * 
 	 * @return the reading_date
@@ -152,7 +130,7 @@ public class Reading {
 	public void setReading_date(LocalDateTime reading_date) {
 		this.reading_date = reading_date;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -162,7 +140,6 @@ public class Reading {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((item_id == null) ? 0 : item_id.hashCode());
 		result = prime * result + ((patient_id == null) ? 0 : patient_id.hashCode());
 		result = prime * result + ((reading_date == null) ? 0 : reading_date.hashCode());
 		result = prime * result + ((reading_id == null) ? 0 : reading_id.hashCode());
@@ -185,11 +162,6 @@ public class Reading {
 		if (getClass() != obj.getClass())
 			return false;
 		Reading other = (Reading) obj;
-		if (item_id == null) {
-			if (other.item_id != null)
-				return false;
-		} else if (!item_id.equals(other.item_id))
-			return false;
 		if (patient_id == null) {
 			if (other.patient_id != null)
 				return false;
@@ -220,8 +192,11 @@ public class Reading {
 	 */
 	@Override
 	public String toString() {
-		return "Reading [patient_id=" + patient_id + ", reading_type=" + reading_type + ", reading_value="
-				+ reading_value + ", reading_id=" + reading_id + ", item_id=" + item_id + ", reading_date="
-				+ reading_date + "]";
+		return "Reading ["
+				+ "\npatient_id=" + patient_id 
+				+ "\nreading_type=" + reading_type 
+				+ "\nreading_value="+ reading_value 
+				+ "\nreading_id=" + reading_id 
+				+ "\nreading_date=" + reading_date + "]";
 	}
 }

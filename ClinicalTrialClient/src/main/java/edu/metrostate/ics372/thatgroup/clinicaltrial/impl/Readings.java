@@ -1,4 +1,4 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.impl;
 import java.io.*;
 import java.text.ParseException;
 import java.time.LocalDateTime;
