@@ -19,118 +19,93 @@ public class Reading {
 	 *            the patient_id to be used
 	 * @param readingType
 	 *            the reading_type to be used
-	 * @param reading_value
-	 *            the reading_value to be used
 	 * @param reading_id
 	 *            the reading_id to be used
+	 * @param reading_value
+	 *            the reading_value to be used
 	 * @param item_id
 	 *            the item_id to be used
 	 * @param reading_date
 	 *            the reading_date to be used
 	 */
-	public Reading(String patientID, ReadingType readingType, String readingValue, String readingID, LocalDateTime readingDate) {
+	public Reading(String patientID, ReadingType readingType, String readingID, String readingValue, LocalDateTime readingDate) {
 		this.patientID = patientID;
 		this.readingType = readingType;
-		this.readingValue = readingValue;
 		this.readingID = readingID;
+		this.readingValue = readingValue;
 		this.readingDate = readingDate;
 	}
-
+	
 	/**
-	 * Returns this Reading's patient ID
-	 * 
-	 * @return the patient_id
+	 * @return the patientID
 	 */
-	public String getPatient_id() {
+	public String getPatientID() {
 		return patientID;
 	}
 
 	/**
-	 * Sets this Reading's patient ID
-	 * 
-	 * @param patient_id
-	 *            the patient_id to set
+	 * @param patientID the patientID to set
 	 */
-	public void setPatient_id(String patientID) {
+	public void setPatientID(String patientID) {
 		this.patientID = patientID;
 	}
 
 	/**
-	 * Returns this Reading's reading type
-	 * 
-	 * @return the reading_type
+	 * @return the readingType
 	 */
-	public ReadingType getReading_type() {
+	public ReadingType getReadingType() {
 		return readingType;
 	}
 
 	/**
-	 * Sets this Reading's reading type
-	 * 
-	 * @param reading_type
-	 *            the reading_type to set
+	 * @param readingType the readingType to set
 	 */
-	public void setReading_type(ReadingType readingType) {
+	public void setReadingType(ReadingType readingType) {
 		this.readingType = readingType;
 	}
 
 	/**
-	 * Returns this Reading's reading value
-	 * 
-	 * @return the reading_value
+	 * @return the readingValue
 	 */
-	public String getReading_value() {
+	public String getReadingValue() {
 		return readingValue;
 	}
 
 	/**
-	 * Sets this Reading's reading value
-	 * 
-	 * @param reading_value
-	 *            the reading_value to set
+	 * @param readingValue the readingValue to set
 	 */
-	public void setReading_value(String readingValue) {
+	public void setReadingValue(String readingValue) {
 		this.readingValue = readingValue;
 	}
 
 	/**
-	 * Returns this Reading's reading ID
-	 * 
-	 * @return the reading_id
+	 * @return the readingID
 	 */
-	public String getReading_id() {
+	public String getReadingID() {
 		return readingID;
 	}
 
 	/**
-	 * Sets this Reading's reading typ
-	 * 
-	 * @param reading_id
-	 *            the reading_id to set
+	 * @param readingID the readingID to set
 	 */
-	public void setReading_id(String readingID) {
+	public void setReadingID(String readingID) {
 		this.readingID = readingID;
 	}
 
 	/**
-	 * Returns this Reading's reading date
-	 * 
-	 * @return the reading_date
+	 * @return the readingDate
 	 */
-	public LocalDateTime getReading_date() {
+	public LocalDateTime getReadingDate() {
 		return readingDate;
 	}
 
 	/**
-	 * Sets this Reading's reading date
-	 * 
-	 * @param reading_date
-	 *            the reading_date to set
+	 * @param readingDate the readingDate to set
 	 */
-	public void setReading_date(LocalDateTime readingDate) {
+	public void setReadingDate(LocalDateTime readingDate) {
 		this.readingDate = readingDate;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -192,11 +167,12 @@ public class Reading {
 	 */
 	@Override
 	public String toString() {
-		return "Reading ["
-				+ "\npatient_id=" + patientID 
-				+ "\nreading_type=" + readingType 
-				+ "\nreading_value="+ readingValue 
-				+ "\nreading_id=" + readingID 
-				+ "\nreading_date=" + readingDate + "]";
+		return "{"
+				+ "\n\"patient_id\":" + patientID
+				+ "\n\"reading_type\":" + readingType
+				+ "\n\"reading_id\":" + readingID
+				+ "\n\"reading_value\":"+ readingValue
+				+ "\n\"reading_date\":" + readingDate
+				+ "\n},";
 	}
 }

@@ -10,6 +10,7 @@ import org.junit.Test;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Reader;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingType;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.Writer;
 
 public class ClinicalTrialTests {
 
@@ -31,8 +32,27 @@ public class ClinicalTrialTests {
 				System.out.println(reading);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
+	}
+	
+	@Test
+	public void testWriter() {
+		List<Reading> readings = null;
+		Reader rr = new Reader();
+		try {
+			rr.read("./data/test_data.json");
+			readings = rr.getReadings();
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+		
+		Writer writer = new Writer();
+		try {
+			writer.write(readings, "./data/test_data_out.json");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
