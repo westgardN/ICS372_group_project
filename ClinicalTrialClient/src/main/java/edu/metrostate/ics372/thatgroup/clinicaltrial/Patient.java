@@ -1,10 +1,9 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial.impl;
+package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Patient {
-	private String patient_id;
+	private String patientID;
 	ArrayList<Object> journal = new ArrayList<Object>();
 	
 	public Patient() {
@@ -18,8 +17,8 @@ public class Patient {
 	 * @param journal
 	 *            the journal name to be used
 	 */
-	public Patient(String patient_id, ArrayList<Object> journal) {
-		this.patient_id = patient_id;
+	public Patient(String patientID, ArrayList<Object> journal) {
+		this.patientID = patientID;
 		this.journal = journal;
 	}	
 	

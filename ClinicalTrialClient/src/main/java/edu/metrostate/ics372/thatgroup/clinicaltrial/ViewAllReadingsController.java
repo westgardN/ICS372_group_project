@@ -1,4 +1,4 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
+package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

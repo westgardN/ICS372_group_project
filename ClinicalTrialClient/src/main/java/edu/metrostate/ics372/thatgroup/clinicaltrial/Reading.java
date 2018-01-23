@@ -1,13 +1,13 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial.impl;
+package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.time.LocalDateTime;
 
 public class Reading {
-	private String patient_id;
-	private ReadingType reading_type;
-	private String reading_value;
-	private String reading_id;
-	private LocalDateTime reading_date;
+	private String patientID;
+	private ReadingType readingType;
+	private String readingValue;
+	private String readingID;
+	private LocalDateTime readingDate;
 	
 	public Reading() {
 	}
@@ -17,7 +17,7 @@ public class Reading {
 	 * 
 	 * @param patient_id
 	 *            the patient_id to be used
-	 * @param reading_type
+	 * @param readingType
 	 *            the reading_type to be used
 	 * @param reading_value
 	 *            the reading_value to be used
@@ -28,12 +28,12 @@ public class Reading {
 	 * @param reading_date
 	 *            the reading_date to be used
 	 */
-	public Reading(String patient_id, ReadingType reading_type, String reading_id, String reading_value, LocalDateTime reading_date) {
-		this.patient_id = patient_id;
-		this.reading_type = reading_type;
-		this.reading_value = reading_value;
-		this.reading_id = reading_id;
-		this.reading_date = reading_date;
+	public Reading(String patientID, ReadingType readingType, String readingValue, String readingID, LocalDateTime readingDate) {
+		this.patientID = patientID;
+		this.readingType = readingType;
+		this.readingValue = readingValue;
+		this.readingID = readingID;
+		this.readingDate = readingDate;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class Reading {
 	 * @return the patient_id
 	 */
 	public String getPatient_id() {
-		return patient_id;
+		return patientID;
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class Reading {
 	 * @param patient_id
 	 *            the patient_id to set
 	 */
-	public void setPatient_id(String patient_id) {
-		this.patient_id = patient_id;
+	public void setPatient_id(String patientID) {
+		this.patientID = patientID;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Reading {
 	 * @return the reading_type
 	 */
 	public ReadingType getReading_type() {
-		return reading_type;
+		return readingType;
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class Reading {
 	 * @param reading_type
 	 *            the reading_type to set
 	 */
-	public void setReading_type(ReadingType reading_type) {
-		this.reading_type = reading_type;
+	public void setReading_type(ReadingType readingType) {
+		this.readingType = readingType;
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Reading {
 	 * @return the reading_value
 	 */
 	public String getReading_value() {
-		return reading_value;
+		return readingValue;
 	}
 
 	/**
@@ -89,8 +89,8 @@ public class Reading {
 	 * @param reading_value
 	 *            the reading_value to set
 	 */
-	public void setReading_value(String reading_value) {
-		this.reading_value = reading_value;
+	public void setReading_value(String readingValue) {
+		this.readingValue = readingValue;
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Reading {
 	 * @return the reading_id
 	 */
 	public String getReading_id() {
-		return reading_id;
+		return readingID;
 	}
 
 	/**
@@ -108,8 +108,8 @@ public class Reading {
 	 * @param reading_id
 	 *            the reading_id to set
 	 */
-	public void setReading_id(String reading_id) {
-		this.reading_id = reading_id;
+	public void setReading_id(String readingID) {
+		this.readingID = readingID;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class Reading {
 	 * @return the reading_date
 	 */
 	public LocalDateTime getReading_date() {
-		return reading_date;
+		return readingDate;
 	}
 
 	/**
@@ -127,8 +127,8 @@ public class Reading {
 	 * @param reading_date
 	 *            the reading_date to set
 	 */
-	public void setReading_date(LocalDateTime reading_date) {
-		this.reading_date = reading_date;
+	public void setReading_date(LocalDateTime readingDate) {
+		this.readingDate = readingDate;
 	}
 	
 	/*
@@ -140,11 +140,11 @@ public class Reading {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((patient_id == null) ? 0 : patient_id.hashCode());
-		result = prime * result + ((reading_date == null) ? 0 : reading_date.hashCode());
-		result = prime * result + ((reading_id == null) ? 0 : reading_id.hashCode());
-		result = prime * result + ((reading_type == null) ? 0 : reading_type.hashCode());
-		result = prime * result + ((reading_value == null) ? 0 : reading_value.hashCode());
+		result = prime * result + ((patientID == null) ? 0 : patientID.hashCode());
+		result = prime * result + ((readingDate == null) ? 0 : readingDate.hashCode());
+		result = prime * result + ((readingID == null) ? 0 : readingID.hashCode());
+		result = prime * result + ((readingType == null) ? 0 : readingType.hashCode());
+		result = prime * result + ((readingValue == null) ? 0 : readingValue.hashCode());
 		return result;
 	}
 
@@ -162,27 +162,27 @@ public class Reading {
 		if (getClass() != obj.getClass())
 			return false;
 		Reading other = (Reading) obj;
-		if (patient_id == null) {
-			if (other.patient_id != null)
+		if (patientID == null) {
+			if (other.patientID != null)
 				return false;
-		} else if (!patient_id.equals(other.patient_id))
+		} else if (!patientID.equals(other.patientID))
 			return false;
-		if (reading_date == null) {
-			if (other.reading_date != null)
+		if (readingDate == null) {
+			if (other.readingDate != null)
 				return false;
-		} else if (!reading_date.equals(other.reading_date))
+		} else if (!readingDate.equals(other.readingDate))
 			return false;
-		if (reading_id == null) {
-			if (other.reading_id != null)
+		if (readingID == null) {
+			if (other.readingID != null)
 				return false;
-		} else if (!reading_id.equals(other.reading_id))
+		} else if (!readingID.equals(other.readingID))
 			return false;
-		if (reading_type != other.reading_type)
+		if (readingType != other.readingType)
 			return false;
-		if (reading_value == null) {
-			if (other.reading_value != null)
+		if (readingValue == null) {
+			if (other.readingValue != null)
 				return false;
-		} else if (!reading_value.equals(other.reading_value))
+		} else if (!readingValue.equals(other.readingValue))
 			return false;
 		return true;
 	}
@@ -193,10 +193,10 @@ public class Reading {
 	@Override
 	public String toString() {
 		return "Reading ["
-				+ "\npatient_id=" + patient_id 
-				+ "\nreading_type=" + reading_type 
-				+ "\nreading_value="+ reading_value 
-				+ "\nreading_id=" + reading_id 
-				+ "\nreading_date=" + reading_date + "]";
+				+ "\npatient_id=" + patientID 
+				+ "\nreading_type=" + readingType 
+				+ "\nreading_value="+ readingValue 
+				+ "\nreading_id=" + readingID 
+				+ "\nreading_date=" + readingDate + "]";
 	}
 }

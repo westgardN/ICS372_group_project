@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="500" prefWidth="700" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.MainController">
+<VBox prefHeight="500" prefWidth="700" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.MainController">
   <children>
       <BorderPane prefHeight="500.0" prefWidth="700.0" VBox.vgrow="ALWAYS">
          <center>

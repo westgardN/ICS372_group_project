@@ -1,10 +1,9 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
+package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.impl.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.impl.ReadingType;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

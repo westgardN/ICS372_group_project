@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
+package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;

@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.impl.ReadingType;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingType;
 
 public class ClinicalTrialTests {
 

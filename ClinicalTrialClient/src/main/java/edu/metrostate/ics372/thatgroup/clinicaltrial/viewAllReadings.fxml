@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.StackPane?>
 <StackPane fx:id="viewAllReadingsView" xmlns:fx="http://javafx.com/fxml"
-	fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ViewAllReadingsController">
+	fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.ViewAllReadingsController">
 	<children>
 		<Button mnemonicParsing="false" onAction="#previousPane" text="Previous Pane" />
 	</children>
