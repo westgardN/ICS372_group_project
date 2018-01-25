@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
 public class JsonProcessorTest {
 

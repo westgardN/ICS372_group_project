@@ -44,16 +44,20 @@ public class BloodPressure extends Reading {
 	 */
 	@Override
 	public void setValue(Object value) {
-		if (value instanceof BloodPressureValue == false && value instanceof String == false) {
-			throw new IllegalArgumentException("value must be a string in systolic/diastolic format or it must be a BloodPressureValue");
-		}
-		
-		if (value instanceof BloodPressureValue) {
-			this.value = ((BloodPressureValue)value).clone();
-		} else if (value instanceof String) {
-			this.value = new BloodPressureValue((String) value);
+		if (value != null) {
+			if (value instanceof BloodPressureValue == false && value instanceof String == false) {
+				throw new IllegalArgumentException("value must be a string in systolic/diastolic format or it must be a BloodPressureValue");
+			}
+			
+			if (value instanceof BloodPressureValue) {
+				this.value = ((BloodPressureValue)value).clone();
+			} else if (value instanceof String) {
+				this.value = new BloodPressureValue((String) value);
+			} else {
+				throw new IllegalArgumentException("Unknown bloodpressure value.");
+			}
 		} else {
-			throw new IllegalArgumentException("Unknown bloodpressure value.");
+			this.value = null;
 		}
 	}
 	

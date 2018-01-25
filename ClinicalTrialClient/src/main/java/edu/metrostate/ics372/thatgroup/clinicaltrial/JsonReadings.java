@@ -61,7 +61,7 @@ public class JsonReadings {
 			this.patient_id = reading.getPatientId();
 			this.reading_type = ReadingFactory.getReadingType(reading);
 			this.reading_id = reading.getId();
-			this.reading_value = reading.getValue() != null ? reading.getValue() : "";
+			this.reading_value = reading.getValue() != null ? reading.getValue() instanceof Number ? reading.getValue() : reading.getValue().toString() : "";
 			this.reading_date = reading.getDate() != null ? reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
 		}
 

@@ -45,20 +45,24 @@ public class Weight extends Reading {
 	 */
 	@Override
 	public void setValue(Object value) {
-		if (value instanceof Number == false && value instanceof String == false) {
-			throw new IllegalArgumentException("value must be a number.");
-		}
-		
-		if (value instanceof Number) {
-			Number num = (Number) value;
-			
-			if (num.intValue() < 0) {
-				throw new IllegalArgumentException("value must be greater than or equal to zero.");
+		if (value != null) {
+			if (value instanceof Number == false && value instanceof String == false) {
+				throw new IllegalArgumentException("value must be a number.");
 			}
 			
-			this.value = num.intValue();
-		} else if (value instanceof String) {
-			this.value = Integer.parseInt((String)value);
+			if (value instanceof Number) {
+				Number num = (Number) value;
+				
+				if (num.intValue() < 0 && num.intValue() != Integer.MIN_VALUE) {
+					throw new IllegalArgumentException("value must be greater than or equal to zero.");
+				}
+				
+				this.value = num.intValue();
+			} else if (value instanceof String) {
+				this.value = Integer.parseInt((String)value);
+			}
+		} else {
+			this.value = Integer.MIN_VALUE;
 		}
 	}
 }

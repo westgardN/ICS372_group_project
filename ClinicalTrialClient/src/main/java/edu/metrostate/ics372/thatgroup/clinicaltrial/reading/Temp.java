@@ -45,16 +45,20 @@ public class Temp extends Reading {
 	 */
 	@Override
 	public void setValue(Object value) {
-		if (value instanceof Number == false && value instanceof String == false) {
-			throw new IllegalArgumentException("value must be a number.");
-		}
-		
-		if (value instanceof Number) {
-			Number num = (Number) value;
+		if (value != null) {
+			if (value instanceof Number == false && value instanceof String == false) {
+				throw new IllegalArgumentException("value must be a number.");
+			}
 			
-			this.value = num.doubleValue();
-		} else if (value instanceof String) {
-			this.value = Double.parseDouble((String)value);
+			if (value instanceof Number) {
+				Number num = (Number) value;
+				
+				this.value = num.doubleValue();
+			} else if (value instanceof String) {
+				this.value = Double.parseDouble((String)value);
+			}
+		} else {
+			this.value = Double.NEGATIVE_INFINITY;
 		}
 	}
 }
