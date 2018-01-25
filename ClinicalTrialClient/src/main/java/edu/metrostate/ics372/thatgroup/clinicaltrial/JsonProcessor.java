@@ -11,6 +11,8 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
+
 public class JsonProcessor {
 	public static List<Reading> read(String filePath) throws IOException {
 		JsonReadings answer = null;

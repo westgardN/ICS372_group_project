@@ -3,6 +3,9 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
+
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -44,7 +47,7 @@ public class JsonReadings {
 		private String patient_id;
 		private String reading_type;
 		private String reading_id;
-		private String reading_value;
+		private Object reading_value;
 		private long reading_date;
 		
 		/**
@@ -56,24 +59,9 @@ public class JsonReadings {
 		 */
 		public JsonReading(Reading reading) {
 			this.patient_id = reading.getPatientId();
-
-			switch (reading.getType()) {
-			case WEIGHT:
-				this.reading_type = "weight";
-				break;
-			case STEPS:
-				this.reading_type = "steps";
-				break;
-			case TEMP:
-				this.reading_type = "temp";
-				break;
-			case BLOOD_PRESSURE:
-				this.reading_type = "blood_press";
-				break;
-			}
-			
+			this.reading_type = ReadingFactory.getReadingType(reading);
 			this.reading_id = reading.getId();
-			this.reading_value = reading.getValue() != null ? reading.getValue().toString() : "";
+			this.reading_value = reading.getValue() != null ? reading.getValue() : "";
 			this.reading_date = reading.getDate() != null ? reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
 		}
 
@@ -89,21 +77,8 @@ public class JsonReadings {
 		 * Returns the type of reading this reading is for.
 		 * @return the type of reading this reading is for.
 		 */
-		public ReadingType getReadingType() {
-			ReadingType answer = ReadingType.WEIGHT; // Default to a Weight type if none is specied.
-			
-			switch (reading_type) {
-				case "steps":
-					answer = ReadingType.STEPS;
-					break;
-				case "temp":
-					answer = ReadingType.TEMP;
-					break;
-				case "blood_press":
-					answer = ReadingType.BLOOD_PRESSURE;
-					break;
-			}
-			return answer;
+		public String getReadingType() {
+			return reading_type;
 		}
 		
 		/**
@@ -119,23 +94,7 @@ public class JsonReadings {
 		 * @return the value of this reading as a String.
 		 */
 		public Object getReadingValue() {
-			Object answer = reading_value;
-			
-			if (getReadingType() == ReadingType.TEMP || getReadingType() == ReadingType.WEIGHT) {
-				try {
-					answer = Double.parseDouble(reading_value);
-				} catch (NumberFormatException ex) {
-					
-				}
-			} else if (getReadingType() == ReadingType.STEPS) {
-				try {
-					answer = Integer.parseInt(reading_value);
-				} catch (NumberFormatException ex) {
-					
-				}
-			}
-			
-			return answer;
+			return reading_value;
 		}
 		
 		/**
@@ -155,7 +114,12 @@ public class JsonReadings {
 		}
 		
 		public Reading toReading() {
-			return new Reading(getPatientId(), getReadingId(), getReadingType(), getReadingDate(), getReadingValue());
+			Reading answer = ReadingFactory.getReading(getReadingType());
+			answer.setPatientId(getPatientId());
+			answer.setId(getReadingId());
+			answer.setDate(getReadingDate());
+			answer.setValue(getReadingValue());
+			return answer;
 		}
 	}
 }

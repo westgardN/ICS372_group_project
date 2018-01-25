@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,19 +10,17 @@ import java.time.LocalDateTime;
  * @author Vincent J. Palodichuk
  *
  */
-public class Reading implements Serializable {
+public abstract class Reading implements Serializable {
 	private static final long serialVersionUID = 8166141304679594433L;
-	private String patientId;
-	private String id;
-	private ReadingType type;
-	private LocalDateTime date;
-	private Object value;
+	protected String patientId;
+	protected String id;
+	protected LocalDateTime date;
 	
 	/**
 	 * Initializes an empty reading.
 	 */
 	public Reading() {
-		
+		this(null, null, null, null);
 	}
 	
 	/**
@@ -30,16 +28,14 @@ public class Reading implements Serializable {
 	 * 
 	 * @param patientId The ID of the patient this reading is for.
 	 * @param id The ID of this reading.
-	 * @param type The type of reading this is.
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. 
 	 */
-	public Reading(String patientId, String id, ReadingType type, LocalDateTime date, Object value) {
+	public Reading(String patientId, String id, LocalDateTime date, Object value) {
 		this.patientId = patientId;
 		this.id = id;
-		this.type = type;
 		this.date = date;
-		this.value = value;
+		this.setValue(value);
 	}
 
 	/* (non-Javadoc)
@@ -52,8 +48,7 @@ public class Reading implements Serializable {
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + ((getValue() == null) ? 0 : getValue().hashCode());
 		return result;
 	}
 
@@ -84,12 +79,10 @@ public class Reading implements Serializable {
 				return false;
 		} else if (!patientId.equals(other.patientId))
 			return false;
-		if (type != other.type)
-			return false;
-		if (value == null) {
-			if (other.value != null)
+		if (getValue() == null) {
+			if (other.getValue() != null)
 				return false;
-		} else if (!value.equals(other.value))
+		} else if (!getValue().equals(other.getValue()))
 			return false;
 		return true;
 	}
@@ -100,16 +93,15 @@ public class Reading implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Reading [patientId=");
+		builder.append(this.getClass().toString());
+		builder.append(" [patientId=");
 		builder.append(patientId);
 		builder.append(", id=");
 		builder.append(id);
-		builder.append(", type=");
-		builder.append(type);
 		builder.append(", date=");
 		builder.append(date);
 		builder.append(", value=");
-		builder.append(value);
+		builder.append(getValue());
 		builder.append("]");
 		return builder.toString();
 	}
@@ -143,20 +135,6 @@ public class Reading implements Serializable {
 	}
 
 	/**
-	 * @return the type
-	 */
-	public ReadingType getType() {
-		return type;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(ReadingType type) {
-		this.type = type;
-	}
-
-	/**
 	 * @return the date
 	 */
 	public LocalDateTime getDate() {
@@ -173,16 +151,11 @@ public class Reading implements Serializable {
 	/**
 	 * @return the value
 	 */
-	public Object getValue() {
-		return value;
-	}
+	public abstract Object getValue();
 
 	/**
 	 * @param value the value to set
 	 */
-	public void setValue(Object value) {
-		this.value = value;
-	}
-	
+	public abstract void setValue(Object value);
 	
 }
