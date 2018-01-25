@@ -31,6 +31,14 @@ public class JsonReadings {
 		
 		return answer;
 	}
+	
+	public void setPatientReadings(List<Reading> readings) {
+		patient_readings = new LinkedList<>();
+		
+		for (Reading reading : readings) {
+			patient_readings.add(new JsonReading(reading));
+		}
+	}
 
 	private class JsonReading {
 		private String patient_id;
@@ -39,6 +47,36 @@ public class JsonReadings {
 		private String reading_value;
 		private long reading_date;
 		
+		/**
+		 * @param patient_id
+		 * @param reading_type
+		 * @param reading_id
+		 * @param reading_value
+		 * @param reading_date
+		 */
+		public JsonReading(Reading reading) {
+			this.patient_id = reading.getPatientId();
+
+			switch (reading.getType()) {
+			case WEIGHT:
+				this.reading_type = "weight";
+				break;
+			case STEPS:
+				this.reading_type = "steps";
+				break;
+			case TEMP:
+				this.reading_type = "temp";
+				break;
+			case BLOOD_PRESSURE:
+				this.reading_type = "blood_press";
+				break;
+			}
+			
+			this.reading_id = reading.getId();
+			this.reading_value = reading.getValue() != null ? reading.getValue().toString() : "";
+			this.reading_date = reading.getDate() != null ? reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() : 0;
+		}
+
 		/**
 		 * Returns the ID of the patient this reading belongs to
 		 * @return the ID of the patient this reading belongs to
