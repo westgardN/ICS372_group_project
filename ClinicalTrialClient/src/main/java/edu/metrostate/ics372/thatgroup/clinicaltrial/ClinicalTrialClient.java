@@ -1,7 +1,6 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,17 +9,16 @@ import javafx.stage.Stage;
 
 public class ClinicalTrialClient extends Application {
 
+
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Patient Trial Client");
-
 		stage.setScene(createScene(loadMainPane()));
-
 		stage.show();
 	}
 
 	/**
-	 * Loads the main fxml layout. Sets up the view switching Navigator. Loads
+	 * Loads the main fxml layout. Sets up the view Navigator. Loads
 	 * the first view into the fxml layout.
 	 *
 	 * @return the loaded pane.
@@ -29,11 +27,7 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Pane loadMainPane() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		Pane mainPane = (Pane) loader.load(getClass().getResourceAsStream(ViewNavigator.MAIN));
-		MainController mainController = loader.getController();
-		ViewNavigator.setMainController(mainController);
-		ViewNavigator.loadView(ViewNavigator.INPUT_READING);
-
+		Pane mainPane = (Pane) loader.load(getClass().getResourceAsStream("./views/clinicalTrialView.fxml"));
 		return mainPane;
 	}
 
@@ -50,7 +44,7 @@ public class ClinicalTrialClient extends Application {
 		scene.getStylesheets()
 				.setAll(getClass()
 						.getResource(
-								"views.css")
+								"./views/styling.css")
 						.toExternalForm());
 		return scene;
 	}

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="620" prefWidth="768"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView">
+	<top>
+		<VBox>
+			<children>
+				<MenuBar>
+					<menus>
+						<Menu mnemonicParsing="false" text="File">
+							<items>
+								<MenuItem mnemonicParsing="false" text="Close" />
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="Edit">
+							<items>
+								<MenuItem mnemonicParsing="false" text="Delete" />
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="Help">
+							<items>
+								<MenuItem mnemonicParsing="false" text="About" />
+							</items>
+						</Menu>
+					</menus>
+				</MenuBar>
+				<BorderPane styleClass="header-section">
+					<left>
+						<Label id="header-text" text="Patient Trial Client" />
+					</left>
+				</BorderPane>
+			</children>
+		</VBox>
+	</top>
+	<center>
+		<StackPane prefHeight="500" prefWidth="700"
+			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+			<children>
+				<BorderPane prefHeight="200.0" prefWidth="200.0">
+					<left>
+						<AnchorPane prefHeight="500.0" prefWidth="204.0"
+							BorderPane.alignment="CENTER">
+							<children>
+								<ListView fx:id="patientList" layoutX="2.0" layoutY="29.0"
+									prefHeight="470.0" prefWidth="200.0" AnchorPane.bottomAnchor="1.0"
+									AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0"
+									AnchorPane.topAnchor="29.0" />
+								<Label layoutY="6.0" text="Patient List" />
+							</children>
+						</AnchorPane>
+					</left>
+					<center>
+						<AnchorPane prefHeight="500.0" prefWidth="349.0"
+							BorderPane.alignment="CENTER">
+							<children>
+								<ListView fx:id="readingList" layoutX="4.0" layoutY="28.0"
+									prefHeight="469.0" prefWidth="265.0" AnchorPane.bottomAnchor="2.0"
+									AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0"
+									AnchorPane.topAnchor="29.0" />
+								<Label layoutX="6.0" layoutY="6.0" text="Patient Readings" />
+							</children>
+						</AnchorPane>
+					</center>
+					<right>
+						<AnchorPane prefHeight="449.0" prefWidth="223.0"
+							BorderPane.alignment="CENTER">
+							<children>
+								<Accordion layoutX="11.0" layoutY="28.0" prefHeight="469.0"
+									prefWidth="223.0" AnchorPane.bottomAnchor="2.0"
+									AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+									AnchorPane.topAnchor="29.0">
+									<panes>
+										<TitledPane animated="false"
+											text="Add Reading For Selected Patient">
+											<content>
+												<AnchorPane minHeight="0.0" minWidth="0.0"
+													prefHeight="180.0" prefWidth="200.0">
+													<children>
+														<Label fx:id="patientIDLbl" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="14.0"
+															prefHeight="30.0" prefWidth="90.0" text="Patient ID:"
+															textAlignment="LEFT" />
+														<TextField fx:id="patientIDTxt" editable="false"
+															layoutX="21.0" layoutY="38.0" maxHeight="-Infinity"
+															maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+															prefHeight="25.0" prefWidth="163.0" />
+														<Label fx:id="readingTypeLbl" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="63.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading Type:"
+															textAlignment="LEFT" />
+														<ChoiceBox fx:id="readingTypeChoice" layoutX="21.0"
+															layoutY="87.0" maxHeight="-Infinity" maxWidth="-Infinity"
+															minHeight="-Infinity" minWidth="-Infinity" prefWidth="163.0" />
+														<Label fx:id="readingIDLbl" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="112.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading ID:"
+															textAlignment="LEFT" />
+														<TextField fx:id="readingIDTxt" layoutX="21.0"
+															layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity"
+															minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+															prefWidth="163.0" />
+														<Label fx:id="readingValueLbl" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="161.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading Value:"
+															textAlignment="LEFT" />
+														<TextField fx:id="readingValueTxt" layoutX="21.0"
+															layoutY="185.0" maxHeight="-Infinity" maxWidth="-Infinity"
+															minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+															prefWidth="163.0" />
+														<Label fx:id="readingDateLbl" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="208.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading Date:"
+															textAlignment="LEFT" />
+														<DatePicker fx:id="readingDatePicker" layoutX="21.0"
+															layoutY="232.0" prefWidth="163.0" />
+														<Label layoutX="22.0" layoutY="263.0" text="Time:" />
+														<Label layoutX="37.0" layoutY="280.0" text="HH:" />
+														<TextField layoutX="57.0" layoutY="276.0"
+															prefHeight="25.0" prefWidth="29.0" />
+														<Label layoutX="100.0" layoutY="280.0" text="MM:" />
+														<TextField layoutX="125.0" layoutY="276.0"
+															prefHeight="25.0" prefWidth="29.0" />
+														<Button fx:id="submitBtn" alignment="CENTER_RIGHT"
+															contentDisplay="CENTER" defaultButton="true" layoutX="60.0"
+															layoutY="316.0" mnemonicParsing="false" text="Add Reading"
+															textAlignment="CENTER" />
+													</children>
+												</AnchorPane>
+											</content>
+										</TitledPane>
+										<TitledPane animated="false" text="Edit Selected Reading">
+											<content>
+												<AnchorPane minHeight="0.0" minWidth="0.0"
+													prefHeight="180.0" prefWidth="200.0">
+													<children>
+														<Label fx:id="patientIDLblEdit" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="14.0"
+															prefHeight="30.0" prefWidth="90.0" text="Patient ID:"
+															textAlignment="LEFT" />
+														<TextField fx:id="patientIDTxtEdit" editable="false"
+															layoutX="21.0" layoutY="38.0" maxHeight="-Infinity"
+															maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+															prefHeight="25.0" prefWidth="163.0" />
+														<Label fx:id="readingTypeLblEdit" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="63.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading Type:"
+															textAlignment="LEFT" />
+														<ChoiceBox fx:id="readingTypeChoiceEdit"
+															layoutX="21.0" layoutY="87.0" maxHeight="-Infinity"
+															maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+															prefWidth="163.0" />
+														<Label fx:id="readingIDLblEdit" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="112.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading ID:"
+															textAlignment="LEFT" />
+														<TextField fx:id="readingIDTxtEdit" layoutX="21.0"
+															layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity"
+															minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+															prefWidth="163.0" />
+														<Label fx:id="readingValueLblEdit" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="161.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading Value:"
+															textAlignment="LEFT" />
+														<TextField fx:id="readingValueTxtEdit" layoutX="21.0"
+															layoutY="185.0" maxHeight="-Infinity" maxWidth="-Infinity"
+															minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0"
+															prefWidth="163.0" />
+														<Label fx:id="readingDateLblEdit" alignment="CENTER_LEFT"
+															cache="true" cacheHint="SCALE" layoutX="21.0" layoutY="208.0"
+															prefHeight="30.0" prefWidth="90.0" text="Reading Date:"
+															textAlignment="LEFT" />
+														<DatePicker fx:id="readingDatePickerEdit"
+															layoutX="21.0" layoutY="232.0" prefWidth="163.0" />
+														<Label layoutX="22.0" layoutY="264.0" text="Time:" />
+														<Label layoutX="37.0" layoutY="281.0" text="HH:" />
+														<TextField layoutX="57.0" layoutY="277.0"
+															prefHeight="25.0" prefWidth="29.0" />
+														<Label layoutX="100.0" layoutY="281.0" text="MM:" />
+														<TextField layoutX="125.0" layoutY="277.0"
+															prefHeight="25.0" prefWidth="29.0" />
+														<Button fx:id="submitBtnEdit" alignment="CENTER_RIGHT"
+															contentDisplay="CENTER" defaultButton="true" layoutX="59.0"
+															layoutY="316.0" mnemonicParsing="false" text="Confirm Edit"
+															textAlignment="CENTER" />
+													</children>
+												</AnchorPane>
+											</content>
+										</TitledPane>
+										<TitledPane animated="false" text="Add Patient">
+											<content>
+												<AnchorPane minHeight="0.0" minWidth="0.0"
+													prefHeight="180.0" prefWidth="200.0">
+													<children>
+														<Label layoutX="45.0" layoutY="6.0"
+															text="Add New Patient To Trial" />
+														<Label layoutX="36.0" layoutY="60.0" text="Patient ID:" />
+														<TextField layoutX="36.0" layoutY="77.0" />
+														<Button defaultButton="true" layoutX="71.0"
+															layoutY="120.0" mnemonicParsing="false" text="Add Patient" />
+														<CheckBox layoutX="14.0" layoutY="220.0"
+															mnemonicParsing="false" text="Import Patient Readings" />
+													</children>
+												</AnchorPane>
+											</content>
+										</TitledPane>
+										<TitledPane animated="false" text="Remove Patient From Trial">
+											<content>
+												<AnchorPane minHeight="0.0" minWidth="0.0"
+													prefHeight="180.0" prefWidth="200.0" />
+											</content>
+										</TitledPane>
+									</panes>
+								</Accordion>
+								<Label layoutY="6.0" text="Actions" />
+							</children>
+						</AnchorPane>
+					</right>
+				</BorderPane>
+			</children>
+		</StackPane>
+	</center>
+	<bottom>
+		<HBox id="footer-section">
+			<children>
+			</children>
+		</HBox>
+	</bottom>
+</BorderPane>
