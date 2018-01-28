@@ -155,10 +155,6 @@ public class BloodPressure extends Reading {
 			return true;
 		}
 		
-		private BloodPressure getOuterType() {
-			return BloodPressure.this;
-		}
-		
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
