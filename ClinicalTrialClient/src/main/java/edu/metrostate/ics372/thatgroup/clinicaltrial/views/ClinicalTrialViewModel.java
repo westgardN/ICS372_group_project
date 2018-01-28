@@ -2,13 +2,9 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 import javafx.collections.FXCollections;
@@ -26,7 +22,7 @@ public class ClinicalTrialViewModel {
 		trial = new Trial("testTrial01");
 		int k = 0;
 		for (int i = 0; i < 30; i++) {
-			Set<Reading> simJournal = new HashSet<>();
+			List<Reading> simJournal = new ArrayList<>();
 			for (int j = 0; j < 30; j++) {
 				try {
 					simJournal.addAll(JsonProcessor.read("./data/testReadAndWrite_out.json"));
@@ -34,10 +30,7 @@ public class ClinicalTrialViewModel {
 					e.printStackTrace();
 				}
 			}
-			Patient patient = PatientFactory.getPatient("clinical");
-			patient.setId(String.format("p%d", k++));
-			patient.setJournal(simJournal);
-			trial.addPatient(patient);
+			trial.addPatient(new Patient(String.format("p%d", k++), simJournal));
 		}
 		obvservableSimPatients = FXCollections.observableArrayList(trial.getPatientList());
 		obvservableSimReadings = FXCollections.observableArrayList(trial.getPatientList().get(0).getJournal());

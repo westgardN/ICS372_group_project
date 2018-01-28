@@ -2,7 +2,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
