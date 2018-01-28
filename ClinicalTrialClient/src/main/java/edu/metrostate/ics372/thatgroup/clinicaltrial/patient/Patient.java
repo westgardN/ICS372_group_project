@@ -18,7 +18,7 @@ public abstract class Patient implements Serializable {
 	 * Initializes an empty patient.
 	 */
 	public Patient() {
-		super();
+		this(null, null, null, null);
 	}
 
 	/**
@@ -126,4 +126,55 @@ public abstract class Patient implements Serializable {
 		return reading != null ? journal.contains(reading) : false;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((journal == null) ? 0 : journal.hashCode());
+		result = prime * result + ((trialEndDate == null) ? 0 : trialEndDate.hashCode());
+		result = prime * result + ((trialStartDate == null) ? 0 : trialStartDate.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Patient))
+			return false;
+		Patient other = (Patient) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Patient [id=");
+		builder.append(id);
+		builder.append(", trialStartDate=");
+		builder.append(trialStartDate);
+		builder.append(", trialEndDate=");
+		builder.append(trialEndDate);
+		builder.append(", journal=");
+		builder.append(journal);
+		builder.append("]");
+		return builder.toString();
+	}
 }
