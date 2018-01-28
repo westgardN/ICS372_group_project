@@ -131,7 +131,6 @@ public class BloodPressure extends Reading {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + getOuterType().hashCode();
 			result = prime * result + diastolic;
 			result = prime * result + systolic;
 			return result;
@@ -149,8 +148,6 @@ public class BloodPressure extends Reading {
 			if (!(obj instanceof BloodPressureValue))
 				return false;
 			BloodPressureValue other = (BloodPressureValue) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
 			if (diastolic != other.diastolic)
 				return false;
 			if (systolic != other.systolic)

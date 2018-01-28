@@ -18,15 +18,9 @@ public class JsonProcessor {
 		JsonReadings answer = null;
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))){
-			StringBuilder json = new StringBuilder();
-			
-			while (br.ready()) {
-				json.append(br.readLine());
-			}
-			
 			Gson gson = new GsonBuilder().create();
 			
-			answer = gson.fromJson(json.toString(), JsonReadings.class);
+			answer = gson.fromJson(br, JsonReadings.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
