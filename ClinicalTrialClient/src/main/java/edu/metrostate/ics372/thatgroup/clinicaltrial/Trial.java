@@ -3,6 +3,8 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
+
 public class Trial {
 	private String trialID;
 	List<String> sites;
@@ -22,7 +24,7 @@ public class Trial {
 	public Trial(String trialID) {
 		this.trialID = trialID;
 		sites = new ArrayList<String>();
-		patientList = new ArrayList<Patient>();
+		patientList = new ArrayList<>();
 	}
 	
 	
