@@ -4,6 +4,9 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.BloodPressure.BloodPressureValue;
 
 /**
  * @author Vincent J. Palodichuk
@@ -64,5 +67,20 @@ public class Steps extends Reading {
 		} else {
 			this.value = Integer.MIN_VALUE;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Steps taken ");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+		String formattedDateTime = date.format(formatter);
+		builder.append(formattedDateTime);
+		builder.append(" is: ");
+		builder.append(getValue());
+		return builder.toString();
 	}
 }

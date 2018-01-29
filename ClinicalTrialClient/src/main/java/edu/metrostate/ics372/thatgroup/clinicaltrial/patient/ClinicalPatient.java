@@ -82,5 +82,29 @@ public class ClinicalPatient extends Patient {
 		return answer;
 	}
 	
-	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(id);
+		if (trialEndDate == null) {
+			builder.append(" active since ");
+			builder.append(trialStartDate);
+		} else {
+			builder.append(" inactive (");
+			builder.append(trialStartDate);
+			builder.append(" - ");
+			builder.append(trialEndDate);
+		}
+		
+		builder.append(" has ");
+		builder.append(journal.size());
+		builder.append(" reading");
+		if (journal.size() != 1) {
+			builder.append("s");
+		}
+		return builder.toString();
+	}
 }

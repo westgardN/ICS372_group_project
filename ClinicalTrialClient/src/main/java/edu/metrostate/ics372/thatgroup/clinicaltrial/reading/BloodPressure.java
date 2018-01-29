@@ -5,6 +5,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Vincent J. Palodichuk
@@ -59,6 +60,23 @@ public class BloodPressure extends Reading {
 		} else {
 			this.value = null;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Blood Pressure taken ");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+		String formattedDateTime = date.format(formatter);
+		builder.append(formattedDateTime);
+		builder.append(" is: ");
+		builder.append(((BloodPressureValue)getValue()).getSystolic());
+		builder.append(" / ");
+		builder.append(((BloodPressureValue)getValue()).getDiastolic());
+		return builder.toString();
 	}
 	
 	public class BloodPressureValue implements Serializable {

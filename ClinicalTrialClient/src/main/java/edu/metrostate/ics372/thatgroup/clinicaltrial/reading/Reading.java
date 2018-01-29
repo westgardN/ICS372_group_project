@@ -93,7 +93,7 @@ public abstract class Reading implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().toString());
+		builder.append("Reading");
 		builder.append(" [patientId=");
 		builder.append(patientId);
 		builder.append(", id=");
