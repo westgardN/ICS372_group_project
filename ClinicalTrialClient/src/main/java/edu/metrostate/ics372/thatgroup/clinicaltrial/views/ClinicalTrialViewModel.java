@@ -16,66 +16,51 @@ import javafx.collections.ObservableList;
 
 public class ClinicalTrialViewModel {
 	public static Trial trial;
-	ObservableList<Patient> obvservableSimPatients;
-	ObservableList<Reading> obvservableSimReadings;
-	ObservableList<String> readingTypeChoices;
+	ObservableList<Patient> patients;
+	ObservableList<Reading> readings;
+	ObservableList<String> types;
 
 	public ClinicalTrialViewModel() {
 		// This is just a mock implementation.  TODO
-		readingTypeChoices = FXCollections.observableArrayList("Weight", "Steps", "Temp", "Blood Pressure");
-		trial = new Trial("testTrial01");
-		int k = 0;
-		for (int i = 0; i < 30; i++) {
-			Set<Reading> simJournal = new HashSet<>();
-			for (int j = 0; j < 30; j++) {
-				try {
-					simJournal.addAll(JsonProcessor.read("./data/testReadAndWrite_out.json"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			Patient patient = PatientFactory.getPatient("clinical");
-			patient.setId(String.format("p%d", k++));
-			patient.setJournal(simJournal);
-			trial.addPatient(patient);
-		}
-		obvservableSimPatients = FXCollections.observableArrayList(trial.getPatientList());
-		obvservableSimReadings = FXCollections.observableArrayList(trial.getPatientList().get(0).getJournal());
+		types = FXCollections.observableArrayList("Weight", "Steps", "Temp", "Blood Pressure");
+		trial = new Trial();
+		patients = FXCollections.observableArrayList(trial.getPatientList());
+		readings = FXCollections.observableArrayList(trial.getPatientList().get(0).getJournal());
 	}
 
 	/**
 	 * @return the obvservableSimPatients
 	 */
-	public ObservableList<Patient> getObvservableSimPatients() {
-		return obvservableSimPatients;
+	public ObservableList<Patient> getPatients() {
+		return patients;
 	}
 
 	/**
 	 * @param obvservableSimPatients the obvservableSimPatients to set
 	 */
-	public void setObvservableSimPatients(ObservableList<Patient> obvservableSimPatients) {
-		this.obvservableSimPatients = obvservableSimPatients;
+	public void setPatients(ObservableList<Patient> obvservableSimPatients) {
+		this.patients = obvservableSimPatients;
 	}
 
 	/**
 	 * @return the obvservableSimReadings
 	 */
-	public ObservableList<Reading> getObvservableSimReadings() {
-		return obvservableSimReadings;
+	public ObservableList<Reading> getReadings() {
+		return readings;
 	}
 
 	/**
 	 * @param obvservableSimReadings the obvservableSimReadings to set
 	 */
-	public void setObvservableSimReadings(ObservableList<Reading> obvservableSimReadings) {
-		this.obvservableSimReadings = obvservableSimReadings;
+	public void setReadings(ObservableList<Reading> obvservableSimReadings) {
+		this.readings = obvservableSimReadings;
 	}
 	
 	/**
 	 * @return the readingTypeChoices
 	 */
-	public ObservableList<String> getReadingTypeChoices() {
-		return readingTypeChoices;
+	public ObservableList<String> getTypes() {
+		return types;
 	}
 
 	public ObservableList<Reading> getPatientJournal(Patient patient) {

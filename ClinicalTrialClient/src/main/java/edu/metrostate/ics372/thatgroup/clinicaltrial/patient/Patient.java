@@ -90,7 +90,7 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
-	 * @return a copy of the patient's journal.
+	 * @return a reference to this patient's journal.
 	 */
 	public Set<Reading> getJournal() {
 		return new HashSet<>(journal);

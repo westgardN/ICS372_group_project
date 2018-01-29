@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 
 <BorderPane prefHeight="620" prefWidth="768"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -13,17 +14,20 @@
 			<children>
 				<MenuBar>
 					<menus>
-						<Menu mnemonicParsing="false" text="File">
+						<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
 							<items>
-								<MenuItem mnemonicParsing="false" text="Close" />
+								<MenuItem mnemonicParsing="false" text="Import Readings..." />
+								<MenuItem mnemonicParsing="false" text="Export Readings..." />
+								<SeparatorMenuItem />
+								<MenuItem mnemonicParsing="false" text="Exit" />
 							</items>
 						</Menu>
-						<Menu mnemonicParsing="false" text="Edit">
+						<Menu fx:id="menuTrial" mnemonicParsing="false" text="Trial">
 							<items>
-								<MenuItem mnemonicParsing="false" text="Delete" />
+								<MenuItem mnemonicParsing="false" text="Add Patient" />
 							</items>
 						</Menu>
-						<Menu mnemonicParsing="false" text="Help">
+						<Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
 							<items>
 								<MenuItem mnemonicParsing="false" text="About" />
 							</items>

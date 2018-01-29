@@ -12,12 +12,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TextField;
 
 
 
 public class ClinicalTrialView implements Initializable {
 	ClinicalTrialViewModel viewModel;
+
+	@FXML
+	Menu menuFile;
+	@FXML
+	Menu menuTrial;
+	@FXML
+	Menu menuHelp;
 	
 	// Patient and Reading ListViews
 	@FXML
@@ -29,7 +37,7 @@ public class ClinicalTrialView implements Initializable {
 	
 	
 	// Actions Section
-		//Add Reading Form
+	//Add Reading Form
 	@FXML
 	TextField patientIDTxt;
 	@FXML
@@ -62,8 +70,8 @@ public class ClinicalTrialView implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		viewModel = new ClinicalTrialViewModel();
-		patientList.setItems(viewModel.getObvservableSimPatients());
-		readingTypeChoice.setItems(viewModel.getReadingTypeChoices());
+		patientList.setItems(viewModel.getPatients());
+		readingTypeChoice.setItems(viewModel.getTypes());
 		readingTypeChoice.getSelectionModel().selectFirst();
 
 		patientList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Patient>() {

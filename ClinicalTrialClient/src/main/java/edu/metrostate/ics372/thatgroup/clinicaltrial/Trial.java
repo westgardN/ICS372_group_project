@@ -6,43 +6,41 @@ import java.util.List;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 
 public class Trial {
-	private String trialID;
-	List<String> sites;
-	List<Patient> patientList;
+	private String id;
+	List<Patient> patients;
+	
+	public Trial() {
+		this(null);
+	}
 	
 	
 	/**
-	 * Creates a new Trial object with the following parameters
+	 * Creates a new Trial object with the specified values.
 	 * 
-	 * @param trialID
-	 *          the trialID for the trial
-	 * @param sites
-	 *          an array list of the sites
-	 * @param patient           
-	 * 			an array list of the sites
+	 * @param trialId
+	 *          the id of this trial.
 	 */
-	public Trial(String trialID) {
-		this.trialID = trialID;
-		sites = new ArrayList<String>();
-		patientList = new ArrayList<>();
+	public Trial(String trialId) {
+		this.id = trialId;
+		patients = new ArrayList<>();
 	}
 	
 	
 	
 	/**
-	 * @return the trialID
+	 * @return the id of this trial.
 	 */
-	public String getTrialID() {
-		return trialID;
+	public String getTrialId() {
+		return id;
 	}
 
 
 
 	/**
-	 * @param trialID the trialID to set
+	 * @param trialId the new id of this trial.
 	 */
-	public void setTrialID(String trialID) {
-		this.trialID = trialID;
+	public void setTrialID(String trialId) {
+		this.id = trialId;
 	}
 
 
@@ -51,7 +49,7 @@ public class Trial {
 	 * @return the patientList
 	 */
 	public List<Patient> getPatientList() {
-		return patientList;
+		return patients;
 	}
 
 
@@ -60,11 +58,11 @@ public class Trial {
 	 * @param patientList the patientList to set
 	 */
 	public void setPatientList(List<Patient> patientList) {
-		this.patientList = patientList;
+		this.patients = patientList;
 	}
 
 	public void addPatient(Patient patient) {
-		patientList.add(patient);
+		patients.add(patient);
 	}
 	
 	public void updatePatient(Patient patient) {
