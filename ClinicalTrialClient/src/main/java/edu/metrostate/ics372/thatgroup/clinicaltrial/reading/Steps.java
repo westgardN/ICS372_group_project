@@ -6,8 +6,6 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.BloodPressure.BloodPressureValue;
-
 /**
  * @author Vincent J. Palodichuk
  *
