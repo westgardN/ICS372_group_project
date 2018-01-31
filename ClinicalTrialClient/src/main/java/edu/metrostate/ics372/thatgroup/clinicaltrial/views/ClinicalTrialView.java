@@ -38,11 +38,11 @@ public class ClinicalTrialView implements Initializable {
 //	@FXML
 //	AddPatientView addPatientView;
 	
-	@FXML
-	VBox inputForm;
-
-	@FXML
-	StackPane editStackPane;
+//	@FXML
+//	VBox inputForm;
+//
+//	@FXML
+//	StackPane editStackPane;
 	// Patient and Reading ListViews
 //	@FXML
 //	ListView<Patient> patientList;
@@ -65,24 +65,24 @@ public class ClinicalTrialView implements Initializable {
 //	@FXML
 //	Button deleteReadingBtn;
 	// Input Form Add/Edit/Delete
-	@FXML
-	TextField patientIDTxt;
-	@FXML
-	ChoiceBox<String> readingTypeChoice;
-	@FXML
-	TextField readingIDTxt;
-	@FXML
-	TextField readingValueTxt;
-	@FXML
-	StackPane bloodPressStack;
-	@FXML
-	TextField systolic;
-	@FXML
-	TextField diastolic;
-	@FXML
-	DatePicker readingDate;
-	@FXML
-	Button submitBtn;
+//	@FXML
+//	TextField patientIDTxt;
+//	@FXML
+//	ChoiceBox<String> readingTypeChoice;
+//	@FXML
+//	TextField readingIDTxt;
+//	@FXML
+//	TextField readingValueTxt;
+//	@FXML
+//	StackPane bloodPressStack;
+//	@FXML
+//	TextField systolic;
+//	@FXML
+//	TextField diastolic;
+//	@FXML
+//	DatePicker readingDate;
+//	@FXML
+//	Button submitBtn;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -95,9 +95,9 @@ public class ClinicalTrialView implements Initializable {
 		// trial
 //		patientList.setItems(viewModel.getObservablePatients());
 		// Initialize the reading type choice box
-		readingTypeChoice.setItems(viewModel.getReadingTypeChoices());
-		// Set the reading type choice box default value
-		readingTypeChoice.getSelectionModel().selectFirst();
+//		readingTypeChoice.setItems(viewModel.getReadingTypeChoices());
+//		// Set the reading type choice box default value
+//		readingTypeChoice.getSelectionModel().selectFirst();
 
 		// Creates a change listener for the patient list
 //		patientList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Patient>() {
@@ -178,21 +178,21 @@ public class ClinicalTrialView implements Initializable {
 		 * Sets the change listener for the reading type choice box and changes the
 		 * input form to accommodate a blood pressure reading entry
 		 */
-		readingTypeChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observableValue, String oldSelection,
-					String newSelection) {
-				if (newSelection.toLowerCase().equals("blood pressure")) {
-					bloodPressStack.toFront();
-					bloodPressStack.setVisible(true);
-					readingValueTxt.setVisible(false);
-				} else {
-					bloodPressStack.toBack();
-					bloodPressStack.setVisible(false);
-					readingValueTxt.setVisible(true);
-				}
-			}
-		});
+//		readingTypeChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+//			@Override
+//			public void changed(ObservableValue<? extends String> observableValue, String oldSelection,
+//					String newSelection) {
+//				if (newSelection.toLowerCase().equals("blood pressure")) {
+//					bloodPressStack.toFront();
+//					bloodPressStack.setVisible(true);
+//					readingValueTxt.setVisible(false);
+//				} else {
+//					bloodPressStack.toBack();
+//					bloodPressStack.setVisible(false);
+//					readingValueTxt.setVisible(true);
+//				}
+//			}
+//		});
 
 		/*
 		 * Sets the action listener for the input forms submitBtn. Currently only
