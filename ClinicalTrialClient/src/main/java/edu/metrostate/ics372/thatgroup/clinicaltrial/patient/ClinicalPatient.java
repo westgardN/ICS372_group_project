@@ -1,6 +1,8 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.patient;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Set;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
@@ -25,7 +27,7 @@ public class ClinicalPatient extends Patient {
 	 * current date and a null trial end date.
 	 */
 	public ClinicalPatient() {
-		super(null, null, LocalDate.now(), null);
+		super(null, null, null, LocalDate.now(), null);
 	}
 	
 	/**
@@ -41,7 +43,7 @@ public class ClinicalPatient extends Patient {
 	 * 			  the date this patient left the trial 
 	 */
 	public ClinicalPatient(String id, Set<Reading> journal, LocalDate startDate, LocalDate endDate) {
-		super(id, journal, startDate, endDate);
+		super(id, null, journal, startDate, endDate);
 	}	
 
 	/**
@@ -66,15 +68,14 @@ public class ClinicalPatient extends Patient {
 		}
 		
 		boolean answer = false;
+		reading.setPatientId(id);
 		
 		if (!journal.contains(reading)) {
 			if (trialEndDate != null) {
 				if (trialEndDate.compareTo(reading.getDate().toLocalDate()) >= 0) {
-					reading.setPatientId(id);
 					answer = journal.add(reading);
 				}
 			} else {
-				reading.setPatientId(id);
 				answer = journal.add(reading);
 			}
 		}
@@ -87,16 +88,22 @@ public class ClinicalPatient extends Patient {
 	 */
 	@Override
 	public String toString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
 		builder.append(id);
 		if (trialEndDate == null) {
-			builder.append(" active since ");
-			builder.append(trialStartDate);
+			builder.append(" active in trial ");
+			builder.append(trialId);
+			builder.append(" since ");
+			builder.append(trialStartDate.format(formatter));
 		} else {
-			builder.append(" inactive (");
-			builder.append(trialStartDate);
+			builder.append(" inactive in trial ");
+			builder.append(trialId);
+			builder.append(" (");
+			builder.append(trialStartDate.format(formatter));
 			builder.append(" - ");
-			builder.append(trialEndDate);
+			builder.append(trialEndDate.format(formatter));
+			builder.append(" )");
 		}
 		
 		builder.append(" has ");

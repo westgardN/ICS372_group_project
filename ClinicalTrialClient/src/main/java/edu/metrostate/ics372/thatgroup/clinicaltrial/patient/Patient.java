@@ -2,14 +2,22 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.patient;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.HashSet;
 import java.util.Set;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
+/**
+ * 
+ * @author 
+ *
+ */
 public abstract class Patient implements Serializable {
 	private static final long serialVersionUID = 8450664877127813850L;
 	protected String id;
+	protected String trialId;
 	protected LocalDate trialStartDate;
 	protected LocalDate trialEndDate;
 	protected Set<Reading> journal = new HashSet<>();
@@ -18,15 +26,22 @@ public abstract class Patient implements Serializable {
 	 * Initializes an empty patient.
 	 */
 	public Patient() {
-		this(null, null, null, null);
+		this(null, null, null, null, null);
 	}
 
 	/**
-	 * Initializes an empty patient.
+	 * Initializes a patient with the specified values.
+	 * 
+	 * @param id the id of this patient
+	 * @param trialId the Trial this patient belongs to
+	 * @param readings the readings for this patient
+	 * @param start the date the patient started the trial
+	 * @param end the date the patient left the trial
 	 */
-	public Patient(String id, Set<Reading> readings, LocalDate start, LocalDate end) {
+	public Patient(String id, String trialId, Set<Reading> readings, LocalDate start, LocalDate end) {
 		super();
 		this.id = id;
+		this.trialId = trialId;
 		setJournal(journal);
 		this.trialStartDate = start;
 		this.trialEndDate = end;
@@ -93,7 +108,7 @@ public abstract class Patient implements Serializable {
 	 * @return a reference to this patient's journal.
 	 */
 	public Set<Reading> getJournal() {
-		return new HashSet<>(journal);
+		return journal;
 	}
 
 	/**
@@ -134,9 +149,7 @@ public abstract class Patient implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((journal == null) ? 0 : journal.hashCode());
-		result = prime * result + ((trialEndDate == null) ? 0 : trialEndDate.hashCode());
-		result = prime * result + ((trialStartDate == null) ? 0 : trialStartDate.hashCode());
+		result = prime * result + ((trialId == null) ? 0 : trialId.hashCode());
 		return result;
 	}
 
@@ -145,18 +158,30 @@ public abstract class Patient implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Patient))
+		}
+		if (!(obj instanceof Patient)) {
 			return false;
+		}
 		Patient other = (Patient) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
+		if (trialId == null) {
+			if (other.trialId != null) {
+				return false;
+			}
+		} else if (!trialId.equals(other.trialId)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -165,16 +190,38 @@ public abstract class Patient implements Serializable {
 	 */
 	@Override
 	public String toString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
-		builder.append("Patient [id=");
+		builder.append("Patient ");
 		builder.append(id);
-		builder.append(", trialStartDate=");
-		builder.append(trialStartDate);
-		builder.append(", trialEndDate=");
-		builder.append(trialEndDate);
-		builder.append(", journal=");
-		builder.append(journal);
-		builder.append("]");
+		builder.append(" (Trial ");
+		builder.append(trialId);
+		builder.append(") (");
+		builder.append(trialStartDate.format(formatter));
+		if (trialEndDate != null) {
+			builder.append(" - ");
+			builder.append(trialEndDate.format(formatter));
+		}
+		builder.append(") has ");
+		builder.append(journal.size());
+		builder.append(" reading");
+		if (journal.size() != 1) {
+			builder.append("s");
+		}
 		return builder.toString();
+	}
+
+	/**
+	 * @return the trialId
+	 */
+	public String getTrialId() {
+		return trialId;
+	}
+
+	/**
+	 * @param trialId the trialId to set
+	 */
+	public void setTrialId(String trialId) {
+		this.trialId = trialId;
 	}
 }

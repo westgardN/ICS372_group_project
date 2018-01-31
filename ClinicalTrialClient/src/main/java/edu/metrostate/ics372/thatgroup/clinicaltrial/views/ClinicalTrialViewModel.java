@@ -34,7 +34,7 @@ public class ClinicalTrialViewModel {
 	 * @return the observablePatients
 	 */
 	public ObservableList<Patient> getObservablePatients() {
-		return FXCollections.observableArrayList(trial.getPatientList());
+		return FXCollections.observableArrayList(trial.getPatients());
 	}
 
 
@@ -66,23 +66,8 @@ public class ClinicalTrialViewModel {
 		return observablePatientJournal;
 	}
 
-	public void addPatientToTrial(String patientID, LocalDate startDate) {
-		Set<Reading> journal = new HashSet<>();
-		Patient patient = PatientFactory.getPatient("clinical");
-		patient.setId(patientID);
-		patient.setTrialStartDate(startDate);
-		patient.setJournal(journal);
-		trial.addPatient(patient);
+	public boolean addPatientToTrial(String patientId, LocalDate startDate) {
+		return trial.addPatient(patientId, startDate);
 	}
 
-	public void addReadingForPatient(int patientIndex, String readingID, String readingType, String readingValue,
-			LocalDate localDate) {
-		LocalDateTime dateTime = localDate.atStartOfDay();
-		Reading reading = ReadingFactory.getReading(readingType);
-		reading.setPatientId(getObservablePatients().get(patientIndex).getId());
-		reading.setId(readingID);
-		reading.setValue(readingValue);
-		reading.setDate(dateTime);
-		trial.getPatientList().get(patientIndex).addReading(reading);
-	}
 }

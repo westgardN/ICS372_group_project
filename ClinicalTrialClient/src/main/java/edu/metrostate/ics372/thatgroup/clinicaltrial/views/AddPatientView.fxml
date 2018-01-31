@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Button?>
@@ -7,12 +9,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 
-<fx:root prefHeight="259.0" prefWidth="266.0" type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<fx:root prefHeight="259.0" prefWidth="266.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<Label layoutX="19.0" layoutY="106.0" text="ID:" />
-		<TextField fx:id="textField" layoutX="63.0" layoutY="101.0" promptText="Patient ID" />
+		<Label layoutX="60.0" layoutY="106.0" text="ID:" />
+		<TextField fx:id="textField" layoutX="101.0" layoutY="102.0" promptText="Patient ID" />
 		<Label layoutX="19.0" layoutY="148.0" text="Start Date:" />
 		<DatePicker fx:id="datePicker" layoutX="101.0" layoutY="143.0" prefWidth="149.0" promptText="Trial Start Date" />
-		<Button fx:id="addButton" defaultButton="true" layoutX="202.0" layoutY="208.0" mnemonicParsing="false" onAction="#addPatient" text="Add" />
+		<Button fx:id="addButton" defaultButton="true" layoutX="214.0" layoutY="185.0" mnemonicParsing="false" onAction="#addPatient" text="Add" />
 	</children>
 </fx:root>

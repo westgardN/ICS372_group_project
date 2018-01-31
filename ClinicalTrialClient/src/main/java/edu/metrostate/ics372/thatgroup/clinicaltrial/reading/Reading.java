@@ -5,6 +5,8 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
  * @author Vincent J. Palodichuk
@@ -45,10 +47,8 @@ public abstract class Reading implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
-		result = prime * result + ((getValue() == null) ? 0 : getValue().hashCode());
 		return result;
 	}
 
@@ -57,33 +57,30 @@ public abstract class Reading implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Reading))
+		}
+		if (!(obj instanceof Reading)) {
 			return false;
+		}
 		Reading other = (Reading) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (patientId == null) {
-			if (other.patientId != null)
+			if (other.patientId != null) {
 				return false;
-		} else if (!patientId.equals(other.patientId))
+			}
+		} else if (!patientId.equals(other.patientId)) {
 			return false;
-		if (getValue() == null) {
-			if (other.getValue() != null)
-				return false;
-		} else if (!getValue().equals(other.getValue()))
-			return false;
+		}
 		return true;
 	}
 
@@ -92,17 +89,16 @@ public abstract class Reading implements Serializable {
 	 */
 	@Override
 	public String toString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
 		builder.append("Reading");
-		builder.append(" [patientId=");
-		builder.append(patientId);
-		builder.append(", id=");
 		builder.append(id);
-		builder.append(", date=");
-		builder.append(date);
-		builder.append(", value=");
+		builder.append(" for patient ");
+		builder.append(patientId);
+		builder.append(" taken on ");
+		builder.append(date.format(formatter));
+		builder.append(" has a value of ");
 		builder.append(getValue());
-		builder.append("]");
 		return builder.toString();
 	}
 

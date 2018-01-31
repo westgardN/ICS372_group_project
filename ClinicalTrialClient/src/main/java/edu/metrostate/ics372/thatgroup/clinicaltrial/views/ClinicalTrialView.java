@@ -86,11 +86,9 @@ public class ClinicalTrialView implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// Initialize the DatePicker to the current date for the Add Patient Form
-		//newPatientStartDate.setValue(LocalDate.now());
 		// Hide the Add/Edit/Delete input Form until the user clicks the Add/Edit/Delete
 		// button
-		inputForm.setVisible(false);
+//		inputForm.setVisible(false);
 		// Initialize the view Model
 		viewModel = new ClinicalTrialViewModel();
 		// Add patients to the patient list if there are any already existing in the
