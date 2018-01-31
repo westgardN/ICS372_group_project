@@ -1,8 +1,12 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
@@ -15,11 +19,12 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
  */
 public class Trial implements Serializable {
 	private static final long serialVersionUID = 4128763071142480689L;
+	private transient final PropertyChangeSupport pcs;
 	private String id;
-	Set<Patient> patients;
+	private Set<Patient> patients;
 	
 	public Trial() {
-		this(null);
+		this("");
 	}
 	
 	/**
@@ -31,6 +36,7 @@ public class Trial implements Serializable {
 	public Trial(String trialId) {
 		this.id = trialId;
 		patients = new HashSet<>();
+		pcs = new PropertyChangeSupport(this);
 	}
 	
 	/**
@@ -44,9 +50,17 @@ public class Trial implements Serializable {
 	 * @param trialId the new id of this trial.
 	 */
 	public void setId(String trialId) {
-		this.id = trialId;
+		if (!Objects.equals(id, trialId)) {
+			String oldId = this.id;
+			this.id = trialId;
+			pcs.firePropertyChange("id", oldId, this.id);
+		}
 	}
 
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+	
 	/**
 	 * @return a reference to the patients in this trial as a Set
 	 */
@@ -73,7 +87,11 @@ public class Trial implements Serializable {
 		boolean answer = false;
 		if (patient != null) {
 			patient.setTrialId(id);
+			int oldValue = patients.size();
 			answer = patients.add(patient);
+			if (answer) {
+				pcs.firePropertyChange("patients", oldValue, patients.size());
+			}
 		}
 		return answer;
 	}
@@ -138,13 +156,18 @@ public class Trial implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Trial ");
 		builder.append(id);
-		builder.append("has ");
+		builder.append(" has ");
 		builder.append(patients.size());
 		builder.append(" patient" );
 		if (patients.size() != 1) {
 			builder.append("s" );
 		}
 		return builder.toString();
-	}	
+	}
+
+	public Patient getPatient(String patientId) {
+		Optional<Patient> answer = patients.stream().filter(patient -> patientId.equals(patient.getId())).findAny();
+		return answer != null && answer.isPresent() ? answer.get() : null;
+	}
 	
 }

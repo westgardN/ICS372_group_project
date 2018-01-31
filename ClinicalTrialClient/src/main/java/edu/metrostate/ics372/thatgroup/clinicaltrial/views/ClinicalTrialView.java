@@ -1,28 +1,16 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 public class ClinicalTrialView implements Initializable {
 	Patient currentPatient;
@@ -44,14 +32,6 @@ public class ClinicalTrialView implements Initializable {
 	@FXML
 	ReadingView readingView;
 	
-//	@FXML
-//	VBox inputForm;
-//
-//	@FXML
-//	StackPane editStackPane;
-	// Patient and Reading ListViews
-//	@FXML
-//	ListView<Patient> patientList;
 	@FXML
 	TableView<Reading> readingTable;
 
@@ -63,32 +43,6 @@ public class ClinicalTrialView implements Initializable {
 	TableColumn<Reading, String> valueCol;
 	@FXML
 	TableColumn<Reading, String> readingIDCol;
-	// Actions Section
-//	@FXML
-//	Button addReadingBtn;
-//	@FXML
-//	Button editReadingBtn;
-//	@FXML
-//	Button deleteReadingBtn;
-	// Input Form Add/Edit/Delete
-//	@FXML
-//	TextField patientIDTxt;
-//	@FXML
-//	ChoiceBox<String> readingTypeChoice;
-//	@FXML
-//	TextField readingIDTxt;
-//	@FXML
-//	TextField readingValueTxt;
-//	@FXML
-//	StackPane bloodPressStack;
-//	@FXML
-//	TextField systolic;
-//	@FXML
-//	TextField diastolic;
-//	@FXML
-//	DatePicker readingDate;
-//	@FXML
-//	Button submitBtn;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

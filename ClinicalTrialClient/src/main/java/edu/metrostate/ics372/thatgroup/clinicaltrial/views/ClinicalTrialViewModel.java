@@ -42,8 +42,7 @@ public class ClinicalTrialViewModel {
 	}
 
 	/**
-	 * @param journal
-	 *            the observablePatientJournal to set
+	 * @param patient the patient's whose journal we are observing.
 	 */
 	public void setJournal(Patient patient) {
 		journal = FXCollections.observableArrayList(patient.getJournal());
@@ -63,7 +62,9 @@ public class ClinicalTrialViewModel {
 
 	public boolean addPatient(String patientId, LocalDate startDate) {
 		boolean answer = trial.addPatient(patientId, startDate);
+		if (answer) {
+			patients.add(trial.getPatient(patientId));
+		}
 		return answer;
 	}
-
 }

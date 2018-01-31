@@ -3,6 +3,8 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +16,7 @@ import java.time.format.FormatStyle;
  */
 public abstract class Reading implements Serializable {
 	private static final long serialVersionUID = 8166141304679594433L;
+	private transient final PropertyChangeSupport pcs;
 	protected String patientId;
 	protected String id;
 	protected LocalDateTime date;
@@ -38,8 +41,13 @@ public abstract class Reading implements Serializable {
 		this.id = id;
 		this.date = date;
 		this.setValue(value);
+		pcs = new PropertyChangeSupport(this);
 	}
 
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

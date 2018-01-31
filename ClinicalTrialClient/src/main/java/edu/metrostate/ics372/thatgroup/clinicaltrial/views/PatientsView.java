@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,11 +22,14 @@ import javafx.scene.layout.AnchorPane;
  *
  */
 public class PatientsView extends AnchorPane implements Initializable {
-	@FXML private ListView<Patient> listView;
+	@FXML 
+	private ListView<Patient> listView;
 	private ClinicalTrialViewModel model;
+	private ListProperty<Patient> patientsProperty;
 	
 	public PatientsView() {
 		model = null;
+		patientsProperty = new SimpleListProperty<>();
 		
 		try (InputStream stream = getClass().getResourceAsStream("PatientsView.fxml")) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
@@ -49,12 +54,15 @@ public class PatientsView extends AnchorPane implements Initializable {
 	public void setModel(ClinicalTrialViewModel model) {
 		this.model = model;
 		
-		listView.setItems(model.getPatients());
+		patientsProperty.set(model.getPatients());
+		
+		this.model.getTrial().addPropertyChangeListener((event) -> {
+			System.out.println(event);
+		});
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
-		
+		listView.itemsProperty().bind(patientsProperty);
 	}
 }

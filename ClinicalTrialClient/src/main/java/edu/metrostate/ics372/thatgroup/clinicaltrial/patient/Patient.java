@@ -1,10 +1,13 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.patient;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
@@ -16,11 +19,12 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
  */
 public abstract class Patient implements Serializable {
 	private static final long serialVersionUID = 8450664877127813850L;
+	protected transient final PropertyChangeSupport pcs;
 	protected String id;
 	protected String trialId;
 	protected LocalDate trialStartDate;
 	protected LocalDate trialEndDate;
-	protected Set<Reading> journal = new HashSet<>();
+	protected Set<Reading> journal;
 
 	/**
 	 * Initializes an empty patient.
@@ -42,11 +46,21 @@ public abstract class Patient implements Serializable {
 		super();
 		this.id = id;
 		this.trialId = trialId;
-		setJournal(journal);
+		if (readings != null) {
+			setJournal(readings);
+		} else {
+			journal = new HashSet<>();
+		}
+		
 		this.trialStartDate = start;
 		this.trialEndDate = end;
+		pcs = new PropertyChangeSupport(this);
 	}
 
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+	
 	/**
 	 * Adds a reading to this patient's Journal. Behavior of this method is defined
 	 * by the specific type of patient.
@@ -66,7 +80,11 @@ public abstract class Patient implements Serializable {
 	 * @param id the new id for this patient.
 	 */
 	public void setId(String id) {
-		this.id = id;
+		if (!Objects.equals(this.id, id)) {
+			String oldValue = this.id;
+			this.id = id;
+			pcs.firePropertyChange("id", oldValue, this.id);
+		}
 	}
 
 	/**
@@ -80,7 +98,11 @@ public abstract class Patient implements Serializable {
 	 * @param trialStartDate the new trial start date for this patient.
 	 */
 	public void setTrialStartDate(LocalDate trialStartDate) {
-		this.trialStartDate = trialStartDate;
+		if (!Objects.equals(this.trialStartDate, trialStartDate)) {
+			LocalDate oldValue = this.trialStartDate;
+			this.trialStartDate = trialStartDate;
+			pcs.firePropertyChange("trialStartDate", oldValue, this.trialStartDate);
+		}
 	}
 
 	/**
@@ -101,7 +123,11 @@ public abstract class Patient implements Serializable {
 	 * @param trialEndDate the date this patient left the clinical trial. 
 	 */
 	public void setTrialEndDate(LocalDate trialEndDate) {
-		this.trialEndDate = trialEndDate;
+		if (!Objects.equals(this.trialEndDate, trialEndDate)) {
+			LocalDate oldValue = this.trialEndDate;
+			this.trialEndDate = trialEndDate;
+			pcs.firePropertyChange("trialEndDate", oldValue, this.trialEndDate);
+		}
 	}
 
 	/**
@@ -115,7 +141,11 @@ public abstract class Patient implements Serializable {
 	 * @param journal the new journal for this patient.
 	 */
 	public void setJournal(Set<Reading> journal) {
-		this.journal = journal == null ? new HashSet<>() : new HashSet<>(journal); // Create our own copy of the set.
+		if (!Objects.equals(this.journal, journal)) {
+			Set<Reading> oldValue = this.journal;
+			this.journal = journal;
+			pcs.firePropertyChange("journal", oldValue, this.journal);
+		}
 	}
 
 	/**
@@ -123,7 +153,10 @@ public abstract class Patient implements Serializable {
 	 */
 	public void removeReading(Reading reading) {
 		if (reading != null && journal.contains(reading)) {
-			journal.remove(reading);
+			int oldValue = journal.size();
+			if(journal.remove(reading)) {
+				pcs.firePropertyChange("journalSize", oldValue, journal.size());
+			}
 		}
 	}
 
@@ -131,7 +164,11 @@ public abstract class Patient implements Serializable {
 	 * Removes all of the readings from this patient's journal.
 	 */
 	public void removeAllReadings() {
-		journal.clear();
+		if (!journal.isEmpty()) {
+			int oldValue = journal.size();
+			journal.clear();
+			pcs.firePropertyChange("journalSize", oldValue, journal.size());
+		}
 	}
 
 	/**
@@ -222,6 +259,10 @@ public abstract class Patient implements Serializable {
 	 * @param trialId the trialId to set
 	 */
 	public void setTrialId(String trialId) {
-		this.trialId = trialId;
+		if (!Objects.equals(this.trialId, trialId)) {
+			String oldValue = this.trialId;
+			this.trialId = trialId;
+			pcs.firePropertyChange("trialId", oldValue, this.trialId);
+		}
 	}
 }
