@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
  * @author Vincent J. Palodichuk
  *
  */
-public class AddPatientView extends VBox {
+public class AddPatientView extends AnchorPane {
 	@FXML private TextField textField;
 	@FXML private DatePicker datePicker;
 	@FXML private Button addButton;
@@ -30,12 +30,10 @@ public class AddPatientView extends VBox {
 	public AddPatientView() {
 		patients = null;
 		
-		InputStream stream = getClass().getResourceAsStream("AddPatient.fxml");
-		FXMLLoader fxmlLoader = new FXMLLoader();
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		
-		try {
+		try (InputStream stream = getClass().getResourceAsStream("AddPatientView.fxml")) {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setRoot(this);
+			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);

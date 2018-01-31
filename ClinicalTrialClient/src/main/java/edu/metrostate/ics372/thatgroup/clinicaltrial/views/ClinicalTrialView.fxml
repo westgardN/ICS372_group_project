@@ -8,7 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddPatientView?>
+<?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.PatientsView?>
 
 <BorderPane prefHeight="680" prefWidth="900" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView">
 	<top>
@@ -53,17 +55,7 @@
 											<panes>
 												<TitledPane animated="false" text="Add Patient">
 													<content>
-													
-														<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-															<children>
-																<AddPatientView minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-																<Label layoutX="36.0" layoutY="106.0" text="ID:" />
-																<TextField fx:id="addPatientIDTxt" layoutX="36.0" layoutY="123.0" />
-																<Button fx:id="addPatientBtn" defaultButton="true" layoutX="71.0" layoutY="222.0" mnemonicParsing="false" text="Add Patient" />
-																<Label layoutX="37.0" layoutY="148.0" text="Start Date" />
-																<DatePicker fx:id="newPatientStartDate" layoutX="36.0" layoutY="165.0" prefWidth="149.0" />
-															</children>
-														</AnchorPane>
+														<AddPatientView fx:id="addPatientView" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
 													</content>
 												</TitledPane>
 												<TitledPane animated="false" text="Patients">
@@ -72,19 +64,7 @@
 															<children>
 																<SplitPane dividerPositions="0.5" layoutX="9.6" layoutY="33.6" orientation="VERTICAL" prefHeight="413.0" prefWidth="260.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 																	<items>
-																		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-																			<children>
-																				<TextField layoutX="5.0" layoutY="2.0" prefHeight="25.0" prefWidth="200.0" promptText="Search..." AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" />
-																				<ListView fx:id="patientList" layoutX="6.0" layoutY="30.0" prefHeight="165.0" prefWidth="201.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="30.0" />
-																				<HBox alignment="CENTER" layoutX="27.0" layoutY="239.0" prefHeight="26.0" prefWidth="159.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
-																					<children>
-																						<Button fx:id="addReadingBtn" mnemonicParsing="false" prefWidth="51.0" text="Add" />
-																						<Button fx:id="editReadingBtn" mnemonicParsing="false" prefWidth="51.0" text="Edit" />
-																						<Button fx:id="deleteReadingBtn" mnemonicParsing="false" text="Delete" />
-																					</children>
-																				</HBox>
-																			</children>
-																		</AnchorPane>
+																		<PatientsView fx:id="patientsView" minHeight="0.0" minWidth="0.0" prefHeight="337.0" prefWidth="315.0"/>
 																		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
 																			<children>
 																				<VBox fx:id="inputForm" alignment="TOP_CENTER" fillWidth="false" layoutY="-1.0" prefHeight="177.0" prefWidth="209.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

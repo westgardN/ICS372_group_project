@@ -1,6 +1,8 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.io.IOException;
+import java.io.InputStream;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,8 +28,13 @@ public class ClinicalTrialClient extends Application {
 	 *             if the pane could not be loaded.
 	 */
 	private Pane loadMainPane() throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		Pane mainPane = (Pane) loader.load(getClass().getResourceAsStream("./views/clinicalTrialView.fxml"));
+		Pane mainPane = null;
+		try (InputStream stream = getClass().getResourceAsStream("./views/ClinicalTrialView.fxml")) {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			mainPane = (Pane) fxmlLoader.load(stream);
+		} catch (IOException | IllegalStateException exception) {
+			throw new RuntimeException(exception);
+		}
 		return mainPane;
 	}
 
