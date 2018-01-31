@@ -15,6 +15,13 @@
 	<children>
 		<VBox fx:id="inputForm" alignment="TOP_CENTER" fillWidth="false" layoutY="-1.0" prefHeight="177.0" prefWidth="209.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
+				<HBox alignment="CENTER" layoutX="4.0" layoutY="292.0" prefHeight="26.0" prefWidth="159.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
+					<children>
+						<Button fx:id="addReadingBtn" mnemonicParsing="false" prefWidth="51.0" text="Add" />
+						<Button fx:id="editReadingBtn" mnemonicParsing="false" prefWidth="51.0" text="Edit" />
+						<Button fx:id="deleteReadingBtn" mnemonicParsing="false" text="Delete" />
+					</children>
+				</HBox>
 				<TextField fx:id="patientId" />
 				<ChoiceBox fx:id="type" prefHeight="25.0" prefWidth="148.0" />
 				<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID..." />
