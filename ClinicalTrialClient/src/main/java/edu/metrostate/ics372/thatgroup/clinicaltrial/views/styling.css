@@ -65,3 +65,11 @@
     -fx-border-width: 1;
     -fx-border-color: #E8E8E8 transparent transparent transparent;
 }
+
+.popup {
+    -fx-background-color: cornsilk;
+    -fx-padding: 5;
+    -fx-border-color: black; 
+    -fx-border-width: 1;
+    -fx-font-size: 14;
+}

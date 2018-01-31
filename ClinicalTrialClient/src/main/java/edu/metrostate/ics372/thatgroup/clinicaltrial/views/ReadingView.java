@@ -17,8 +17,11 @@ import javafx.scene.layout.AnchorPane;
  *
  */
 public class ReadingView extends AnchorPane implements Initializable {
+	private ClinicalTrialViewModel model;
 	
 	public ReadingView() {
+		model = null;
+		
 		try (InputStream stream = getClass().getResourceAsStream("ReadingView.fxml")) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
@@ -29,6 +32,20 @@ public class ReadingView extends AnchorPane implements Initializable {
 		}
 	}
 	
+	/**
+	 * @return the model
+	 */
+	public ClinicalTrialViewModel getModel() {
+		return model;
+	}
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(ClinicalTrialViewModel model) {
+		this.model = model;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

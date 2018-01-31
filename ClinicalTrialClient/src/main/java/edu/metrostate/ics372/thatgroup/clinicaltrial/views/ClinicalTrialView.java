@@ -35,8 +35,14 @@ public class ClinicalTrialView implements Initializable {
 	@FXML
 	Menu menuHelp;
 	
-//	@FXML
-//	AddPatientView addPatientView;
+	@FXML
+	AddPatientView addPatientView;
+	
+	@FXML
+	PatientsView patientsView;
+	
+	@FXML
+	ReadingView readingView;
 	
 //	@FXML
 //	VBox inputForm;
@@ -91,6 +97,11 @@ public class ClinicalTrialView implements Initializable {
 //		inputForm.setVisible(false);
 		// Initialize the view Model
 		viewModel = new ClinicalTrialViewModel();
+		
+		addPatientView.setModel(viewModel);
+		patientsView.setModel(viewModel);
+		readingView.setModel(viewModel);
+		
 		// Add patients to the patient list if there are any already existing in the
 		// trial
 //		patientList.setItems(viewModel.getObservablePatients());
@@ -216,7 +227,7 @@ public class ClinicalTrialView implements Initializable {
 	 * currently selected patient and their respective readings
 	 */
 	private void fillReadingTable() {
-		readingTable.setItems(viewModel.getPatientJournal(currentPatient));
+		readingTable.setItems(viewModel.getJournal(currentPatient));
 		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
 		readingTypeCol.setCellValueFactory(
 				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getReadingType(cellData.getValue())));
