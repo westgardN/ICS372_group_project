@@ -3,6 +3,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial;
 import java.io.IOException;
 import java.io.InputStream;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,13 +11,18 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class ClinicalTrialClient extends Application {
-
+	ClinicalTrialView view;
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Patient Trial Client");
-		stage.setScene(createScene(loadMainPane()));
+		Pane pane = loadMainPane();
+		stage.setScene(createScene(pane));
 		stage.show();
+		
+		if (view != null) {
+			view.setStage(stage);
+		}
 	}
 
 	/**
@@ -30,8 +36,9 @@ public class ClinicalTrialClient extends Application {
 	private Pane loadMainPane() throws IOException {
 		Pane mainPane = null;
 		try (InputStream stream = getClass().getResourceAsStream("./views/ClinicalTrialView.fxml")) {
-			FXMLLoader fxmlLoader = new FXMLLoader();
-			mainPane = (Pane) fxmlLoader.load(stream);
+			FXMLLoader loader = new FXMLLoader();
+			mainPane = (Pane) loader.load(stream);
+			view = loader.<ClinicalTrialView>getController();
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);
 		}

@@ -5,15 +5,12 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
@@ -21,7 +18,7 @@ import javafx.scene.layout.AnchorPane;
  * @author Vincent J. Palodichuk
  *
  */
-public class PatientsView extends AnchorPane implements Initializable {
+public class PatientsView extends AnchorPane {
 	@FXML 
 	private ListView<Patient> listView;
 	private ClinicalTrialViewModel model;
@@ -59,10 +56,13 @@ public class PatientsView extends AnchorPane implements Initializable {
 		this.model.getTrial().addPropertyChangeListener((event) -> {
 			System.out.println(event);
 		});
-	}
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+		
 		listView.itemsProperty().bind(patientsProperty);
+		
+		listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.intValue() >= 0) {
+				model.setSelectedPatient(listView.getItems().get(newValue.intValue()));
+			}
+		});
 	}
 }

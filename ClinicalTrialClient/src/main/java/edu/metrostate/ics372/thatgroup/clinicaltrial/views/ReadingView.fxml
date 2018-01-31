@@ -15,9 +15,9 @@
 	<children>
 		<VBox fx:id="inputForm" alignment="TOP_CENTER" fillWidth="false" layoutY="-1.0" prefHeight="177.0" prefWidth="209.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
-				<TextField fx:id="patientIDTxt" />
-				<ChoiceBox fx:id="readingTypeChoice" prefHeight="25.0" prefWidth="148.0" />
-				<TextField fx:id="readingIDTxt" prefWidth="148.0" promptText="Reading ID..." />
+				<TextField fx:id="patientId" />
+				<ChoiceBox fx:id="type" prefHeight="25.0" prefWidth="148.0" />
+				<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID..." />
 				<StackPane prefWidth="148.0">
 					<children>
 						<StackPane fx:id="bloodPressStack">
@@ -30,21 +30,21 @@
 								</HBox>
 							</children>
 						</StackPane>
-						<TextField fx:id="readingValueTxt" prefWidth="148.0" promptText="Reading Value...." />
+						<TextField fx:id="value" prefWidth="148.0" promptText="Reading Value...." />
 					</children>
 				</StackPane>
-				<DatePicker fx:id="readingDate" prefWidth="148.0" promptText="Reading Date..." />
+				<DatePicker fx:id="date" prefWidth="148.0" promptText="Reading Date..." />
 				<HBox alignment="CENTER" prefHeight="16.0" prefWidth="148.0" spacing="5.0" VBox.vgrow="NEVER">
 					<children>
-						<TextField prefHeight="25.0" prefWidth="46.0" promptText="HH" />
-						<TextField prefHeight="25.0" prefWidth="46.0" promptText="MM" />
-						<TextField prefWidth="46.0" promptText="SS" />
+						<TextField fx:id="hour" prefHeight="25.0" prefWidth="46.0" promptText="HH" />
+						<TextField fx:id="minutes" prefHeight="25.0" prefWidth="46.0" promptText="MM" />
+						<TextField fx:id="seconds" prefWidth="46.0" promptText="SS" />
 					</children>
 					<VBox.margin>
 						<Insets />
 					</VBox.margin>
 				</HBox>
-				<Button fx:id="submitBtn" defaultButton="true" mnemonicParsing="false" text="Submit" />
+				<Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Ok" />
 			</children>
 			<padding>
 				<Insets top="5.0" />

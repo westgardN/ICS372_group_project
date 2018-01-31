@@ -12,6 +12,7 @@
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddPatientView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.PatientsView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ReadingView?>
+<?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ReadingsView?>
 
 <BorderPane prefHeight="680" prefWidth="900" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView">
 	<top>
@@ -21,8 +22,8 @@
 					<menus>
 						<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
 							<items>
-								<MenuItem mnemonicParsing="false" text="Import Readings..." />
-								<MenuItem mnemonicParsing="false" text="Export Readings..." />
+								<MenuItem mnemonicParsing="false" text="Import Readings..." onAction="#importReadings" />
+								<MenuItem mnemonicParsing="false" text="Export Readings..." onAction="#exportReadings" />
 								<SeparatorMenuItem />
 								<MenuItem mnemonicParsing="false" text="Exit" />
 							</items>
@@ -73,28 +74,11 @@
 														</AnchorPane>
 													</content>
 												</TitledPane>
-												<TitledPane animated="false" text="Remove Patient From Trial">
-													<content>
-														<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-													</content>
-												</TitledPane>
 											</panes>
 										</Accordion>
 									</children>
 								</AnchorPane>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-									<children>
-										<Label layoutX="287.0" layoutY="6.0" text="Readings" />
-										<TableView fx:id="readingTable" layoutX="164.0" layoutY="28.0" prefHeight="548.0" prefWidth="528.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
-											<columns>
-												<TableColumn fx:id="readingIDCol" editable="false" prefWidth="132.0" text="Reading ID" />
-												<TableColumn fx:id="dateTimeCol" editable="false" prefWidth="132.0" text="Date/Time" />
-												<TableColumn fx:id="readingTypeCol" editable="false" prefWidth="132.0" text="Reading Type" />
-												<TableColumn fx:id="valueCol" editable="false" prefWidth="132.0" text="Value" />
-											</columns>
-										</TableView>
-									</children>
-								</AnchorPane>
+								<ReadingsView fx:id="readingsView" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
 							</items>
 						</SplitPane>
 					</center>

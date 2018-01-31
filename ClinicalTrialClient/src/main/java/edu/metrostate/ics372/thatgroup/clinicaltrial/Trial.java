@@ -169,5 +169,9 @@ public class Trial implements Serializable {
 		Optional<Patient> answer = patients.stream().filter(patient -> patientId.equals(patient.getId())).findAny();
 		return answer != null && answer.isPresent() ? answer.get() : null;
 	}
+
+	public int getNumPatients() {
+		return patients.size();
+	}
 	
 }

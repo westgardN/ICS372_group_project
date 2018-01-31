@@ -1,20 +1,28 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
-import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 public class ClinicalTrialView implements Initializable {
-	Patient currentPatient;
-	ClinicalTrialViewModel viewModel;
+	Stage stage;
+	ClinicalTrialViewModel model;
 
 	@FXML
 	Menu menuFile;
@@ -33,16 +41,87 @@ public class ClinicalTrialView implements Initializable {
 	ReadingView readingView;
 	
 	@FXML
-	TableView<Reading> readingTable;
+	ReadingsView readingsView;
+	
+	public void importReadings(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Graph File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("JSON Files", "*.json"),
+                new ExtensionFilter("All Files", "*.*"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM was executed from.
+        File file = fileChooser.showOpenDialog(stage);
+        
+        if (file != null) {
+            try {
+				List<Reading> readings = JsonProcessor.read(file.getAbsolutePath());
+				Trial trial = model.getTrial();
+				int count = 0;
+				
+				for (Reading reading : readings) {
+					Patient patient = trial.getPatient(reading.getPatientId());
+					
+					if (patient == null) {
+						if (model.addPatient(reading.getPatientId(), null)) {
+							patient = trial.getPatient(reading.getPatientId());
+						}
+					}
+					
+					if (patient != null) {
+						if (patient.addReading(reading)) {
+							count++;
+						}
+					}
+				}
+				
+				PopupNotification.showPopupMessage("Imported " + count + " reading(s)", stage.getScene());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+	}
+	
+	public void exportReadings(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Graph File");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("JSON Files", "*.json"),
+                new ExtensionFilter("All Files", "*.*"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM was executed from.
+        File file = fileChooser.showSaveDialog(stage);
+        
+        if (file != null) {
+            try {
+				Trial trial = model.getTrial();
+				List<Reading> readings = new ArrayList<>();
+				
+				for (Patient patient : trial.getPatients()) {
+					for (Reading reading : patient.getJournal()) {
+						readings.add(reading);
+					}
+				}
+				
+				JsonProcessor.write(readings, file.getAbsolutePath());
+				PopupNotification.showPopupMessage("Exported " + readings.size() + " reading(s)", stage.getScene());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+	}
+	
+	/**
+	 * @return the stage
+	 */
+	public Stage getStage() {
+		return stage;
+	}
 
-	@FXML
-	TableColumn<Reading, String> dateTimeCol;
-	@FXML
-	TableColumn<Reading, String> readingTypeCol;
-	@FXML
-	TableColumn<Reading, String> valueCol;
-	@FXML
-	TableColumn<Reading, String> readingIDCol;
+	/**
+	 * @param stage the stage to set
+	 */
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -50,48 +129,13 @@ public class ClinicalTrialView implements Initializable {
 		// button
 //		inputForm.setVisible(false);
 		// Initialize the view Model
-		viewModel = new ClinicalTrialViewModel();
+		model = new ClinicalTrialViewModel();
 		
-		addPatientView.setModel(viewModel);
-		patientsView.setModel(viewModel);
-		readingView.setModel(viewModel);
+		addPatientView.setModel(model);
+		patientsView.setModel(model);
+		readingView.setModel(model);
+		readingsView.setModel(model);
 		
-		// Add patients to the patient list if there are any already existing in the
-		// trial
-//		patientList.setItems(viewModel.getObservablePatients());
-		// Initialize the reading type choice box
-//		readingTypeChoice.setItems(viewModel.getReadingTypeChoices());
-//		// Set the reading type choice box default value
-//		readingTypeChoice.getSelectionModel().selectFirst();
-
-		// Creates a change listener for the patient list
-//		patientList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Patient>() {
-//			@Override
-//			public void changed(ObservableValue<? extends Patient> observable, Patient oldPatient, Patient newPatient) {
-//				/*
-//				 * Sets the view model's currently observable patient journal to the one
-//				 * currently selected in the patient list
-//				 */
-//				if (newPatient != null) {
-//					viewModel.setObservablePatientJournal(newPatient);
-//				}
-//				/*
-//				 * When a new patient is selected from the list, set currentPatient to the
-//				 * currently selected patient to be used with fillReading() as it is used to
-//				 * find the proper patient journal to display in readings table
-//				 */
-//				if (patientList.getSelectionModel().getSelectedItem() != null) {
-//					currentPatient = patientList.getSelectionModel().getSelectedItem();
-//					patientIDTxt.setText(currentPatient.getId());
-//				}
-//				/*
-//				 * Fill the reading table with the proper patient journal of the currently
-//				 * selected patient
-//				 */
-//				fillReadingTable();
-//			}
-//		});
-//
 		/*
 		 * Sets the action listener for addPatientButton which will send the information
 		 * from the add new patient form to the model view to create and add a new
@@ -101,8 +145,8 @@ public class ClinicalTrialView implements Initializable {
 //			@Override
 //			public void handle(ActionEvent event) {
 //				LocalDate startDate = newPatientStartDate.getValue();
-//				viewModel.addPatientToTrial(addPatientIDTxt.getText(), startDate);
-//				patientList.setItems(viewModel.getObservablePatients());
+//				model.addPatientToTrial(addPatientIDTxt.getText(), startDate);
+//				patientList.setItems(model.getObservablePatients());
 //			}
 //		});
 
@@ -166,27 +210,14 @@ public class ClinicalTrialView implements Initializable {
 //		submitBtn.setOnAction(new EventHandler<ActionEvent>() {
 //			@Override
 //			public void handle(ActionEvent event) {
-//				viewModel.addReadingForPatient(patientList.getSelectionModel().getSelectedIndex(),
+//				model.addReadingForPatient(patientList.getSelectionModel().getSelectedIndex(),
 //						readingIDTxt.getText(), readingTypeChoice.getSelectionModel().getSelectedItem().toString(),
 //						readingValueTxt.getText(), readingDate.getValue());
 //				fillReadingTable();
 //				patientList.getItems().clear();
-//				patientList.setItems(viewModel.getObservablePatients());
+//				patientList.setItems(model.getObservablePatients());
 //			}
 //		});
 	}
 
-	/*
-	 * Fills the reading table columns with the proper information based on the
-	 * currently selected patient and their respective readings
-	 */
-	private void fillReadingTable() {
-		readingTable.setItems(viewModel.getJournal(currentPatient));
-		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
-		readingTypeCol.setCellValueFactory(
-				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getReadingType(cellData.getValue())));
-		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
-		dateTimeCol
-				.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().toString()));
-	}
 }

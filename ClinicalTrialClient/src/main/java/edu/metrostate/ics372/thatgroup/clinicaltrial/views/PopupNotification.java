@@ -27,7 +27,7 @@ public class PopupNotification {
 	            popup.hide();
 	        }
 	    });
-	    label.getStyleClass().add("popup");
+	    label.getStyleClass().add("my-popup");
 	    popup.getContent().add(label);
 	    return popup;
 	}

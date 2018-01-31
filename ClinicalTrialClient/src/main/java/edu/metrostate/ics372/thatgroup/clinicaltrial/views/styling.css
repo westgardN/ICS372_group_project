@@ -66,7 +66,7 @@
     -fx-border-color: #E8E8E8 transparent transparent transparent;
 }
 
-.popup {
+.my-popup {
     -fx-background-color: cornsilk;
     -fx-padding: 5;
     -fx-border-color: black; 
