@@ -62,7 +62,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	@FXML
 	public void addPatient(ActionEvent event) {
 		if (model.addPatient(textField.getText(), datePicker.getValue())) {
-			PopupNotification.showPopupMessage("The patient was added to the trial.", getScene());
+			PopupNotification.showPopupMessage("New Patient Added", getScene());
 			textField.setText("");
 		} else {
 			PopupNotification.showPopupMessage("Unable to add patient to the trial.", getScene());
