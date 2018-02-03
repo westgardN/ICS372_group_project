@@ -97,4 +97,5 @@ public class ClinicalTrialViewModel {
 		}
 		return answer;
 	}
+	
 }

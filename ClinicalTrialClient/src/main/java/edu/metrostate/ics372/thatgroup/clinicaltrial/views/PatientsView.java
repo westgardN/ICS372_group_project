@@ -4,13 +4,16 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.io.InputStream;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
@@ -23,6 +26,8 @@ public class PatientsView extends AnchorPane {
 	private ListView<Patient> listView;
 	private ClinicalTrialViewModel model;
 	private ListProperty<Patient> patientsProperty;
+	@FXML private Button startPtTrial;
+	@FXML private Button endPtTrial;
 	
 	public PatientsView() {
 		model = null;
@@ -65,4 +70,16 @@ public class PatientsView extends AnchorPane {
 			}
 		});
 	}
+	public void startPtTrial(ActionEvent e){
+	/*	LocalDate startDate =LocalDate newPatientStartDate.getValue();
+		model.getSelectedPatient();
+//		patientList.setItems(model.getObservablePatients());
+		}
+	*/}
+	public void endPtTrial(ActionEvent e){
+		model.getSelectedPatient();
+	}
+	
+	
 }
+
