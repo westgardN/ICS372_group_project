@@ -41,6 +41,7 @@ public class PatientsView extends AnchorPane {
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);
 		}
+		endPtTrial.setDisable(true);
 	}
 
 	/**
@@ -71,13 +72,14 @@ public class PatientsView extends AnchorPane {
 		});
 	}
 	public void startPtTrial(ActionEvent e){
-	/*	LocalDate startDate =LocalDate newPatientStartDate.getValue();
-		model.getSelectedPatient();
-//		patientList.setItems(model.getObservablePatients());
-		}
-	*/}
+		LocalDate startDate = LocalDate.now();
+		model.getSelectedPatient().setTrialStartDate(startDate);
+
+
+	}
 	public void endPtTrial(ActionEvent e){
-		model.getSelectedPatient();
+		LocalDate endDate = LocalDate.now();
+		model.getSelectedPatient().setTrialStartDate(endDate);
 	}
 	
 	
