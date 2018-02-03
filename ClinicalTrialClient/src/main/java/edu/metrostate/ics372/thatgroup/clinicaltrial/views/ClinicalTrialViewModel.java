@@ -3,11 +3,13 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -98,4 +100,19 @@ public class ClinicalTrialViewModel {
 		return answer;
 	}
 	
+
+	public boolean addReading(String type, String id, Object value, LocalDateTime date) {
+		Reading reading = ReadingFactory.getReading(type);
+		reading.setPatientId(selectedPatient.getId());
+		reading.setId(id);
+		reading.setValue(value);
+		reading.setDate(date);
+		int oldValue = selectedPatient.getJournalSize();
+		boolean answer = selectedPatient.addReading(reading);
+		if (answer) {
+			pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
+			journal.add(reading);
+		}
+		return answer;
+	}
 }
