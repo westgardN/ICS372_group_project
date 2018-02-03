@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +25,6 @@ import java.util.ResourceBundle;
  */
 public class AddPatientView extends AnchorPane implements Initializable {
 	@FXML private TextField textField;
-	@FXML private DatePicker datePicker;
 	@FXML private Button addButton;
 	private ClinicalTrialViewModel model;
 	
@@ -61,7 +59,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 
 	@FXML
 	public void addPatient(ActionEvent event) {
-		if (model.addPatient(textField.getText(), datePicker.getValue())) {
+		if (model.addPatient(textField.getText(), null)) {
 			PopupNotification.showPopupMessage("New Patient Added", getScene());
 			textField.setText("");
 		} else {
@@ -71,7 +69,6 @@ public class AddPatientView extends AnchorPane implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		datePicker.setValue(LocalDate.now());
 		
 		textField.setOnKeyPressed((event) -> {
 			if (event.getCode() == KeyCode.ENTER) {
@@ -92,6 +89,6 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	}
 	
 	private boolean canEnableAddButton() {
-		return model != null && textField.getText() != null && !textField.getText().trim().isEmpty() && datePicker.getValue() != null;
+		return model != null && textField.getText() != null && !textField.getText().trim().isEmpty();
 	}
 }
