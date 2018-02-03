@@ -84,7 +84,7 @@ public class ReadingsView extends AnchorPane implements Initializable {
 		readingTable.setItems(model.getJournal());
 		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
 		readingTypeCol.setCellValueFactory(
-				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getReadingType(cellData.getValue())));
+				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getPrettyReadingType(cellData.getValue())));
 		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
 		dateTimeCol
 				.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().toString()));

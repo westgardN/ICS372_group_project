@@ -52,4 +52,23 @@ public class ReadingFactory {
 		return answer;
 	}
 
+	public static String getPrettyReadingType(Reading reading) {
+		String answer = null;
+		
+		if (reading instanceof BloodPressure) {
+			answer = "Blood Pressure";
+		} else if (reading instanceof Steps) {
+			answer = "Steps";
+		} else if (reading instanceof Temp) {
+			answer = "Temperature";
+		} else if (reading instanceof Weight) {
+			answer = "Weight";
+		} else if (reading != null) {
+			answer = reading.getClass().getName();
+		} else {
+			throw new IllegalArgumentException("reading cannot be null.");
+		}
+		
+		return answer;
+	}
 }

@@ -7,6 +7,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -16,6 +17,8 @@ public class ClinicalTrialClient extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Patient Trial Client");
+		Image applicationIcon = new Image(getClass().getResourceAsStream("./resources/logo256x256.png"));
+		stage.getIcons().add(applicationIcon);
 		Pane pane = loadMainPane();
 		stage.setScene(createScene(pane));
 		stage.show();
