@@ -74,6 +74,9 @@ public class ReadingView extends AnchorPane {
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);
 		}
+		validator = new ReadingFormValidator();
+		date.setValue(LocalDate.now());
+		inputForm.setVisible(false);
 	}
 
 	/**
@@ -94,9 +97,7 @@ public class ReadingView extends AnchorPane {
 	public void setModel(ClinicalTrialViewModel model) {
 		this.model = model;
 		setListenersAndEventHandlers();
-		validator = new ReadingFormValidator();
-		date.setValue(LocalDate.now());
-		inputForm.setVisible(false);
+
 		type.setItems(model.getReadingTypeChoices());
 		type.getSelectionModel().selectFirst();
 	}
@@ -186,6 +187,10 @@ public class ReadingView extends AnchorPane {
 				generateErrorMessage("time");
 				return false;
 			}
+			if (!isFilled(id)) {
+				generateErrorMessage("id");
+				return false;
+			}
 			if (readingType.equals("blood pressure") && !validateBloodPressure()) {
 				generateErrorMessage("blood_press");
 				return false;
@@ -242,6 +247,11 @@ public class ReadingView extends AnchorPane {
 			case "time":
 				PopupNotification.showPopupMessage(
 						"Invalid time detected.  Please check the time input fields for errors.", getScene());
+				break;
+			case "id":
+				PopupNotification.showPopupMessage(
+						"Invalid reading id detected.  Please check the reading id input fields for errors.",
+						getScene());
 				break;
 			case "blood_press":
 				PopupNotification.showPopupMessage(
