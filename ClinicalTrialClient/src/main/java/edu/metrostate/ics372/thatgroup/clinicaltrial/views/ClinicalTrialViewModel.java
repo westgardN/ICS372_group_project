@@ -38,6 +38,18 @@ public class ClinicalTrialViewModel {
 		return selectedPatient;
 	}
 
+	public void fireUpdatePatient(Patient patient) {
+		if (patient != null) {
+			Patient oldValue = null;
+			pcs.firePropertyChange("updatePatient", oldValue, patient);
+		}
+	}
+	
+	public void fireUpdatePatient(String patientId) {
+		Patient patient = getPatient(patientId);
+		fireUpdatePatient(patient);
+	}
+	
 	/**
 	 * @param selectedPatient the selectedPatient to set
 	 */

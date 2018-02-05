@@ -12,7 +12,6 @@ import java.net.URL;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,7 +63,8 @@ public class PatientsView extends AnchorPane implements Initializable {
 		patientsProperty.set(model.getPatients());
 		
 		this.model.addPropertyChangeListener((event) -> {
-			if (event.getPropertyName() == "selectedPatient") {
+			String prop = event.getPropertyName();
+			if (prop.equals("selectedPatient")) {
 				updateButtons(this.model.getSelectedPatient());
 			}
 		});
@@ -79,11 +79,26 @@ public class PatientsView extends AnchorPane implements Initializable {
 	}
 	
 	private void updateButtons(Patient selectedPatient) {
+		updateSelectedPatient(selectedPatient);
+		
 		if (!model.hasPatientStartedTrial(selectedPatient)) {
 			startPtTrial.setDisable(false);
+			endPtTrial.setDisable(true);
 		} else if (model.isPatientInTrial(selectedPatient)) {
 			endPtTrial.setDisable(false);
 			startPtTrial.setDisable(true);
+		}
+	}
+
+	/**
+	 * @param selectedPatient
+	 */
+	private void updateSelectedPatient(Patient selectedPatient) {
+		int index = patientsProperty.indexOf(selectedPatient);
+		
+		if (index >= 0) {
+			patientsProperty.set(index, null);
+			patientsProperty.set(index, selectedPatient);
 		}
 	}
 
@@ -92,12 +107,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		Patient patient = model.getSelectedPatient();
 		patient.setTrialStartDate(startDate);
 		patient.setTrialEndDate(null);
-		int index = patientsProperty.indexOf(patient);
-		
-		if (index >= 0) {
-			patientsProperty.set(index, null);
-			patientsProperty.set(index, patient);
-		}
+		updateSelectedPatient(patient);
 		startPtTrial.setDisable(true);
 		endPtTrial.setDisable(false);
 	}
@@ -107,12 +117,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		Patient patient = model.getSelectedPatient();
 		patient.setTrialEndDate(endDate);
 		
-		int index = patientsProperty.indexOf(patient);
-		
-		if (index >= 0) {
-			patientsProperty.set(index, null);
-			patientsProperty.set(index, patient);
-		}
+		updateSelectedPatient(patient);
 		startPtTrial.setDisable(false);
 		endPtTrial.setDisable(true);
 	}

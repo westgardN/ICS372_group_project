@@ -6,6 +6,8 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -66,7 +68,7 @@ public class ReadingsView extends AnchorPane implements Initializable {
 		
 		this.model.addPropertyChangeListener((event) -> {
 			if (Objects.equals(event.getPropertyName(), "journal")) {
-				System.out.println("New journal is: " + event.getNewValue());
+				//System.out.println("New journal is: " + event.getNewValue());
 				fillTable();
 			}
 		});
@@ -74,6 +76,12 @@ public class ReadingsView extends AnchorPane implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
+		readingTypeCol.setCellValueFactory(
+				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getPrettyReadingType(cellData.getValue())));
+		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+		dateTimeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().format(formatter)));
 	}
 
 	/*
@@ -82,11 +90,5 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 */
 	private void fillTable() {
 		readingTable.setItems(model.getJournal());
-		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
-		readingTypeCol.setCellValueFactory(
-				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getPrettyReadingType(cellData.getValue())));
-		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
-		dateTimeCol
-				.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().toString()));
 	}
 }
