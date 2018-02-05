@@ -23,11 +23,10 @@ public class ClinicalPatient extends Patient {
 	private static final long serialVersionUID = 8755342577713670301L;
 
 	/**
-	 * Initializes a new patient with no id an empty journal, a trial start date set to the 
-	 * current date and a null trial end date.
+	 * Initializes a new patient with no id an empty journal, no trial start date and no trial end date.
 	 */
 	public ClinicalPatient() {
-		super(null, null, null, LocalDate.now(), null);
+		super(null, null, null, null, null);
 	}
 	
 	/**
@@ -91,27 +90,31 @@ public class ClinicalPatient extends Patient {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
 		builder.append(id);
-		if (trialEndDate == null) {
-			builder.append(" active in trial ");
-			builder.append(trialId);
-			builder.append(" since ");
-			builder.append(trialStartDate.format(formatter));
+		if (trialStartDate != null) {
+			if (trialEndDate == null) {
+				builder.append(" active in trial ");
+				builder.append(trialId);
+				builder.append(" since ");
+				builder.append(trialStartDate.format(formatter));
+			} else {
+				builder.append(" inactive in trial ");
+				builder.append(trialId);
+				builder.append(" (");
+				builder.append(trialStartDate.format(formatter));
+				builder.append(" - ");
+				builder.append(trialEndDate.format(formatter));
+				builder.append(" )");
+			}
+			builder.append(" has ");
+			builder.append(journal.size());
+			builder.append(" reading");
+			if (journal.size() != 1) {
+				builder.append("s");
+			}
 		} else {
-			builder.append(" inactive in trial ");
-			builder.append(trialId);
-			builder.append(" (");
-			builder.append(trialStartDate.format(formatter));
-			builder.append(" - ");
-			builder.append(trialEndDate.format(formatter));
-			builder.append(" )");
+			builder.append(" has not started the trial");
 		}
 		
-		builder.append(" has ");
-		builder.append(journal.size());
-		builder.append(" reading");
-		if (journal.size() != 1) {
-			builder.append("s");
-		}
 		return builder.toString();
 	}
 }

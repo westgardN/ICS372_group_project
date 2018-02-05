@@ -25,17 +25,7 @@
 								<MenuItem mnemonicParsing="false" text="Import Readings..." onAction="#importReadings" />
 								<MenuItem mnemonicParsing="false" text="Export Readings..." onAction="#exportReadings" />
 								<SeparatorMenuItem />
-								<MenuItem mnemonicParsing="false" text="Exit" />
-							</items>
-						</Menu>
-						<Menu fx:id="menuTrial" mnemonicParsing="false" text="Trial">
-							<items>
-								<MenuItem mnemonicParsing="false" text="Add Patient" />
-							</items>
-						</Menu>
-						<Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
-							<items>
-								<MenuItem mnemonicParsing="false" text="About" />
+								<MenuItem mnemonicParsing="false" text="Exit" onAction="#exit" />
 							</items>
 						</Menu>
 					</menus>

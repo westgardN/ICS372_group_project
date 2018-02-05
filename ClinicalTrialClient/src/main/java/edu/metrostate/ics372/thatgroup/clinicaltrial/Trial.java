@@ -97,11 +97,29 @@ public class Trial implements Serializable {
 	}
 	
 	public boolean addPatient(String patientId) {
+		return addPatient(patientId, null);
+	}
+	
+	public boolean hasPatientStartedTrial(Patient patient) {
 		boolean answer = false;
-		answer = addPatient(patientId, null);
+		
+		if (patient.getTrialId() == id && patient.getTrialStartDate() != null && patient.getTrialEndDate() == null) {
+			answer = true;
+		}
+		
 		return answer;
 	}
 	
+	public boolean isPatientInTrial(Patient patient) {
+		boolean answer = false;
+		
+		if (patients.contains(patient) && patient.getTrialId() == id && hasPatientStartedTrial(patient)) {
+			answer = true;
+		}
+		
+		return answer;
+	}
+
 	public boolean addPatient(String patientId, LocalDate startDate) {
 		boolean answer = false;
 		Patient patient = PatientFactory.getPatient("clinical");

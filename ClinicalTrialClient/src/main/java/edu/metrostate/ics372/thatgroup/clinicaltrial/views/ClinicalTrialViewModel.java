@@ -112,4 +112,20 @@ public class ClinicalTrialViewModel {
 		}
 		return answer;
 	}
+
+	public Patient getPatient(String patientId) {
+		return trial.getPatient(patientId);
+	}
+
+	public String getTrialId() {
+		return trial.getId();
+	}
+	
+	public boolean isPatientInTrial(Patient patient) {
+		return trial.isPatientInTrial(patient);
+	}
+	
+	public boolean hasPatientStartedTrial(Patient patient) {
+		return trial.hasPatientStartedTrial(patient);
+	}
 }

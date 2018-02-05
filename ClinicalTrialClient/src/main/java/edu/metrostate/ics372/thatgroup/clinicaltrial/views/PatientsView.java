@@ -5,14 +5,18 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 import java.io.InputStream;
+import java.net.URL;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
@@ -21,7 +25,7 @@ import javafx.scene.layout.AnchorPane;
  * @author Vincent J. Palodichuk
  *
  */
-public class PatientsView extends AnchorPane {
+public class PatientsView extends AnchorPane implements Initializable {
 	@FXML 
 	private ListView<Patient> listView;
 	private ClinicalTrialViewModel model;
@@ -41,7 +45,7 @@ public class PatientsView extends AnchorPane {
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);
 		}
-		endPtTrial.setDisable(true);
+		
 	}
 
 	/**
@@ -59,8 +63,10 @@ public class PatientsView extends AnchorPane {
 		
 		patientsProperty.set(model.getPatients());
 		
-		this.model.getTrial().addPropertyChangeListener((event) -> {
-			System.out.println(event);
+		this.model.addPropertyChangeListener((event) -> {
+			if (event.getPropertyName() == "selectedPatient") {
+				updateButtons(this.model.getSelectedPatient());
+			}
 		});
 		
 		listView.itemsProperty().bind(patientsProperty);
@@ -71,17 +77,50 @@ public class PatientsView extends AnchorPane {
 			}
 		});
 	}
+	
+	private void updateButtons(Patient selectedPatient) {
+		if (!model.hasPatientStartedTrial(selectedPatient)) {
+			startPtTrial.setDisable(false);
+		} else if (model.isPatientInTrial(selectedPatient)) {
+			endPtTrial.setDisable(false);
+			startPtTrial.setDisable(true);
+		}
+	}
+
 	public void startPtTrial(ActionEvent e){
 		LocalDate startDate = LocalDate.now();
-		model.getSelectedPatient().setTrialStartDate(startDate);
-
-
+		Patient patient = model.getSelectedPatient();
+		patient.setTrialStartDate(startDate);
+		patient.setTrialEndDate(null);
+		int index = patientsProperty.indexOf(patient);
+		
+		if (index >= 0) {
+			patientsProperty.set(index, null);
+			patientsProperty.set(index, patient);
+		}
+		startPtTrial.setDisable(true);
+		endPtTrial.setDisable(false);
 	}
+	
 	public void endPtTrial(ActionEvent e){
 		LocalDate endDate = LocalDate.now();
-		model.getSelectedPatient().setTrialStartDate(endDate);
+		Patient patient = model.getSelectedPatient();
+		patient.setTrialEndDate(endDate);
+		
+		int index = patientsProperty.indexOf(patient);
+		
+		if (index >= 0) {
+			patientsProperty.set(index, null);
+			patientsProperty.set(index, patient);
+		}
+		startPtTrial.setDisable(false);
+		endPtTrial.setDisable(true);
 	}
-	
-	
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		startPtTrial.setDisable(true);
+		endPtTrial.setDisable(true);		
+	}
 }
 

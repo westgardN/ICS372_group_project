@@ -3,6 +3,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -11,6 +12,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,10 +27,6 @@ public class ClinicalTrialView implements Initializable {
 
 	@FXML
 	Menu menuFile;
-	@FXML
-	Menu menuTrial;
-	@FXML
-	Menu menuHelp;
 
 	@FXML
 	AddPatientView addPatientView;
@@ -54,26 +52,27 @@ public class ClinicalTrialView implements Initializable {
 		if (file != null) {
 			try {
 				List<Reading> readings = JsonProcessor.read(file.getAbsolutePath());
-				Trial trial = model.getTrial();
-				int count = 0;
+				int readingCount = 0;
+				int patientCount = 0;
 
 				for (Reading reading : readings) {
-					Patient patient = trial.getPatient(reading.getPatientId());
+					Patient patient = model.getPatient(reading.getPatientId());
 
 					if (patient == null) {
-						if (model.addPatient(reading.getPatientId(), null)) {
-							patient = trial.getPatient(reading.getPatientId());
+						if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
+							++patientCount;
+							patient = model.getPatient(reading.getPatientId());
 						}
 					}
 
 					if (patient != null) {
 						if (patient.addReading(reading)) {
-							count++;
+							readingCount++;
 						}
 					}
 				}
 
-				PopupNotification.showPopupMessage("Imported " + count + " reading(s)", stage.getScene());
+				PopupNotification.showPopupMessage("Imported " + patientCount + " patients(s) and " + readingCount + " reading(s)", stage.getScene());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -107,6 +106,11 @@ public class ClinicalTrialView implements Initializable {
 			}
 		}
 	}
+	
+	public void exit(ActionEvent event) {
+		Platform.exit();
+	}
+	
 
 	/**
 	 * @return the stage
