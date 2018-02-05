@@ -50,7 +50,7 @@ public class ClinicalTrialViewModel {
 	}
 
 	/**
-	 * @param selectedPatient the selectedPatient to set
+	 * @param selectedReading the selectedReading to set
 	 */
 	public void setSelectedReading(Reading selectedReading) {
 		if (!Objects.equals(this.selectedReading, selectedReading)) {
@@ -58,6 +58,10 @@ public class ClinicalTrialViewModel {
 			this.selectedReading = selectedReading;
 			pcs.firePropertyChange("selectedReading", oldValue, this.selectedReading);
 		}
+	}
+	
+	public Reading getSelectedReading() {
+		return selectedReading;
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
