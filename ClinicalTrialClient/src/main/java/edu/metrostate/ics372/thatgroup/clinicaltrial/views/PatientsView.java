@@ -5,6 +5,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.io.InputStream;
 import java.net.URL;
@@ -65,7 +66,15 @@ public class PatientsView extends AnchorPane implements Initializable {
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
 			if (prop.equals("selectedPatient")) {
-				updateButtons(this.model.getSelectedPatient());
+				if (event.getNewValue() instanceof Patient) {
+					Patient patient = (Patient)event.getNewValue();
+					
+					if (event.getOldValue() == null) {
+						updateButtons(patient, false);
+					} else {
+						updateButtons(patient, true);
+					}
+				}
 			} else if (prop.equals("updatePatient")) {
 				if (event.getNewValue() instanceof Patient) {
 					updatePatient((Patient)event.getNewValue());
@@ -77,14 +86,28 @@ public class PatientsView extends AnchorPane implements Initializable {
 		listView.itemsProperty().bind(patientsProperty);
 		
 		listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue.intValue() >= 0) {
-				model.setSelectedPatient(listView.getItems().get(newValue.intValue()));
+			int index = newValue.intValue();
+			
+			if (index >= 0 && index < patientsProperty.size() && patientsProperty.get(index) instanceof Patient) {
+				Patient patient = patientsProperty.get(index);
+				if (!Objects.equals(patient, model.getSelectedPatient())) {
+					model.setSelectedPatient(patient);
+				}
+				
+			} else {
+				model.setSelectedPatient(null);
 			}
 		});
 	}
 	
 	private void updateButtons(Patient patient) {
-		updatePatient(patient);
+		updateButtons(patient, true);
+	}
+	
+	private void updateButtons(Patient patient, boolean updatePatient) {
+		if (updatePatient) {
+			updatePatient(patient);
+		}
 		
 		if (!model.hasPatientStartedTrial(patient)) {
 			startPtTrial.setDisable(false);
