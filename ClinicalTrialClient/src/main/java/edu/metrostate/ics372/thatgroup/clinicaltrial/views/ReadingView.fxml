@@ -78,7 +78,7 @@
 					</VBox.margin>
 				</HBox>
 				<HBox>
-					<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" text="Ok" />
+					<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" text="OK" />
 					<Button defaultButton="false" mnemonicParsing="false" text="Clear" onAction="#clearForm"/>
 					<Button fx:id="cancelBtn" defaultButton="false" mnemonicParsing="false" text="Cancel" />
 				</HBox>

@@ -1,5 +1,5 @@
 /**
- * 
+ * File: ReadingView.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
