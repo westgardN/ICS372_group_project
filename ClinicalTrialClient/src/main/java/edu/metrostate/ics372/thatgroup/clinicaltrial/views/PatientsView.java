@@ -100,10 +100,6 @@ public class PatientsView extends AnchorPane implements Initializable {
 		});
 	}
 	
-	private void updateButtons(Patient patient) {
-		updateButtons(patient, true);
-	}
-	
 	private void updateButtons(Patient patient, boolean updatePatient) {
 		if (updatePatient) {
 			updatePatient(patient);
