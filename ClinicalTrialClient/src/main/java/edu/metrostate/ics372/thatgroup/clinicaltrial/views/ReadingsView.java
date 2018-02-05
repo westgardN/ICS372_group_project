@@ -82,6 +82,10 @@ public class ReadingsView extends AnchorPane implements Initializable {
 		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
 		dateTimeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().format(formatter)));
+		
+		readingTable.getSelectionModel().selectedIndexProperty().addListener((event) -> {
+			this.model.setSelectedReading(readingTable.getSelectionModel().getSelectedItem());
+		});
 	}
 
 	/*
