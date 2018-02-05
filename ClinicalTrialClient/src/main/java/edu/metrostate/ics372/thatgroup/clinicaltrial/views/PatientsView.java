@@ -101,7 +101,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 	}
 	
 	private void updateButtons(Patient patient, boolean updatePatient) {
-		if (updatePatient) {
+		if (updatePatient && patient != null) {
 			updatePatient(patient);
 		}
 		
@@ -121,29 +121,35 @@ public class PatientsView extends AnchorPane implements Initializable {
 		int index = patientsProperty.indexOf(patient);
 		
 		if (index >= 0) {
+			int selected = listView.getSelectionModel().getSelectedIndex();
 			patientsProperty.set(index, null);
 			patientsProperty.set(index, patient);
+			listView.getSelectionModel().select(selected);
 		}
 	}
 
 	public void startPtTrial(ActionEvent e){
-		LocalDate startDate = LocalDate.now();
 		Patient patient = model.getSelectedPatient();
-		patient.setTrialStartDate(startDate);
-		patient.setTrialEndDate(null);
-		updatePatient(patient);
-		startPtTrial.setDisable(true);
-		endPtTrial.setDisable(false);
+		if (patient != null) {
+			LocalDate startDate = LocalDate.now();
+			patient.setTrialStartDate(startDate);
+			patient.setTrialEndDate(null);
+			updateButtons(patient, true);
+//			startPtTrial.setDisable(true);
+//			endPtTrial.setDisable(false);
+		}
 	}
 	
 	public void endPtTrial(ActionEvent e){
-		LocalDate endDate = LocalDate.now();
 		Patient patient = model.getSelectedPatient();
-		patient.setTrialEndDate(endDate);
-		
-		updatePatient(patient);
-		startPtTrial.setDisable(false);
-		endPtTrial.setDisable(true);
+		if (patient != null) {
+			LocalDate endDate = LocalDate.now();
+			patient.setTrialEndDate(endDate);
+			
+			updateButtons(patient, true);
+//			startPtTrial.setDisable(false);
+//			endPtTrial.setDisable(true);
+		}
 	}
 
 	@Override
