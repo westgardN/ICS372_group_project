@@ -15,18 +15,16 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.geometry.Insets?>
 
-<fx:root minHeight="0.0" minWidth="0.0" prefHeight="250.0"
-	prefWidth="160.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="160.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<VBox fx:id="inputForm" alignment="TOP_CENTER" fillWidth="false"
-			layoutY="-1.0" prefHeight="250.0" prefWidth="160.0" spacing="5.0"
-			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER" layoutX="6.0" layoutY="2.0" prefHeight="25.0" prefWidth="148.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0">
+         <children>
+      				<Button fx:id="addReadingBtn" layoutX="36.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Add Reading" AnchorPane.topAnchor="2.0" />
+         </children>
+      </HBox>
+		<VBox fx:id="inputForm" alignment="TOP_CENTER" fillWidth="false" layoutY="26.0" prefHeight="224.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0">
 			<children>
-				<Button fx:id="addReadingBtn" mnemonicParsing="false"
-					prefHeight="25.0" prefWidth="89.0" text="Add Reading" />
-				<TextField fx:id="patientId" />
+				<TextField fx:id="patientId" editable="false" />
 				<ChoiceBox fx:id="type" prefHeight="25.0" prefWidth="148.0" />
 				<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID...">
 					<tooltip>
@@ -37,13 +35,10 @@
 					<children>
 						<StackPane fx:id="bloodPressStack">
 							<children>
-								<HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0"
-									spacing="5.0">
+								<HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0" spacing="5.0">
 									<children>
-										<TextField fx:id="systolic" prefHeight="25.0"
-											prefWidth="80.0" promptText="sys" />
-										<TextField fx:id="diastolic" prefHeight="25.0"
-											prefWidth="80.0" promptText="dia" />
+										<TextField fx:id="systolic" prefHeight="25.0" prefWidth="80.0" promptText="sys" />
+										<TextField fx:id="diastolic" prefHeight="25.0" prefWidth="80.0" promptText="dia" />
 									</children>
 								</HBox>
 							</children>
@@ -60,17 +55,14 @@
 						<Tooltip text="Required" />
 					</tooltip>
 				</DatePicker>
-				<HBox alignment="CENTER" prefHeight="16.0" prefWidth="148.0"
-					spacing="5.0" VBox.vgrow="NEVER">
+				<HBox alignment="CENTER" prefHeight="16.0" prefWidth="148.0" spacing="5.0" VBox.vgrow="NEVER">
 					<children>
-						<TextField fx:id="hour" prefHeight="25.0" prefWidth="46.0"
-							promptText="HH">
+						<TextField fx:id="hour" prefHeight="25.0" prefWidth="46.0" promptText="HH">
 							<tooltip>
 								<Tooltip text="0-23" />
 							</tooltip>
 						</TextField>
-						<TextField fx:id="minutes" prefHeight="25.0" prefWidth="46.0"
-							promptText="MM">
+						<TextField fx:id="minutes" prefHeight="25.0" prefWidth="46.0" promptText="MM">
 							<tooltip>
 								<Tooltip text="0-59" />
 							</tooltip>
@@ -85,8 +77,7 @@
 						<Insets />
 					</VBox.margin>
 				</HBox>
-				<Button fx:id="okButton" defaultButton="true"
-					mnemonicParsing="false" text="Ok" />
+				<Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Ok" />
 			</children>
 			<padding>
 				<Insets top="5.0" />

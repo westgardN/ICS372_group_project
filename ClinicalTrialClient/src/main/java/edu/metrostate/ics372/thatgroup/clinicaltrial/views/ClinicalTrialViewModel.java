@@ -58,14 +58,12 @@ public class ClinicalTrialViewModel {
 		return trial;
 	}
 
-
 	/**
 	 * @return the observablePatients
 	 */
 	public ObservableList<Patient> getPatients() {
 		return patients;
 	}
-
 
 	/**
 	 * @return the observablePatientJournal
@@ -100,7 +98,6 @@ public class ClinicalTrialViewModel {
 		return answer;
 	}
 	
-
 	public boolean addReading(String type, String id, Object value, LocalDateTime date) {
 		Reading reading = ReadingFactory.getReading(type);
 		reading.setPatientId(selectedPatient.getId());
