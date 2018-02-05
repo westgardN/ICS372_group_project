@@ -19,12 +19,12 @@
 	<children>
       <HBox alignment="CENTER" layoutX="6.0" layoutY="2.0" prefHeight="25.0" prefWidth="148.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0">
          <children>
-      				<Button fx:id="addReadingBtn" layoutX="36.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Add Reading" AnchorPane.topAnchor="2.0" />
+      				<Button fx:id="addBtn" layoutX="36.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Add Reading" AnchorPane.topAnchor="2.0" />
          </children>
       </HBox>
-		<VBox fx:id="inputForm" alignment="TOP_CENTER" fillWidth="false" layoutY="26.0" prefHeight="224.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0">
+		<VBox fx:id="form" alignment="TOP_CENTER" fillWidth="false" layoutY="26.0" prefHeight="224.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0">
 			<children>
-				<TextField fx:id="patientId" editable="false" />
+				<TextField fx:id="patientId" editable="false" visible="false" />
 				<ChoiceBox fx:id="type" prefHeight="25.0" prefWidth="148.0" />
 				<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID...">
 					<tooltip>
@@ -77,7 +77,11 @@
 						<Insets />
 					</VBox.margin>
 				</HBox>
-				<Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" text="Ok" />
+				<HBox>
+					<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" text="Ok" />
+					<Button defaultButton="false" mnemonicParsing="false" text="Clear" onAction="#clearForm"/>
+					<Button fx:id="cancelBtn" defaultButton="false" mnemonicParsing="false" text="Cancel" />
+				</HBox>
 			</children>
 			<padding>
 				<Insets top="5.0" />

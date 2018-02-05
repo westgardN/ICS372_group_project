@@ -3,19 +3,20 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -28,149 +29,7 @@ import javafx.scene.layout.VBox;
  * @author Vincent J. Palodichuk
  *
  */
-public class ReadingView extends AnchorPane {
-	private ReadingFormValidator validator;
-	private ClinicalTrialViewModel model;
-	@FXML
-	private Button addReadingBtn;
-	@FXML
-	private VBox inputForm;
-	@FXML
-	private TextField patientId;
-	@FXML
-	private ChoiceBox<String> type;
-	@FXML
-	private TextField id;
-	@FXML
-	private TextField value;
-	@FXML
-	private DatePicker date;
-	@FXML
-	private TextField hour;
-	@FXML
-	private TextField minutes;
-	@FXML
-	private TextField seconds;
-	@FXML
-	private Button okButton;
-	@FXML
-	private StackPane bloodPressStack;
-	@FXML
-	private TextField systolic;
-	@FXML
-	private TextField diastolic;
-
-	/**
-	 * Constructs a new ReadingView instance
-	 */
-	public ReadingView() {
-		model = null;
-
-		try (InputStream stream = getClass().getResourceAsStream("ReadingView.fxml")) {
-			FXMLLoader fxmlLoader = new FXMLLoader();
-			fxmlLoader.setRoot(this);
-			fxmlLoader.setController(this);
-			fxmlLoader.load(stream);
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
-		}
-		validator = new ReadingFormValidator();
-		date.setValue(LocalDate.now());
-		inputForm.setVisible(false);
-	}
-
-	/**
-	 * Gets the view model associated with this view
-	 * 
-	 * @return the model
-	 */
-	public ClinicalTrialViewModel getModel() {
-		return model;
-	}
-
-	/**
-	 * Sets the view model associated with this view
-	 * 
-	 * @param model
-	 *            the model to set
-	 */
-	public void setModel(ClinicalTrialViewModel model) {
-		this.model = model;
-		setListenersAndEventHandlers();
-
-		type.setItems(model.getReadingTypeChoices());
-		type.getSelectionModel().selectFirst();
-	}
-
-	private void setListenersAndEventHandlers() {
-
-		model.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (model.getSelectedPatient() != null) {
-					patientId.setText(model.getSelectedPatient().getId());
-					clearForm();
-				}
-				if (!model.getTrial().getPatients().contains(model.getSelectedPatient())) {
-					inputForm.setVisible(false);
-				}
-			}
-		});
-
-		type.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observableValue, String oldSel, String newSel) {
-				if (newSel.equals("Blood Pressure")) {
-					bloodPressStack.setVisible(true);
-					value.setVisible(false);
-				} else {
-					bloodPressStack.setVisible(false);
-					value.setVisible(true);
-				}
-			}
-		});
-
-		addReadingBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (model.getTrial().getPatients().contains(model.getSelectedPatient())) {
-					inputForm.setVisible(true);
-				} else {
-					PopupNotification.showPopupMessage("This patient is not active in the clinical trial.", getScene());
-				}
-			}
-		});
-
-		okButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (validator.validateInput()) {
-					addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(),
-							date.getValue());
-				}
-			}
-		});
-	}
-
-	private void addReading(String rType, String rId, String rVal, LocalDate rDateTime) {
-		if (rType.toLowerCase().equals("blood pressure")) {
-			rType = "blood_press";
-			rVal = String.format("%s/%s", systolic.getText(), diastolic.getText());
-		}
-		model.addReading(rType, rId, rVal, LocalDateTime.of(rDateTime, getTime()));
-	}
-
-	private LocalTime getTime() {
-		if (validator.timeIsNotEmpty()) {
-			int hh = Integer.parseInt(hour.getText());
-			int mm = Integer.parseInt(minutes.getText());
-			int ss = Integer.parseInt(seconds.getText());
-			return LocalTime.of(hh, mm, ss);
-		} else {
-			return LocalTime.now();
-		}
-	}
-
+public class ReadingView extends AnchorPane implements Initializable {
 	private class ReadingFormValidator {
 		private final String INT_INPUT = "^[0-9]*$"; // Only numbers
 		private final String DECIMAL_INPUT = "[-+]?[0-9]*\\.?[0-9]+"; // Only numbers or decimals
@@ -270,14 +129,167 @@ public class ReadingView extends AnchorPane {
 			}
 		}
 	}
+	
+	private ReadingFormValidator validator;
+	private ClinicalTrialViewModel model;
+	@FXML
+	private Button addBtn;
+	@FXML
+	private VBox form;
+	@FXML
+	private TextField patientId;
+	@FXML
+	private ChoiceBox<String> type;
+	@FXML
+	private TextField id;
+	@FXML
+	private TextField value;
+	@FXML
+	private DatePicker date;
+	@FXML
+	private TextField hour;
+	@FXML
+	private TextField minutes;
+	@FXML
+	private TextField seconds;
+	@FXML
+	private Button okBtn;
+	@FXML
+	private Button cancelBtn;
+	@FXML
+	private StackPane bloodPressStack;
+	@FXML
+	private TextField systolic;
+	@FXML
+	private TextField diastolic;
 
 	/**
-	 * This is super ugly, however, since some of the nodes are wrapped in other
-	 * containers within the same VBox iterating over all the parents would be quite
-	 * tedious. This is the most straightforward way that I can see to accomplish
-	 * this.
+	 * Constructs a new ReadingView instance
 	 */
-	private void clearForm() {
+	public ReadingView() {
+		model = null;
+
+		try (InputStream stream = getClass().getResourceAsStream("ReadingView.fxml")) {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setRoot(this);
+			fxmlLoader.setController(this);
+			fxmlLoader.load(stream);
+		} catch (IOException | IllegalStateException exception) {
+			throw new RuntimeException(exception);
+		}
+	}
+
+	/**
+	 * Gets the view model associated with this view
+	 * 
+	 * @return the model
+	 */
+	public ClinicalTrialViewModel getModel() {
+		return model;
+	}
+
+	/**
+	 * Sets the view model associated with this view
+	 * 
+	 * @param model
+	 *            the model to set
+	 */
+	public void setModel(ClinicalTrialViewModel model) {
+		this.model = model;
+		type.setItems(model.getReadingTypeChoices());
+		type.getSelectionModel().selectFirst();		
+		
+		model.addPropertyChangeListener((evt) -> {
+			if (Objects.equals(evt.getPropertyName(), "selectedPatient")) {
+				Patient patient = null;
+				
+				if (evt.getNewValue() instanceof Patient) {
+					patient = (Patient) evt.getNewValue();
+				}
+				
+				if (patient != null && model.isPatientInTrial(patient)) {
+					patientId.setText(model.getSelectedPatient().getId());
+					addBtn.setDisable(false);
+				} else {
+					addBtn.setDisable(true);
+				}
+			}
+		});
+
+	}
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		validator = new ReadingFormValidator();
+		date.setValue(LocalDate.now());
+		form.setVisible(false);
+		addBtn.setDisable(true);
+
+		type.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSel, newSel) -> {
+			if (newSel.equals("Blood Pressure")) {
+				bloodPressStack.setVisible(true);
+				value.setVisible(false);
+			} else {
+				bloodPressStack.setVisible(false);
+				value.setVisible(true);
+			}
+		});
+
+		addBtn.setOnAction((event) -> {
+			Patient patient = model.getSelectedPatient();
+			
+			if (model.isPatientInTrial(patient)) {
+				form.setVisible(true);
+				addBtn.setDisable(true);
+			} else {
+				PopupNotification.showPopupMessage("This patient is not active in the clinical trial.", getScene());
+			}
+		});
+
+		okBtn.setOnAction((event) -> {
+			if (validator.validateInput()) {
+				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), date.getValue())) {
+					model.fireUpdatePatient(patientId.getText());
+					PopupNotification.showPopupMessage("Reading has been added.", getScene());
+				}
+			}
+		});
+		
+		cancelBtn.setOnAction((event) -> {
+			Patient patient = model.getSelectedPatient();
+			clear();
+			
+			form.setVisible(false);
+			
+			if (model.isPatientInTrial(patient)) {
+				addBtn.setDisable(false);
+			} else {
+				addBtn.setDisable(true);
+			}
+		});
+	}
+	
+
+	private boolean addReading(String rType, String rId, String rVal, LocalDate rDateTime) {
+		if (rType.toLowerCase().equals("blood pressure")) {
+			rType = "blood_press";
+			rVal = String.format("%s/%s", systolic.getText(), diastolic.getText());
+		}
+		return model.addReading(rType, rId, rVal, LocalDateTime.of(rDateTime, getTime()));
+	}
+
+	private LocalTime getTime() {
+		if (validator.timeIsNotEmpty()) {
+			int hh = Integer.parseInt(hour.getText());
+			int mm = Integer.parseInt(minutes.getText());
+			int ss = Integer.parseInt(seconds.getText());
+			return LocalTime.of(hh, mm, ss);
+		} else {
+			return LocalTime.now();
+		}
+	}
+
+	private void clear() {
 		id.clear();
 		value.clear();
 		systolic.clear();
@@ -286,5 +298,11 @@ public class ReadingView extends AnchorPane {
 		hour.clear();
 		minutes.clear();
 		seconds.clear();
+		okBtn.setDisable(true);
 	}
+	
+	public void clearForm(ActionEvent event) {
+		clear();
+	}
+
 }

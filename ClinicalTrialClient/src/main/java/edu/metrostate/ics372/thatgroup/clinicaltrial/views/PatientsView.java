@@ -135,8 +135,6 @@ public class PatientsView extends AnchorPane implements Initializable {
 			patient.setTrialStartDate(startDate);
 			patient.setTrialEndDate(null);
 			updateButtons(patient, true);
-//			startPtTrial.setDisable(true);
-//			endPtTrial.setDisable(false);
 		}
 	}
 	
@@ -145,10 +143,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		if (patient != null) {
 			LocalDate endDate = LocalDate.now();
 			patient.setTrialEndDate(endDate);
-			
 			updateButtons(patient, true);
-//			startPtTrial.setDisable(false);
-//			endPtTrial.setDisable(true);
 		}
 	}
 
