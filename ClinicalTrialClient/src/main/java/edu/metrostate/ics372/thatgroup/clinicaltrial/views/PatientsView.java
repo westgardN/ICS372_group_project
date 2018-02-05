@@ -66,7 +66,12 @@ public class PatientsView extends AnchorPane implements Initializable {
 			String prop = event.getPropertyName();
 			if (prop.equals("selectedPatient")) {
 				updateButtons(this.model.getSelectedPatient());
+			} else if (prop.equals("updatePatient")) {
+				if (event.getNewValue() instanceof Patient) {
+					updatePatient((Patient)event.getNewValue());
+				}
 			}
+			
 		});
 		
 		listView.itemsProperty().bind(patientsProperty);
@@ -78,27 +83,27 @@ public class PatientsView extends AnchorPane implements Initializable {
 		});
 	}
 	
-	private void updateButtons(Patient selectedPatient) {
-		updateSelectedPatient(selectedPatient);
+	private void updateButtons(Patient patient) {
+		updatePatient(patient);
 		
-		if (!model.hasPatientStartedTrial(selectedPatient)) {
+		if (!model.hasPatientStartedTrial(patient)) {
 			startPtTrial.setDisable(false);
 			endPtTrial.setDisable(true);
-		} else if (model.isPatientInTrial(selectedPatient)) {
+		} else if (model.isPatientInTrial(patient)) {
 			endPtTrial.setDisable(false);
 			startPtTrial.setDisable(true);
 		}
 	}
 
 	/**
-	 * @param selectedPatient
+	 * @param patient
 	 */
-	private void updateSelectedPatient(Patient selectedPatient) {
-		int index = patientsProperty.indexOf(selectedPatient);
+	private void updatePatient(Patient patient) {
+		int index = patientsProperty.indexOf(patient);
 		
 		if (index >= 0) {
 			patientsProperty.set(index, null);
-			patientsProperty.set(index, selectedPatient);
+			patientsProperty.set(index, patient);
 		}
 	}
 
@@ -107,7 +112,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		Patient patient = model.getSelectedPatient();
 		patient.setTrialStartDate(startDate);
 		patient.setTrialEndDate(null);
-		updateSelectedPatient(patient);
+		updatePatient(patient);
 		startPtTrial.setDisable(true);
 		endPtTrial.setDisable(false);
 	}
@@ -117,7 +122,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		Patient patient = model.getSelectedPatient();
 		patient.setTrialEndDate(endDate);
 		
-		updateSelectedPatient(patient);
+		updatePatient(patient);
 		startPtTrial.setDisable(false);
 		endPtTrial.setDisable(true);
 	}
