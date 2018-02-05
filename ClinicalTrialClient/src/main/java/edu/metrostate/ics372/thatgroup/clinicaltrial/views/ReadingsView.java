@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
