@@ -17,9 +17,11 @@ public class ClinicalTrialViewModel {
 	private transient final PropertyChangeSupport pcs;
 	private Trial trial;
 	private Patient selectedPatient;
-	ObservableList<Patient> patients;
-	ObservableList<Reading> journal;
-	ObservableList<String> readingTypes = FXCollections.observableArrayList("Weight", "Steps", "Temp", "Blood Pressure");
+	private Reading selectedReading;
+	
+	private ObservableList<Patient> patients;
+	private ObservableList<Reading> journal;
+	private ObservableList<String> readingTypes = FXCollections.observableArrayList("Weight", "Steps", "Temp", "Blood Pressure");
 
 	public ClinicalTrialViewModel() {
 		trial = new Trial("t01");
@@ -44,6 +46,17 @@ public class ClinicalTrialViewModel {
 			this.selectedPatient = selectedPatient;
 			pcs.firePropertyChange("selectedPatient", oldValue, this.selectedPatient);
 			setJournal(this.selectedPatient);
+		}
+	}
+
+	/**
+	 * @param selectedPatient the selectedPatient to set
+	 */
+	public void setSelectedReading(Reading selectedReading) {
+		if (!Objects.equals(this.selectedReading, selectedReading)) {
+			Reading oldValue = this.selectedReading;
+			this.selectedReading = selectedReading;
+			pcs.firePropertyChange("selectedReading", oldValue, this.selectedReading);
 		}
 	}
 
