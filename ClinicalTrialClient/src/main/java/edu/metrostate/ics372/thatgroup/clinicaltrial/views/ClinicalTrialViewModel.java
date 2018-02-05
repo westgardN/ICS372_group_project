@@ -39,7 +39,7 @@ public class ClinicalTrialViewModel {
 	}
 
 	public void fireUpdatePatient(Patient patient) {
-		if (patient != null) {
+		if (patient != null && trial.hasPatientInList(patient)) {
 			Patient oldValue = null;
 			pcs.firePropertyChange("updatePatient", oldValue, patient);
 		}

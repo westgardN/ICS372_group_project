@@ -191,5 +191,9 @@ public class Trial implements Serializable {
 	public int getNumPatients() {
 		return patients.size();
 	}
+
+	public boolean hasPatientInList(Patient patient) {
+		return patients.contains(patient);
+	}
 	
 }
