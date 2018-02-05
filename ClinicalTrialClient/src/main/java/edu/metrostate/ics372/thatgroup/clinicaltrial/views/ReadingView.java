@@ -298,7 +298,6 @@ public class ReadingView extends AnchorPane implements Initializable {
 		hour.clear();
 		minutes.clear();
 		seconds.clear();
-		okBtn.setDisable(true);
 	}
 	
 	public void clearForm(ActionEvent event) {
