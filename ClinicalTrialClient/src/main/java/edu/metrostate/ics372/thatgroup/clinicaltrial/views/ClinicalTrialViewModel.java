@@ -27,6 +27,7 @@ public class ClinicalTrialViewModel {
 		trial = new Trial("t01");
 		patients = FXCollections.observableArrayList(trial.getPatients());
 		selectedPatient = null;
+		selectedReading = null;
 		pcs = new PropertyChangeSupport(this);
 	}
 
