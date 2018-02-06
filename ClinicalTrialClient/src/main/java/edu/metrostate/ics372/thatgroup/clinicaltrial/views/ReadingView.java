@@ -254,6 +254,8 @@ public class ReadingView extends AnchorPane implements Initializable {
 					model.fireUpdatePatient(patientId.getText());
 					id.setText("");
 					PopupNotification.showPopupMessage("Reading has been added.", getScene());
+				} else {
+					PopupNotification.showPopupMessage("Unalble to add the reading. Please verify the Reading ID is unique for this patient.", getScene());
 				}
 			}
 		});

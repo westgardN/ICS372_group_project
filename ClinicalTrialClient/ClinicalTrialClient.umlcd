@@ -18,6 +18,7 @@
     <targetRole xmi:id="_3kTh5giMEeik0PD_iDXlOQ" aggregationKind="NONE" name="view" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MfaYAiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48TPkAiMEeik0PD_iDXlOQ" position="-29.261208599834873,233.03509101072893"/>
+      <stereotypes xmi:id="_LnoQ0QiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3kTh5wiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3kTh6AiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -42,6 +43,7 @@
     <targetRole xmi:id="_3l5dVgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="patient_readings" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MgogAiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48T2oQiMEeik0PD_iDXlOQ" position="-273.66901648900694,59.18272935706136"/>
+      <stereotypes xmi:id="_LnoQ0AiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3l5dVwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3l5dWAiMEeik0PD_iDXlOQ" label="1..*" max="-1" min="1"/>
     </targetRole>
@@ -65,6 +67,7 @@
     </sourceRole>
     <targetRole xmi:id="_3mD1ZgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="reading_value" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MjEwQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnnpwQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3mD1ZwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3mD1aAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -86,6 +89,7 @@
     </sourceRole>
     <targetRole xmi:id="_3mjkpgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="pcs" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2Mk58AiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnnpwAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3mjkpwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3mjkqAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -131,6 +135,7 @@
     </sourceRole>
     <targetRole xmi:id="_3nD68giMEeik0PD_iDXlOQ" aggregationKind="NONE" name="pcs" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MnWMgiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnnCsAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3nGXMwiMEeik0PD_iDXlOQ" label="#"/>
       <cardinality xmi:id="_3nGXMgiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -148,6 +153,7 @@
     </sourceRole>
     <targetRole xmi:id="_3nEiAAiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="trialStartDate" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MokUQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnmboQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3nG-QwiMEeik0PD_iDXlOQ" label="#"/>
       <cardinality xmi:id="_3nG-QgiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -165,6 +171,7 @@
     </sourceRole>
     <targetRole xmi:id="_3nEiBAiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="trialEndDate" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MpLYAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnmboAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3nG-SAiMEeik0PD_iDXlOQ" label="#"/>
       <cardinality xmi:id="_3nG-RwiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -187,6 +194,7 @@
     <targetRole xmi:id="_3nFJEAiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="journal" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MpLYgiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48WS4QiMEeik0PD_iDXlOQ" position="370.8499541594831,-226.38201400556136"/>
+      <stereotypes xmi:id="_Lnl0kQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3nHlVAiMEeik0PD_iDXlOQ" label="#"/>
       <cardinality xmi:id="_3nHlUwiMEeik0PD_iDXlOQ" label="1..*" max="-1" min="1"/>
     </targetRole>
@@ -229,6 +237,7 @@
     </sourceRole>
     <targetRole xmi:id="_3n2lIgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="pcs" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2Muq8giMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_Lnl0kAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3n5BYQiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3n5BYAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -246,6 +255,7 @@
     </sourceRole>
     <targetRole xmi:id="_3n3MMgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="date" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2Mv5EgiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnlNgAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3n5BZgiMEeik0PD_iDXlOQ" label="#"/>
       <cardinality xmi:id="_3n5BZQiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -278,6 +288,7 @@
     <targetRole xmi:id="_3n62lgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="value" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2MrAkAiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48XhAQiMEeik0PD_iDXlOQ" position="255.69902735530763,82.47017749604515"/>
+      <stereotypes xmi:id="_LnkmcAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3n62lwiMEeik0PD_iDXlOQ" label="+"/>
       <cardinality xmi:id="_3n62mAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -373,6 +384,8 @@
     </sourceRole>
     <targetRole xmi:id="_3o5G9giMEeik0PD_iDXlOQ" aggregationKind="NONE" name="textField" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M0xkAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_Lnj_YAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_Lnj_YQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3o5G9wiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3o5G-AiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -390,6 +403,8 @@
     </sourceRole>
     <targetRole xmi:id="_3o5uBgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="addButton" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M1YogiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnjYUAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnjYUQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3o5uBwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3o5uCAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -407,6 +422,7 @@
     </sourceRole>
     <targetRole xmi:id="_3pBp0giMEeik0PD_iDXlOQ" aggregationKind="NONE" name="stage" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M2mwAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnixQAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3pDfAwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pDfAgiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -429,6 +445,7 @@
     <targetRole xmi:id="_3pCQ4wiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="model" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M2mwgiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48Z9QQiMEeik0PD_iDXlOQ" position="-65.19497355044686,654.9067249572406"/>
+      <stereotypes xmi:id="_LniKMgiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3pEGEwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pEGEgiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -448,6 +465,8 @@
     </sourceRole>
     <targetRole xmi:id="_3pF7RgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="menuFile" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M3N0QiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LniKMAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LniKMQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pF7RwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pF7SAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -465,6 +484,8 @@
     </sourceRole>
     <targetRole xmi:id="_3pGiVgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="menuTrial" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M304giMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnhjIAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnhjIQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pGiVwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pGiWAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -482,6 +503,8 @@
     </sourceRole>
     <targetRole xmi:id="_3pHJZgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="menuHelp" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M4b8giMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_Lng8EAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_Lng8EQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pHJZwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pHJaAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -505,6 +528,8 @@
     <targetRole xmi:id="_3pHwdgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="patientsView" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M5qEgiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48bLYQiMEeik0PD_iDXlOQ" position="-678.5,339.0"/>
+      <stereotypes xmi:id="_LngVAAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LngVAQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pHwdwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pHweAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -528,6 +553,8 @@
     <targetRole xmi:id="_3pIXhgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="readingView" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M6RIwiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48cZgQiMEeik0PD_iDXlOQ" position="-955.960914231506,745.8978547242082"/>
+      <stereotypes xmi:id="_Lnft8AiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_Lnft8QiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pIXhwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pIXiAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -550,6 +577,8 @@
     <targetRole xmi:id="_3pJlpgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="readingsView" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M64MwiMEeik0PD_iDXlOQ"/>
       <visualProperties xmi:id="_48dnoQiMEeik0PD_iDXlOQ" position="-214.5567996495123,85.26068072595194"/>
+      <stereotypes xmi:id="_LnfG4AiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnfG4QiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pJlpwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pJlqAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -677,6 +706,7 @@
     </sourceRole>
     <targetRole xmi:id="_3p1iJgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="pcs" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NI6owiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_Lnef0AiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3p4lcgiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3p4lcQiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -699,6 +729,8 @@
     </sourceRole>
     <targetRole xmi:id="_3p7BtgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="patients" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NJhswiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_Lnd4wQiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_Lnd4wgiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3p7BtwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3p7BuAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -716,6 +748,8 @@
     </sourceRole>
     <targetRole xmi:id="_3p7oxgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="journal" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NKIwQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LndRsAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_Lnd4wAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3p7oxwiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3p7oyAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -733,6 +767,8 @@
     </sourceRole>
     <targetRole xmi:id="_3p825giMEeik0PD_iDXlOQ" aggregationKind="NONE" name="readingTypes" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NKv0AiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LncqoAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LncqoQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3p825wiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3p826AiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -751,6 +787,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qJEIAiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="startPtTrial" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M97gQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnbcgAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnbcgQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qK5UQiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qK5UAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -768,6 +806,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qJEJAiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="endPtTrial" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M-ikwiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnaOYQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_Lna1cAiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qK5VwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qK5VgiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -786,6 +826,9 @@
     </sourceRole>
     <targetRole xmi:id="_3qNVlgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="listView" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M8GUAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnZnUAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnZnUQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnaOYAiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qNVlwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qNVmAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -803,6 +846,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qOjtgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="patientsProperty" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M9UcAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnZAQAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnZAQQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
       <visibility xmi:id="_3qOjtwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qOjuAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -822,6 +867,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qbYAQiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="id" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NFQQQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnYZMAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnYZMQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qdNMwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qdNMgiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -839,6 +886,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qbYBQiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="patientId" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NF3UgiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnXyIAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnXyIQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qd0QgiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qd0QQiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -856,6 +905,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qb_EwiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="value" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NGeYQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnXLEAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnXLEQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qd0SAiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qd0RwiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -874,6 +925,8 @@
     </sourceRole>
     <targetRole xmi:id="_3qg3lgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="date" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NHFcQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnWkAAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnWkAQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qg3lwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qg3mAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -891,6 +944,9 @@
     </sourceRole>
     <targetRole xmi:id="_3qiFtgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="type" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NHsgwiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnVV4AiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnVV4QiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnVV4giOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qiFtwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qiFuAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -911,6 +967,9 @@
     </sourceRole>
     <targetRole xmi:id="_3quS9giMEeik0PD_iDXlOQ" aggregationKind="NONE" name="readingTable" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2M_wsAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnUu0AiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnUu0QiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnUu0giOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3quS9wiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3quS-AiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -928,6 +987,9 @@
     </sourceRole>
     <targetRole xmi:id="_3qvhFgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="dateTimeCol" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NAXwwiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnTgsQiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnUHwAiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnUHwQiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qvhFwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qvhGAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -945,6 +1007,9 @@
     </sourceRole>
     <targetRole xmi:id="_3qwvNgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="readingTypeCol" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NBl4giMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnS5oAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnS5oQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnTgsAiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qwvNwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qwvOAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -962,6 +1027,9 @@
     </sourceRole>
     <targetRole xmi:id="_3qx9VgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="valueCol" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NC0AAiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnRrgAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnRrgQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnSSkAiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qx9VwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qx9WAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -979,6 +1047,9 @@
     </sourceRole>
     <targetRole xmi:id="_3qzLdgiMEeik0PD_iDXlOQ" aggregationKind="NONE" name="readingIDCol" navigable="true">
       <modelElement href="ClinicalTrialClient.uml#_2NECIgiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnQdYAiOEeik0PD_iDXlOQ" name="Generics"/>
+      <stereotypes xmi:id="_LnQdYQiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnREcAiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3qzLdwiMEeik0PD_iDXlOQ" label="-"/>
       <cardinality xmi:id="_3qzLeAiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
     </targetRole>
@@ -3451,6 +3522,8 @@
     </attributes>
     <attributes xmi:id="_3pJlyAiMEeik0PD_iDXlOQ" name="addPatientView">
       <modelElement href="ClinicalTrialClient.uml#_2M5DAQiMEeik0PD_iDXlOQ"/>
+      <stereotypes xmi:id="_LnBM0AiOEeik0PD_iDXlOQ" name="LegacyStyledElement"/>
+      <stereotypes xmi:id="_LnBz4AiOEeik0PD_iDXlOQ" name="Annotations"/>
       <visibility xmi:id="_3pJlyQiMEeik0PD_iDXlOQ" label="~"/>
       <cardinality xmi:id="_3pJlygiMEeik0PD_iDXlOQ" label="1" max="1" min="1"/>
       <type xmi:id="_3pJlywiMEeik0PD_iDXlOQ" name="AddPatientView">
