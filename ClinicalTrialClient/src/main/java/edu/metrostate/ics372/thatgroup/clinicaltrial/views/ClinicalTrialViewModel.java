@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class ClinicalTrialViewModel {
+	private static final String DEFAULT_TRIAL_NAME = "";
 	private transient final PropertyChangeSupport pcs;
 	private Trial trial;
 	private Patient selectedPatient;
@@ -24,7 +25,11 @@ public class ClinicalTrialViewModel {
 	private ObservableList<String> readingTypes = FXCollections.observableArrayList("Weight", "Steps", "Temp", "Blood Pressure");
 
 	public ClinicalTrialViewModel() {
-		trial = new Trial("t01");
+		this(DEFAULT_TRIAL_NAME);
+	}
+
+	public ClinicalTrialViewModel(String name) {
+		trial = new Trial(name);
 		patients = FXCollections.observableArrayList(trial.getPatients());
 		selectedPatient = null;
 		selectedReading = null;
