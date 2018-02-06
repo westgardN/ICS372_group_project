@@ -42,7 +42,7 @@ public class ClinicalTrialView implements Initializable {
 
 	public void importReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Graph File");
+		fileChooser.setTitle("Select Import File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
 				new ExtensionFilter("All Files", "*.*"));
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
@@ -84,7 +84,7 @@ public class ClinicalTrialView implements Initializable {
 
 	public void exportReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Graph File");
+		fileChooser.setTitle("Select Export File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
 				new ExtensionFilter("All Files", "*.*"));
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));	// user.dir is the directory the JVM

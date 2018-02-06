@@ -200,7 +200,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		type.getSelectionModel().selectFirst();		
 		
 		model.addPropertyChangeListener((evt) -> {
-			if (Objects.equals(evt.getPropertyName(), "selectedPatient")) {
+			if (Objects.equals(evt.getPropertyName(), ClinicalTrialViewModel.PROP_SELECTED_PATIENT)) {
 				Patient patient = null;
 				
 				if (evt.getNewValue() instanceof Patient) {

@@ -18,6 +18,11 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
  *
  */
 public abstract class Patient implements Serializable {
+	public static final String PROP_ID = "id";
+	public static final String PROP_TRIAL_START_DATE = "trialStartDate";
+	public static final String PROP_TRIAL_END_DATE = "trialEndDate";
+	public static final String PROP_JOURNAL = "journal";
+	public static final String PROP_JOURNAL_SIZE = "journalSize";
 	private static final long serialVersionUID = 8450664877127813850L;
 	protected transient final PropertyChangeSupport pcs;
 	protected String id;
@@ -83,7 +88,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.id, id)) {
 			String oldValue = this.id;
 			this.id = id;
-			pcs.firePropertyChange("id", oldValue, this.id);
+			pcs.firePropertyChange(PROP_ID, oldValue, this.id);
 		}
 	}
 
@@ -101,7 +106,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.trialStartDate, trialStartDate)) {
 			LocalDate oldValue = this.trialStartDate;
 			this.trialStartDate = trialStartDate;
-			pcs.firePropertyChange("trialStartDate", oldValue, this.trialStartDate);
+			pcs.firePropertyChange(PROP_TRIAL_START_DATE, oldValue, this.trialStartDate);
 		}
 	}
 
@@ -126,7 +131,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.trialEndDate, trialEndDate)) {
 			LocalDate oldValue = this.trialEndDate;
 			this.trialEndDate = trialEndDate;
-			pcs.firePropertyChange("trialEndDate", oldValue, this.trialEndDate);
+			pcs.firePropertyChange(PROP_TRIAL_END_DATE, oldValue, this.trialEndDate);
 		}
 	}
 
@@ -144,7 +149,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.journal, journal)) {
 			Set<Reading> oldValue = this.journal;
 			this.journal = journal;
-			pcs.firePropertyChange("journal", oldValue, this.journal);
+			pcs.firePropertyChange(PROP_JOURNAL, oldValue, this.journal);
 		}
 	}
 
@@ -155,7 +160,7 @@ public abstract class Patient implements Serializable {
 		if (reading != null && journal.contains(reading)) {
 			int oldValue = journal.size();
 			if(journal.remove(reading)) {
-				pcs.firePropertyChange("journalSize", oldValue, journal.size());
+				pcs.firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
 			}
 		}
 	}
@@ -167,7 +172,7 @@ public abstract class Patient implements Serializable {
 		if (!journal.isEmpty()) {
 			int oldValue = journal.size();
 			journal.clear();
-			pcs.firePropertyChange("journalSize", oldValue, journal.size());
+			pcs.firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
 		}
 	}
 
@@ -185,8 +190,8 @@ public abstract class Patient implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((trialId == null) ? 0 : trialId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.toUpperCase().hashCode());
+		result = prime * result + ((trialId == null) ? 0 : trialId.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -206,18 +211,28 @@ public abstract class Patient implements Serializable {
 		}
 		Patient other = (Patient) obj;
 		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else {
 			if (other.id != null) {
+				if (id.compareToIgnoreCase(other.id) != 0 ) {
+					return false; 
+				}
+			} else {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
-			return false;
 		}
 		if (trialId == null) {
+			if (other.trialId != null)
+				return false;
+		} else {
 			if (other.trialId != null) {
+				if (trialId.compareToIgnoreCase(other.trialId) != 0 ) {
+					return false; 
+				}
+			} else {
 				return false;
 			}
-		} else if (!trialId.equals(other.trialId)) {
-			return false;
 		}
 		return true;
 	}

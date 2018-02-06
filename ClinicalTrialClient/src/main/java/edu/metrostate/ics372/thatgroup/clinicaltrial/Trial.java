@@ -18,6 +18,8 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
  *
  */
 public class Trial implements Serializable {
+	public static final String PROP_PATIENTS = "patients";
+	public static final String PROP_ID = "id";
 	private static final long serialVersionUID = 4128763071142480689L;
 	private transient final PropertyChangeSupport pcs;
 	private String id;
@@ -53,7 +55,7 @@ public class Trial implements Serializable {
 		if (!Objects.equals(id, trialId)) {
 			String oldId = this.id;
 			this.id = trialId;
-			pcs.firePropertyChange("id", oldId, this.id);
+			pcs.firePropertyChange(PROP_ID, oldId, this.id);
 		}
 	}
 
@@ -76,7 +78,7 @@ public class Trial implements Serializable {
 		if (!Objects.equals(this.patients, patients)) {
 			Set<Patient> oldValue = this.patients;
 			this.patients = patients;
-			pcs.firePropertyChange("patients", oldValue, this.patients);
+			pcs.firePropertyChange(PROP_PATIENTS, oldValue, this.patients);
 		}
 	}
 
@@ -95,7 +97,7 @@ public class Trial implements Serializable {
 			int oldValue = patients.size();
 			answer = patients.add(patient);
 			if (answer) {
-				pcs.firePropertyChange("patients", oldValue, patients.size());
+				pcs.firePropertyChange(PROP_PATIENTS, oldValue, patients.size());
 			}
 		}
 		return answer;
@@ -145,7 +147,7 @@ public class Trial implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -165,8 +167,16 @@ public class Trial implements Serializable {
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
-			return false;
+		} else {
+			if (other.id != null) {
+				if (id.compareToIgnoreCase(other.id) != 0 ) {
+					return false; 
+				}
+			} else {
+				return false;
+			}
+		}
+		
 		return true;
 	}
 

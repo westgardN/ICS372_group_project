@@ -38,8 +38,6 @@ public class PopupNotification {
 	        @Override
 	        public void handle(WindowEvent e) {
 	        		popup.centerOnScreen();
-	            //popup.setX(scene.getX() + scene.getWidth()/2 - popup.getWidth()/2);
-	            //popup.setY(scene.getY() + scene.getHeight()/2 - popup.getHeight()/2);
 	        }
 	    });        
 	    popup.show(scene.getWindow());

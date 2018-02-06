@@ -1,5 +1,6 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,7 +18,7 @@ public class ClinicalTrialClient extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Patient Trial Client");
-		Image applicationIcon = new Image(getClass().getResourceAsStream("./resources/logo256x256.png"));
+		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + "resources" + File.separator + "logo256x256.png"));
 		stage.getIcons().add(applicationIcon);
 		Pane pane = loadMainPane();
 		stage.setScene(createScene(pane));
@@ -38,7 +39,7 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Pane loadMainPane() throws IOException {
 		Pane mainPane = null;
-		try (InputStream stream = getClass().getResourceAsStream("./views/ClinicalTrialView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream("." + File.separator + "views" + File.separator + "ClinicalTrialView.fxml")) {
 			FXMLLoader loader = new FXMLLoader();
 			mainPane = (Pane) loader.load(stream);
 			view = loader.<ClinicalTrialView>getController();
@@ -61,7 +62,7 @@ public class ClinicalTrialClient extends Application {
 		scene.getStylesheets()
 				.setAll(getClass()
 						.getResource(
-								"./views/styling.css")
+								"." + File.separator + "views" + File.separator + "styling.css")
 						.toExternalForm());
 		return scene;
 	}

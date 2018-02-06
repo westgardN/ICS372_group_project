@@ -67,7 +67,7 @@ public class ReadingsView extends AnchorPane implements Initializable {
 		
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals("journal") || prop.equals("updatePatient")) {
+			if (prop.equals(ClinicalTrialViewModel.PROP_JOURNAL) || prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
 				fillTable();
 			}
 		});
