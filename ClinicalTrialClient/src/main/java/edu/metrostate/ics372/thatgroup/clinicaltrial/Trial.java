@@ -65,14 +65,19 @@ public class Trial implements Serializable {
 	 * @return a reference to the patients in this trial as a Set
 	 */
 	public Set<Patient> getPatients() {
-		return patients;
+		//return patients;
+		return new HashSet<>(patients);
 	}
 
 	/**
-	 * @param patientSet the new set of patients for this trial.
+	 * @param patients the new set of patients for this trial.
 	 */
-	public void setPatients(Set<Patient> patientSet) {
-		this.patients = patientSet;
+	protected void setPatients(Set<Patient> patients) {
+		if (!Objects.equals(this.patients, patients)) {
+			Set<Patient> oldValue = this.patients;
+			this.patients = patients;
+			pcs.firePropertyChange("patients", oldValue, this.patients);
+		}
 	}
 
 	/**

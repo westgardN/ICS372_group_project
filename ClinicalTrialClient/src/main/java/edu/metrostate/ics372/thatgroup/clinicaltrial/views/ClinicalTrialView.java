@@ -49,6 +49,8 @@ public class ClinicalTrialView implements Initializable {
 																					// was executed from.
 		File file = fileChooser.showOpenDialog(stage);
 
+		Patient selected = model.getSelectedPatient();
+		
 		if (file != null) {
 			try {
 				List<Reading> readings = JsonProcessor.read(file.getAbsolutePath());
@@ -66,12 +68,13 @@ public class ClinicalTrialView implements Initializable {
 					}
 
 					if (patient != null) {
-						if (patient.addReading(reading)) {
+						model.setSelectedPatient(patient, false);
+						if (model.importReading(reading)) {
 							readingCount++;
 						}
 					}
 				}
-
+				model.setSelectedPatient(selected, true);
 				PopupNotification.showPopupMessage("Imported " + patientCount + " patients(s) and " + readingCount + " reading(s)", stage.getScene());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -84,8 +87,9 @@ public class ClinicalTrialView implements Initializable {
 		fileChooser.setTitle("Open Graph File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
 				new ExtensionFilter("All Files", "*.*"));
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
-																					// was executed from.
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));	// user.dir is the directory the JVM
+																					// was executed from. We may want to
+																					// change this to something else.
 		File file = fileChooser.showSaveDialog(stage);
 
 		if (file != null) {

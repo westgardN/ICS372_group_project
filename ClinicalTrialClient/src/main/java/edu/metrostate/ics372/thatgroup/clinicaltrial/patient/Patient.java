@@ -134,13 +134,13 @@ public abstract class Patient implements Serializable {
 	 * @return a reference to this patient's journal.
 	 */
 	public Set<Reading> getJournal() {
-		return journal;
+		return new HashSet<>(journal);
 	}
 
 	/**
 	 * @param journal the new journal for this patient.
 	 */
-	public void setJournal(Set<Reading> journal) {
+	protected void setJournal(Set<Reading> journal) {
 		if (!Objects.equals(this.journal, journal)) {
 			Set<Reading> oldValue = this.journal;
 			this.journal = journal;

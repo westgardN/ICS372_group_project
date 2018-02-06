@@ -54,11 +54,21 @@ public class ClinicalTrialViewModel {
 	 * @param selectedPatient the selectedPatient to set
 	 */
 	public void setSelectedPatient(Patient selectedPatient) {
+		setSelectedPatient(selectedPatient, true);
+	}
+
+	/**
+	 * @param selectedPatient the selectedPatient to set
+	 */
+	public void setSelectedPatient(Patient selectedPatient, boolean notify) {
 		if (!Objects.equals(this.selectedPatient, selectedPatient)) {
 			Patient oldValue = this.selectedPatient;
 			this.selectedPatient = selectedPatient;
-			pcs.firePropertyChange("selectedPatient", oldValue, this.selectedPatient);
-			setJournal(this.selectedPatient);
+			if (notify) {
+				pcs.firePropertyChange("selectedPatient", oldValue, this.selectedPatient);
+			}
+			
+			setJournal(this.selectedPatient, notify);
 		}
 	}
 
@@ -106,9 +116,19 @@ public class ClinicalTrialViewModel {
 	 * @param patient the patient's whose journal we are observing.
 	 */
 	public void setJournal(Patient patient) {
+		setJournal(patient, true);
+	}
+	
+	/**
+	 * @param patient the patient's whose journal we are observing.
+	 */
+	public void setJournal(Patient patient, boolean notify) {
 		ObservableList<Reading> oldValue = journal;
 		journal = patient != null ? FXCollections.observableArrayList(patient.getJournal()) : null;
-		pcs.firePropertyChange("journal", oldValue, journal);
+		
+		if (notify) {
+			pcs.firePropertyChange("journal", oldValue, journal);
+		}
 	}
 
 	/**
@@ -128,19 +148,52 @@ public class ClinicalTrialViewModel {
 		return answer;
 	}
 	
+	public boolean importReading(Reading reading) {
+		boolean answer = false;
+		
+		if (reading != null) {
+			int oldValue = selectedPatient.getJournalSize();
+			answer = selectedPatient.addReading(reading);
+			if (answer) {
+				pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
+				journal.add(reading);
+			}
+		}
+		return answer;
+	}
+	
+	public boolean importReading(String type, String id, Object value, LocalDateTime date) {
+		Reading reading = ReadingFactory.getReading(type);
+		reading.setPatientId(selectedPatient.getId());
+		reading.setId(id);
+		reading.setValue(value);
+		reading.setDate(date);
+		
+		return importReading(reading);
+	}
+	
+	public boolean addReading(Reading reading) {
+		boolean answer = false;
+		
+		if (reading != null) {
+			int oldValue = selectedPatient.getJournalSize();
+			answer = isPatientInTrial(selectedPatient) ? selectedPatient.addReading(reading) : false;
+			if (answer) {
+				pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
+				journal.add(reading);
+			}
+		}
+		return answer;
+	}
+	
 	public boolean addReading(String type, String id, Object value, LocalDateTime date) {
 		Reading reading = ReadingFactory.getReading(type);
 		reading.setPatientId(selectedPatient.getId());
 		reading.setId(id);
 		reading.setValue(value);
 		reading.setDate(date);
-		int oldValue = selectedPatient.getJournalSize();
-		boolean answer = isPatientInTrial(selectedPatient) ? selectedPatient.addReading(reading) : false;
-		if (answer) {
-			pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
-			journal.add(reading);
-		}
-		return answer;
+		
+		return addReading(reading);
 	}
 
 	public Patient getPatient(String patientId) {
