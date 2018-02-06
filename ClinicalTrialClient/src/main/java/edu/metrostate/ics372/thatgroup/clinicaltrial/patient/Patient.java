@@ -185,8 +185,8 @@ public abstract class Patient implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((trialId == null) ? 0 : trialId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.toUpperCase().hashCode());
+		result = prime * result + ((trialId == null) ? 0 : trialId.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -206,18 +206,28 @@ public abstract class Patient implements Serializable {
 		}
 		Patient other = (Patient) obj;
 		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else {
 			if (other.id != null) {
+				if (id.compareToIgnoreCase(other.id) != 0 ) {
+					return false; 
+				}
+			} else {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
-			return false;
 		}
 		if (trialId == null) {
+			if (other.trialId != null)
+				return false;
+		} else {
 			if (other.trialId != null) {
+				if (trialId.compareToIgnoreCase(other.trialId) != 0 ) {
+					return false; 
+				}
+			} else {
 				return false;
 			}
-		} else if (!trialId.equals(other.trialId)) {
-			return false;
 		}
 		return true;
 	}

@@ -55,8 +55,8 @@ public abstract class Reading implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.toUpperCase().hashCode());
+		result = prime * result + ((patientId == null) ? 0 : patientId.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -76,18 +76,28 @@ public abstract class Reading implements Serializable {
 		}
 		Reading other = (Reading) obj;
 		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else {
 			if (other.id != null) {
+				if (id.compareToIgnoreCase(other.id) != 0 ) {
+					return false; 
+				}
+			} else {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
-			return false;
 		}
 		if (patientId == null) {
+			if (other.patientId != null)
+				return false;
+		} else {
 			if (other.patientId != null) {
+				if (patientId.compareToIgnoreCase(other.patientId) != 0 ) {
+					return false; 
+				}
+			} else {
 				return false;
 			}
-		} else if (!patientId.equals(other.patientId)) {
-			return false;
 		}
 		return true;
 	}
