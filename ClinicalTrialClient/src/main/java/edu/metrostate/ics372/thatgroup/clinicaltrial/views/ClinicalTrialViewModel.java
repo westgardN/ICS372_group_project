@@ -14,6 +14,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class ClinicalTrialViewModel {
+	public static final String PROP_READINGS = "readings";
+	public static final String PROP_PATIENTS = "patients";
+	public static final String PROP_JOURNAL = "journal";
+	public static final String PROP_SELECTED_READING = "selectedReading";
+	public static final String PROP_SELECTED_PATIENT = "selectedPatient";
+	public static final String PROP_UPDATE_PATIENT = "updatePatient";
 	private static final String DEFAULT_TRIAL_NAME = "";
 	private transient final PropertyChangeSupport pcs;
 	private Trial trial;
@@ -46,7 +52,7 @@ public class ClinicalTrialViewModel {
 	public void fireUpdatePatient(Patient patient) {
 		if (patient != null && trial.hasPatientInList(patient)) {
 			Patient oldValue = null;
-			pcs.firePropertyChange("updatePatient", oldValue, patient);
+			pcs.firePropertyChange(PROP_UPDATE_PATIENT, oldValue, patient);
 		}
 	}
 	
@@ -70,7 +76,7 @@ public class ClinicalTrialViewModel {
 			Patient oldValue = this.selectedPatient;
 			this.selectedPatient = selectedPatient;
 			if (notify) {
-				pcs.firePropertyChange("selectedPatient", oldValue, this.selectedPatient);
+				pcs.firePropertyChange(PROP_SELECTED_PATIENT, oldValue, this.selectedPatient);
 			}
 			
 			setJournal(this.selectedPatient, notify);
@@ -84,7 +90,7 @@ public class ClinicalTrialViewModel {
 		if (!Objects.equals(this.selectedReading, selectedReading)) {
 			Reading oldValue = this.selectedReading;
 			this.selectedReading = selectedReading;
-			pcs.firePropertyChange("selectedReading", oldValue, this.selectedReading);
+			pcs.firePropertyChange(PROP_SELECTED_READING, oldValue, this.selectedReading);
 		}
 	}
 	
@@ -132,7 +138,7 @@ public class ClinicalTrialViewModel {
 		journal = patient != null ? FXCollections.observableArrayList(patient.getJournal()) : null;
 		
 		if (notify) {
-			pcs.firePropertyChange("journal", oldValue, journal);
+			pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
 		}
 	}
 
@@ -147,7 +153,7 @@ public class ClinicalTrialViewModel {
 		int oldValue = trial.getNumPatients();
 		boolean answer = trial.addPatient(patientId, startDate);
 		if (answer) {
-			pcs.firePropertyChange("patients", oldValue, trial.getNumPatients());
+			pcs.firePropertyChange(PROP_PATIENTS, oldValue, trial.getNumPatients());
 			patients.add(trial.getPatient(patientId));
 		}
 		return answer;
@@ -160,7 +166,7 @@ public class ClinicalTrialViewModel {
 			int oldValue = selectedPatient.getJournalSize();
 			answer = selectedPatient.addReading(reading);
 			if (answer) {
-				pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
+				pcs.firePropertyChange(PROP_READINGS, oldValue, selectedPatient.getJournalSize());
 				journal.add(reading);
 			}
 		}
@@ -184,7 +190,7 @@ public class ClinicalTrialViewModel {
 			int oldValue = selectedPatient.getJournalSize();
 			answer = isPatientInTrial(selectedPatient) ? selectedPatient.addReading(reading) : false;
 			if (answer) {
-				pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
+				pcs.firePropertyChange(PROP_READINGS, oldValue, selectedPatient.getJournalSize());
 				journal.add(reading);
 			}
 		}
