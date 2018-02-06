@@ -65,7 +65,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals("selectedPatient")) {
+			if (prop.equals(ClinicalTrialViewModel.PROP_SELECTED_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
 					Patient patient = (Patient)event.getNewValue();
 					
@@ -75,7 +75,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 						updateButtons(patient, true);
 					}
 				}
-			} else if (prop.equals("updatePatient")) {
+			} else if (prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
 					updatePatient((Patient)event.getNewValue());
 				}
