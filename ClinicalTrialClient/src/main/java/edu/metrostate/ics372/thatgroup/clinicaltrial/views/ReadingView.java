@@ -210,8 +210,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 				if (patient != null && model.isPatientInTrial(patient)) {
 					patientId.setText(model.getSelectedPatient().getId());
 					addBtn.setDisable(false);
-				} else {
+				} else if (patient != null) {
 					addBtn.setDisable(true);
+					form.setVisible(false);
+					clear();
 				}
 			}
 		});
@@ -250,6 +252,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 			if (validator.validateInput()) {
 				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), date.getValue())) {
 					model.fireUpdatePatient(patientId.getText());
+					id.setText("");
 					PopupNotification.showPopupMessage("Reading has been added.", getScene());
 				}
 			}

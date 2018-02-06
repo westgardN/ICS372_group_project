@@ -135,7 +135,7 @@ public class ClinicalTrialViewModel {
 		reading.setValue(value);
 		reading.setDate(date);
 		int oldValue = selectedPatient.getJournalSize();
-		boolean answer = selectedPatient.addReading(reading);
+		boolean answer = isPatientInTrial(selectedPatient) ? selectedPatient.addReading(reading) : false;
 		if (answer) {
 			pcs.firePropertyChange("readings", oldValue, selectedPatient.getJournalSize());
 			journal.add(reading);
