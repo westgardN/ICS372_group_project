@@ -22,21 +22,29 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
 /**
+ * This view is responsible for displaying the patients in a ListView for the
+ * user to select to view or add readings
+ * 
  * @author Vincent J. Palodichuk
  *
  */
 public class PatientsView extends AnchorPane implements Initializable {
-	@FXML 
+	@FXML
 	private ListView<Patient> listView;
 	private ClinicalTrialViewModel model;
 	private ListProperty<Patient> patientsProperty;
-	@FXML private Button startPtTrial;
-	@FXML private Button endPtTrial;
-	
+	@FXML
+	private Button startPtTrial;
+	@FXML
+	private Button endPtTrial;
+
+	/**
+	 * Constructs a new PatientsView instance
+	 */
 	public PatientsView() {
 		model = null;
 		patientsProperty = new SimpleListProperty<>();
-		
+
 		try (InputStream stream = getClass().getResourceAsStream("PatientsView.fxml")) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
@@ -45,10 +53,12 @@ public class PatientsView extends AnchorPane implements Initializable {
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);
 		}
-		
+
 	}
 
 	/**
+	 * Returns the view model associated with this view
+	 * 
 	 * @return the model
 	 */
 	public ClinicalTrialViewModel getModel() {
@@ -56,19 +66,23 @@ public class PatientsView extends AnchorPane implements Initializable {
 	}
 
 	/**
-	 * @param model the model to set
+	 * Sets the view model associated with this view and adds listeners for the list
+	 * of patients and the currently selected patient from the list of patients
+	 * 
+	 * @param model
+	 *            the model to set
 	 */
 	public void setModel(ClinicalTrialViewModel model) {
 		this.model = model;
-		
+
 		patientsProperty.set(model.getPatients());
-		
+
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
 			if (prop.equals(ClinicalTrialViewModel.PROP_SELECTED_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
-					Patient patient = (Patient)event.getNewValue();
-					
+					Patient patient = (Patient) event.getNewValue();
+
 					if (event.getOldValue() == null) {
 						updateButtons(patient, false);
 					} else {
@@ -77,34 +91,34 @@ public class PatientsView extends AnchorPane implements Initializable {
 				}
 			} else if (prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
-					updatePatient((Patient)event.getNewValue());
+					updatePatient((Patient) event.getNewValue());
 				}
 			}
-			
+
 		});
-		
+
 		listView.itemsProperty().bind(patientsProperty);
-		
+
 		listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 			int index = newValue.intValue();
-			
+
 			if (index >= 0 && index < patientsProperty.size() && patientsProperty.get(index) instanceof Patient) {
 				Patient patient = patientsProperty.get(index);
 				if (!Objects.equals(patient, model.getSelectedPatient())) {
 					model.setSelectedPatient(patient);
 				}
-				
+
 			} else {
 				model.setSelectedPatient(null);
 			}
 		});
 	}
-	
+
 	private void updateButtons(Patient patient, boolean updatePatient) {
 		if (updatePatient && patient != null) {
 			updatePatient(patient);
 		}
-		
+
 		if (!model.hasPatientStartedTrial(patient)) {
 			startPtTrial.setDisable(false);
 			endPtTrial.setDisable(true);
@@ -114,12 +128,9 @@ public class PatientsView extends AnchorPane implements Initializable {
 		}
 	}
 
-	/**
-	 * @param patient
-	 */
 	private void updatePatient(Patient patient) {
 		int index = patientsProperty.indexOf(patient);
-		
+
 		if (index >= 0) {
 			int selected = listView.getSelectionModel().getSelectedIndex();
 			patientsProperty.set(index, null);
@@ -128,7 +139,13 @@ public class PatientsView extends AnchorPane implements Initializable {
 		}
 	}
 
-	public void startPtTrial(ActionEvent e){
+	/**
+	 * Starts the clinical trial for the selected trial
+	 * 
+	 * @param e
+	 *            the triggering entity of this action
+	 */
+	public void startPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
 		if (patient != null) {
 			LocalDate startDate = LocalDate.now();
@@ -137,8 +154,14 @@ public class PatientsView extends AnchorPane implements Initializable {
 			updateButtons(patient, true);
 		}
 	}
-	
-	public void endPtTrial(ActionEvent e){
+
+	/**
+	 * Ends the trial for the currently selected patient
+	 * 
+	 * @param e
+	 *            the triggering entity of this action
+	 */
+	public void endPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
 		if (patient != null) {
 			LocalDate endDate = LocalDate.now();
@@ -150,7 +173,6 @@ public class PatientsView extends AnchorPane implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		startPtTrial.setDisable(true);
-		endPtTrial.setDisable(true);		
+		endPtTrial.setDisable(true);
 	}
 }
-

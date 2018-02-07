@@ -21,6 +21,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+/**
+ * This View is the main wrapper for the user interface and is responsible for
+ * holding the the various views
+ */
 public class ClinicalTrialView implements Initializable {
 	Stage stage;
 	ClinicalTrialViewModel model;
@@ -40,6 +44,12 @@ public class ClinicalTrialView implements Initializable {
 	@FXML
 	ReadingsView readingsView;
 
+	/**
+	 * Imports readings from a JSON formatted file
+	 * 
+	 * @param event
+	 *            the triggering entity of this action
+	 */
 	public void importReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Import File");
@@ -50,7 +60,7 @@ public class ClinicalTrialView implements Initializable {
 		File file = fileChooser.showOpenDialog(stage);
 
 		Patient selected = model.getSelectedPatient();
-		
+
 		if (file != null) {
 			try {
 				List<Reading> readings = JsonProcessor.read(file.getAbsolutePath());
@@ -75,19 +85,27 @@ public class ClinicalTrialView implements Initializable {
 					}
 				}
 				model.setSelectedPatient(selected, true);
-				PopupNotification.showPopupMessage("Imported " + patientCount + " patients(s) and " + readingCount + " reading(s)", stage.getScene());
+				PopupNotification.showPopupMessage(
+						"Imported " + patientCount + " patients(s) and " + readingCount + " reading(s)",
+						stage.getScene());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
+	/**
+	 * Exports readings to a JSON formatted file
+	 * 
+	 * @param event
+	 *            the triggering entity of this action
+	 */
 	public void exportReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Export File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
 				new ExtensionFilter("All Files", "*.*"));
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));	// user.dir is the directory the JVM
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
 																					// was executed from. We may want to
 																					// change this to something else.
 		File file = fileChooser.showSaveDialog(stage);
@@ -110,14 +128,21 @@ public class ClinicalTrialView implements Initializable {
 			}
 		}
 	}
-	
+
+	/**
+	 * Terminates the program
+	 * 
+	 * @param event
+	 *            the triggering entity of this action
+	 */
 	public void exit(ActionEvent event) {
 		Platform.exit();
 	}
-	
 
 	/**
-	 * @return the stage
+	 * Returns the Stage
+	 * 
+	 * @return stage the visible Stage
 	 */
 	public Stage getStage() {
 		return stage;
@@ -131,6 +156,10 @@ public class ClinicalTrialView implements Initializable {
 		this.stage = stage;
 	}
 
+	/**
+	 * Initializes this view and sets the view-model for the Add Patient View,
+	 * Patients View, ReadingView, and Readings View
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Initialize the view Model

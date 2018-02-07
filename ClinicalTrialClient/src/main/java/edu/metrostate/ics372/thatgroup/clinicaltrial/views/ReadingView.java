@@ -1,6 +1,3 @@
-/**
- * File: ReadingView.java
- */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
@@ -11,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,10 +22,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 /**
- * @author Vincent J. Palodichuk
+ * This view is responsible for taking user input for a new patient reading. It
+ * represents the input form required to perform the task of creating and adding
+ * a new reading into a patient's journal
  *
  */
 public class ReadingView extends AnchorPane implements Initializable {
+	private enum ErrCause {
+		DATE, TIME, ID, BP, TEMP, VALUE;
+	}
+
+	/*
+	 * This class is used for validating the user input, ensuring that the values
+	 * entered are of the correct format for their respective fields
+	 */
 	private class ReadingFormValidator {
 		private final String INT_INPUT = "^[0-9]*$"; // Only numbers
 		private final String DECIMAL_INPUT = "[-+]?[0-9]*\\.?[0-9]+"; // Only numbers or decimals
@@ -38,30 +44,33 @@ public class ReadingView extends AnchorPane implements Initializable {
 
 		private boolean validateInput() {
 			String readingType = type.getSelectionModel().getSelectedItem().toLowerCase();
+
 			if (date.getValue() == null) {
-				generateErrorMessage("date");
+				generateErrorMessage(ErrCause.DATE);
 				return false;
 			}
 			if (!hasValidTime()) {
-				generateErrorMessage("time");
+				generateErrorMessage(ErrCause.TIME);
 				return false;
 			}
 			if (!isFilled(id)) {
-				generateErrorMessage("id");
+				generateErrorMessage(ErrCause.ID);
 				return false;
 			}
-			if (readingType.equals("blood pressure") && !validateBloodPressure()) {
-				generateErrorMessage("blood_press");
+			if (readingType.equals(StringResource.BP_VALUE.get()) && !validateBloodPressure()) {
+				generateErrorMessage(ErrCause.BP);
 				return false;
 			}
-			if (readingType.equals("temp") && !validateTemp()) {
-				generateErrorMessage("temp");
+			if (readingType.equals(StringResource.TEMP_VALUE.get()) && !validateTemp()) {
+				generateErrorMessage(ErrCause.TEMP);
 				return false;
 			}
-			if (!isFilled(value) && !readingType.equals("temp") && !readingType.equals("blood pressure")
-					|| isFilled(value) && !value.getText().matches(INT_INPUT) && !readingType.equals("temp")
-							&& !readingType.equals("blood pressure")) {
-				generateErrorMessage("value");
+			if (!isFilled(value) && !readingType.equals(StringResource.TEMP_VALUE.get())
+					&& !readingType.equals(StringResource.BP_VALUE.get())
+					|| isFilled(value) && !value.getText().matches(INT_INPUT)
+							&& !readingType.equals(StringResource.TEMP_VALUE.get())
+							&& !readingType.equals(StringResource.BP_VALUE.get())) {
+				generateErrorMessage(ErrCause.VALUE);
 				return false;
 			}
 			return true;
@@ -90,7 +99,8 @@ public class ReadingView extends AnchorPane implements Initializable {
 			String hh = hour.getText(), mm = minutes.getText(), ss = seconds.getText();
 			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC)) {
 				answer = true;
-			} else if (hh.equals("") && mm.equals("") && ss.equals("")) {
+			} else if (hh.equals(StringResource.EMPTY.get()) && mm.equals(StringResource.EMPTY.get())
+					&& ss.equals(StringResource.EMPTY.get())) {
 				answer = true;
 			} else {
 				answer = false;
@@ -98,38 +108,31 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return answer;
 		}
 
-		private void generateErrorMessage(String cause) {
+		private void generateErrorMessage(ErrCause cause) {
 			switch (cause) {
-			case "date":
-				PopupNotification.showPopupMessage("Date can not be empty.", getScene());
+			case DATE:
+				PopupNotification.showPopupMessage(StringResource.ERR_DATE_MSG.get(), getScene());
 				break;
-			case "time":
-				PopupNotification.showPopupMessage(
-						"Invalid time detected.  Please check the time input fields for errors.", getScene());
+			case TIME:
+				PopupNotification.showPopupMessage(StringResource.ERR_TIME_MSG.get(), getScene());
 				break;
-			case "id":
-				PopupNotification.showPopupMessage(
-						"Invalid reading id detected.  Please check the reading id input fields for errors.",
-						getScene());
+			case ID:
+				PopupNotification.showPopupMessage(StringResource.ERR_ID_MSG.get(), getScene());
 				break;
-			case "blood_press":
-				PopupNotification.showPopupMessage(
-						"Invalid blood pressure detected.  Please check the blood pressure input fields for errors.",
-						getScene());
+			case BP:
+				PopupNotification.showPopupMessage(StringResource.ERR_BLOOD_PRESSURE_MSG.get(), getScene());
 				break;
-			case "temp":
-				PopupNotification.showPopupMessage(
-						"Invalid temperature detected.  Please check the reading value input field for errors.",
-						getScene());
+			case TEMP:
+				PopupNotification.showPopupMessage(StringResource.ERR_TEMP_MSG.get(), getScene());
 				break;
-			case "value":
-				PopupNotification.showPopupMessage(
-						"Invalid input detected.  Please check the reading value input field for errors.", getScene());
+			case VALUE:
+				PopupNotification.showPopupMessage(StringResource.ERR_VALUE_MSG.get(), getScene());
+			default:
 				break;
 			}
 		}
 	}
-	
+
 	private ReadingFormValidator validator;
 	private ClinicalTrialViewModel model;
 	@FXML
@@ -180,7 +183,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 	}
 
 	/**
-	 * Gets the view model associated with this view
+	 * Returns the view model associated with this view
 	 * 
 	 * @return the model
 	 */
@@ -197,16 +200,21 @@ public class ReadingView extends AnchorPane implements Initializable {
 	public void setModel(ClinicalTrialViewModel model) {
 		this.model = model;
 		type.setItems(model.getReadingTypeChoices());
-		type.getSelectionModel().selectFirst();		
-		
+		type.getSelectionModel().selectFirst();
+
+		/*
+		 * If the selected patient from the patients list is active in the trial, show
+		 * the add reading button to allow the user to create and add new readings for
+		 * the patient
+		 */
 		model.addPropertyChangeListener((evt) -> {
 			if (Objects.equals(evt.getPropertyName(), ClinicalTrialViewModel.PROP_SELECTED_PATIENT)) {
 				Patient patient = null;
-				
+
 				if (evt.getNewValue() instanceof Patient) {
 					patient = (Patient) evt.getNewValue();
 				}
-				
+
 				if (patient != null && model.isPatientInTrial(patient)) {
 					patientId.setText(model.getSelectedPatient().getId());
 					addBtn.setDisable(false);
@@ -219,7 +227,11 @@ public class ReadingView extends AnchorPane implements Initializable {
 		});
 
 	}
-	
+
+	/**
+	 * Initializes the view/input form and assigns the Action and Event listeners to
+	 * the proper GUI components
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		validator = new ReadingFormValidator();
@@ -228,7 +240,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		addBtn.setDisable(true);
 
 		type.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSel, newSel) -> {
-			if (newSel.equals("Blood Pressure")) {
+			if (newSel.toLowerCase().equals(StringResource.BP_VALUE.get())) {
 				bloodPressStack.setVisible(true);
 				value.setVisible(false);
 			} else {
@@ -239,33 +251,34 @@ public class ReadingView extends AnchorPane implements Initializable {
 
 		addBtn.setOnAction((event) -> {
 			Patient patient = model.getSelectedPatient();
-			
+
 			if (model.isPatientInTrial(patient)) {
 				form.setVisible(true);
 				addBtn.setDisable(true);
 			} else {
-				PopupNotification.showPopupMessage("This patient is not active in the clinical trial.", getScene());
+				PopupNotification.showPopupMessage(StringResource.INACTIVE_PATIENT_MSG.get(), getScene());
 			}
 		});
 
 		okBtn.setOnAction((event) -> {
 			if (validator.validateInput()) {
-				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), date.getValue())) {
+				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(),
+						date.getValue())) {
 					model.fireUpdatePatient(patientId.getText());
-					id.setText("");
-					PopupNotification.showPopupMessage("Reading has been added.", getScene());
+					id.setText(StringResource.EMPTY.get());
+					PopupNotification.showPopupMessage(StringResource.READING_ADDED_MSG.get(), getScene());
 				} else {
-					PopupNotification.showPopupMessage("Unalble to add the reading. Please verify the Reading ID is unique for this patient.", getScene());
+					PopupNotification.showPopupMessage(StringResource.READING_NOT_ADDED_MSG.get(), getScene());
 				}
 			}
 		});
-		
+
 		cancelBtn.setOnAction((event) -> {
 			Patient patient = model.getSelectedPatient();
 			clear();
-			
+
 			form.setVisible(false);
-			
+
 			if (model.isPatientInTrial(patient)) {
 				addBtn.setDisable(false);
 			} else {
@@ -273,11 +286,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 			}
 		});
 	}
-	
 
 	private boolean addReading(String rType, String rId, String rVal, LocalDate rDateTime) {
-		if (rType.toLowerCase().equals("blood pressure")) {
-			rType = "blood_press";
+		if (rType.toLowerCase().equals(StringResource.BP_VALUE.get())) {
+			rType = StringResource.BP_JSON.get();
 			rVal = String.format("%s/%s", systolic.getText(), diastolic.getText());
 		}
 		return model.addReading(rType, rId, rVal, LocalDateTime.of(rDateTime, getTime()));
@@ -304,7 +316,13 @@ public class ReadingView extends AnchorPane implements Initializable {
 		minutes.clear();
 		seconds.clear();
 	}
-	
+
+	/**
+	 * Clears the input fields present on the reading input form
+	 * 
+	 * @param event
+	 *            the triggering entity of this action
+	 */
 	public void clearForm(ActionEvent event) {
 		clear();
 	}

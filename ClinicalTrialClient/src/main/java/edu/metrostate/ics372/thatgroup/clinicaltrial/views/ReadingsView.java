@@ -21,12 +21,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
 /**
+ * This view is responsible for displaying the readings in a TableView for a
+ * selected patient
+ * 
  * @author Vincent J. Palodichuk
  *
  */
 public class ReadingsView extends AnchorPane implements Initializable {
 	private ClinicalTrialViewModel model;
-	
+
 	@FXML
 	private TableView<Reading> readingTable;
 
@@ -39,9 +42,12 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	@FXML
 	private TableColumn<Reading, String> readingIDCol;
 
+	/**
+	 * Constructs a new ReadingsView instance
+	 */
 	public ReadingsView() {
 		model = null;
-		
+
 		try (InputStream stream = getClass().getResourceAsStream("ReadingsView.fxml")) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
@@ -51,8 +57,10 @@ public class ReadingsView extends AnchorPane implements Initializable {
 			throw new RuntimeException(exception);
 		}
 	}
-	
+
 	/**
+	 * Returns the view model associated with this view
+	 * 
 	 * @return the model
 	 */
 	public ClinicalTrialViewModel getModel() {
@@ -60,19 +68,27 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	}
 
 	/**
-	 * @param model the model to set
+	 * Sets the view model associated with this view
+	 * 
+	 * @param model
+	 *            the model to set
 	 */
 	public void setModel(ClinicalTrialViewModel model) {
 		this.model = model;
-		
+
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals(ClinicalTrialViewModel.PROP_JOURNAL) || prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
+			if (prop.equals(ClinicalTrialViewModel.PROP_JOURNAL)
+					|| prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
 				fillTable();
 			}
 		});
 	}
 
+	/**
+	 * Initializes this view and sets up the readings table to display the
+	 * individual reading's information
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
@@ -80,8 +96,9 @@ public class ReadingsView extends AnchorPane implements Initializable {
 				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getPrettyReadingType(cellData.getValue())));
 		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-		dateTimeCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().format(formatter)));
-		
+		dateTimeCol.setCellValueFactory(
+				cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().format(formatter)));
+
 		readingTable.getSelectionModel().selectedIndexProperty().addListener((event) -> {
 			this.model.setSelectedReading(readingTable.getSelectionModel().getSelectedItem());
 		});
