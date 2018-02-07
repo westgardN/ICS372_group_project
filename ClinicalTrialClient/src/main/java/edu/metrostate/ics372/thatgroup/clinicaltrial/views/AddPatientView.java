@@ -99,7 +99,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 		textField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (validate(newValue) && addButton.isDisabled()) {
 				addButton.setDisable(false);
-			} else if (!validate(newValue) && !addButton.isDisabled()) {
+			} else if (!validate(newValue) && !textField.getText().equals(StringResource.EMPTY.get()) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
 				PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
 			}
