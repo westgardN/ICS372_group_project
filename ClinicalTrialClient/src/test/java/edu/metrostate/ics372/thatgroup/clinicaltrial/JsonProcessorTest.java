@@ -18,6 +18,8 @@ public class JsonProcessorTest {
 			System.out.println("Imported");
 			
 			List<Reading> readings = JsonProcessor.read("./data/test_data.json");
+			assertNotNull(readings);
+			assertEquals(4, readings.size());
 			
 			for (Reading reading : readings) {
 				System.out.println(reading);
@@ -26,6 +28,11 @@ public class JsonProcessorTest {
 			JsonProcessor.write(readings, "./data/testReadAndWrite_out.json");
 			
 			System.out.println("Exported");
+			
+			readings = JsonProcessor.read("./data/testReadAndWrite_out.json");
+			assertNotNull(readings);
+			assertEquals(4, readings.size());
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

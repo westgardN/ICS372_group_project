@@ -13,36 +13,56 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
 
 /**
+ * The Trial bean is used to hold information about a clinical trial. The trial
+ * contains a list of all the patients that have and that currently are, a part
+ * of it.
+ * 
+ * The trial class also supports property change notification.
  * 
  * @author That Group
  *
  */
 public class Trial implements Serializable {
+	private static final String DEFAULT_TRIAL_ID = "";
+
+	/**
+	 * The patients property is used to receive notifications about changes to the
+	 * patient list within a trial.
+	 */
 	public static final String PROP_PATIENTS = "patients";
+
+	/**
+	 * The id property of the trial. Used to uniquely identify a trial
+	 */
 	public static final String PROP_ID = "id";
+
 	private static final long serialVersionUID = 4128763071142480689L;
 	private transient final PropertyChangeSupport pcs;
 	private String id;
 	private Set<Patient> patients;
-	
-	public Trial() {
-		this("");
-	}
-	
+
 	/**
-	 * Creates a new Trial object with the specified values.
+	 * Initializes this trial with no id.
+	 */
+	public Trial() {
+		this(DEFAULT_TRIAL_ID);
+	}
+
+	/**
+	 * Initializes this trial with the specified values.
 	 * 
 	 * @param trialId
-	 *          the id of this trial.
+	 *            the id of this trial. Cannot be null.
 	 */
 	public Trial(String trialId) {
 		this.id = trialId;
 		patients = new HashSet<>();
 		pcs = new PropertyChangeSupport(this);
 	}
-	
+
 	/**
 	 * Trials have an id. Each trial has its own unique Id.
+	 * 
 	 * @return the id of this trial.
 	 */
 	public String getId() {
@@ -50,10 +70,11 @@ public class Trial implements Serializable {
 	}
 
 	/**
-	 * Sets the trailId Id of a trial. Reports a bound property update to 
-	 * listeners that have been registered to track updates of all properties 
-	 * or a property with the specified name. No event is fired if old and new trialIds are equal and non-null.
-	 * @param trialId the new id of this trial.
+	 * Sets the trailId Id of a trial. If the id is different from what was
+	 * currently set, a change notification is fired.
+	 * 
+	 * @param trialId
+	 *            the new id for this trial. Cannot be null.
 	 */
 	public void setId(String trialId) {
 		if (!Objects.equals(id, trialId)) {
@@ -64,29 +85,33 @@ public class Trial implements Serializable {
 	}
 
 	/**
-	 * Adds a listener to the list of patients. 
+	 * Add a PropertyChangeListener to the listener list. The listener is registered
+	 * for all properties. The same listener object may be added more than once, and
+	 * will be called as many times as it is added. If listener is null, no
+	 * exception is thrown and no action is taken.
+	 * 
 	 * @param listener
+	 *            - The PropertyChangeListener to be added
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-    }
-	
+		pcs.addPropertyChangeListener(listener);
+	}
+
 	/**
-	 * Constructs a new set containing the Patients in the specified collection. 
-	 * The HashMap is created with default load factor (0.75) and an initial capacity sufficient to contain the elements in the specified collection.
-	 * @return a reference to the patients in this trial as a Set
+	 * Returns a set of the patients in the trial list. Modifications made to the
+	 * returned set do not affect the set of patients in this trial.
 	 */
 	public Set<Patient> getPatients() {
-		//return patients;
 		return new HashSet<>(patients);
 	}
 
 	/**
-	 * Sets the Patients in the patient list. If there is a change:
-	 * Reports a bound property update to listeners that have been registered to track updates 
-	 * of all properties or a property with the specified name.
-	 * No event is fired if old and new values are equal and non-null.
-	 * @param patients the new set of patients for this trial.
+	 * Sets the list of patients to the specified set. Changes made to the set
+	 * outside of this trial will affect it. If this is a new set, a change
+	 * notification is fired.
+	 * 
+	 * @param patients
+	 *            the new set of patients for this trial. Cannot be null.
 	 */
 	protected void setPatients(Set<Patient> patients) {
 		if (!Objects.equals(this.patients, patients)) {
@@ -97,11 +122,12 @@ public class Trial implements Serializable {
 	}
 
 	/**
-	 * Adds the specified patient to this trial if it doesn't already exist. The 
-	 * trial id of the patient is updated with this trial's id. Returns
-	 * true if the patient was successfully added to this trial; otherwise false.
+	 * Adds the specified patient to this trial if it doesn't already exist. The
+	 * trial id of the patient is updated with this trial's id. Returns true if the
+	 * patient was successfully added to this trial; otherwise false.
 	 * 
-	 * @param patient the patient to add to this trial
+	 * @param patient
+	 *            the patient to add to this trial. Cannot be null.
 	 * @return true if the patient was added to this trial; otherwise false.
 	 */
 	public boolean addPatient(Patient patient) {
@@ -116,75 +142,78 @@ public class Trial implements Serializable {
 		}
 		return answer;
 	}
-	
+
 	/**
 	 * Returns true is Patient was successfully added to a trial.
+	 * 
 	 * @param patientId
-	 * @return patientId that was added
+	 *            the id of the patient to add to this trial. Cannot be null.
+	 * @return true if the patient was added to this trial; otherwise false.
 	 */
 	public boolean addPatient(String patientId) {
 		return addPatient(patientId, null);
 	}
-	
+
 	/**
-	 *Returns true, If a Patient has a trial Id and a trial start date, 
-	 *and start date is not null and the patient has no end date, else false.
+	 * Returns true if the specified patient has started this trial
+	 * 
 	 * @param patient
-	 * @return answer 
+	 *            The patient to check. Cannot be null.
+	 * @return answer true if the specified patient has started this trial
 	 */
 	public boolean hasPatientStartedTrial(Patient patient) {
 		boolean answer = false;
-		
+
 		if (patient.getTrialId() == id && patient.getTrialStartDate() != null && patient.getTrialEndDate() == null) {
 			answer = true;
 		}
-		
-		return answer;
-	}
-	
-	/**
-	 * Returns true if the patient is in the patient list and has a trialId  and has the
-	 * same Id of patient that has a trial start date. Else patient is not in a trial.
-	 * @param patient
-	 * @return answer
-	 */
-	public boolean isPatientInTrial(Patient patient) {
-		boolean answer = false;
-		
-		if (patients.contains(patient) && patient.getTrialId() == id && hasPatientStartedTrial(patient)) {
-			answer = true;
-		}
-		
+
 		return answer;
 	}
 
-		/**
-		 * Returns true if:  the patient was added to a "clinical trial and sets the trial start date. The start date 
-		 * cannot be false
-		 * else false.
-		 * @param patientId
-		 * @param startDate
-		 * @return answer
-		 */
+	/**
+	 * Returns true if the patient is considered to be in the trial. Please note
+	 * that a return value of true does not mean the patient is currently active in
+	 * the trial, it just means that the patient is considered to be or have been a
+	 * part of this trial.
+	 * 
+	 * @param patient
+	 *            The patient to check. Cannot be null.
+	 * @return answer true if the patient is considered to be in the trial;
+	 *         otherwise false.
+	 */
+	public boolean isPatientInTrial(Patient patient) {
+		boolean answer = false;
+
+		if (patients.contains(patient) && patient.getTrialId() == id && hasPatientStartedTrial(patient)) {
+			answer = true;
+		}
+
+		return answer;
+	}
+
+	/**
+	 * Returns true if the specified patient was added to this trial.
+	 * 
+	 * @param patientId The id of the patient to add. Cannot be null
+	 * @param startDate The date the patient started the trial. May be null
+	 * if the patient hasn't started the trial yet.
+	 * 
+	 * @return answer true if the specified patient was added to this trial; otherwise false.
+	 */
 	public boolean addPatient(String patientId, LocalDate startDate) {
 		boolean answer = false;
 		Patient patient = PatientFactory.getPatient("clinical");
 		patient.setId(patientId);
-		
+
 		if (startDate != null) {
 			patient.setTrialStartDate(startDate);
 		}
-		
+
 		answer = addPatient(patient);
 		return answer;
 	}
-	
-	/*
-	 * Returns a hash code value for the object. This method is supported for the benefit of 
-	 * hash tables such as those provided by java.util.HashMap.
-	 * @returns result
-	 * 
-	 */
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -193,16 +222,6 @@ public class Trial implements Serializable {
 		return result;
 	}
 
-
-	/* 
-	 * Indicates whether some other object is "equal to" this one. In the case that a trialId is
-	 * equal to a trialId it returns true. If the trialId is a different instance of a trial it returns false.
-	 * If a trialId has differences in case it compares two strings lexicographically, ignoring case differences. 
-	 * This method returns an integer whose sign is that of calling compareTo with normalized versions of the strings 
-	 * where case differences have been eliminated by calling Character.toLowerCase(Character.toUpperCase(character)) on each character.
-	 * 
-	 * @returns true if equals, else false
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -217,23 +236,17 @@ public class Trial implements Serializable {
 				return false;
 		} else {
 			if (other.id != null) {
-				if (id.compareToIgnoreCase(other.id) != 0 ) {
-					return false; 
+				if (id.compareToIgnoreCase(other.id) != 0) {
+					return false;
 				}
 			} else {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-
-
-	/*
-	 * @returns builder 
-	 * Returns a string containing the characters in this sequence in the same order as this sequence. 
-	 * The length of the string will be the length of this sequence.
-	 */
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -241,18 +254,20 @@ public class Trial implements Serializable {
 		builder.append(id);
 		builder.append(" has ");
 		builder.append(patients.size());
-		builder.append(" patient" );
+		builder.append(" patient");
 		if (patients.size() != 1) {
-			builder.append("s" );
+			builder.append("s");
 		}
 		return builder.toString();
 	}
 
 	/**
+	 * Returns a reference to the specified patient id if it is in this trial;
+	 * otherwise a null reference is returned.
 	 * 
-	 * @param patientId
-	 * @return answer
-	 * Returns a sequential Stream with patients as its source that match a patient to thier unique Id.
+	 * @param patientId The patient to retrieve
+	 * @return The patient with the specified Id or the null reference if the id is not
+	 * found in this trial.
 	 * 
 	 */
 	public Patient getPatient(String patientId) {
@@ -261,17 +276,21 @@ public class Trial implements Serializable {
 	}
 
 	/**
-	 * 
-	 * @return An integer representing the number of patients
-	 * Returns the number of patients in this set (its cardinality). 
-	 * 
+	 * The number of patients in considered to be or have been a part of this trial.
+	 * @return the number of patients in considered to be or have been a part of this trial. 
 	 */
 	public int getNumPatients() {
 		return patients.size();
 	}
 
+	/**
+	 * Returns true if the specified patient exists in this trial's list of patients.
+	 * 
+	 * @param patient The patient to search for.
+	 * 
+	 * @return true if the specified patient exists in this trial's list of patients; otherwise false.
+	 */
 	public boolean hasPatientInList(Patient patient) {
 		return patients.contains(patient);
 	}
-	
 }

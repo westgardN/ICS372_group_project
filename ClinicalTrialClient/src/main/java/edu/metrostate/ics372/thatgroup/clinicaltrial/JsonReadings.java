@@ -1,5 +1,5 @@
 /**
- * 
+ * File: JsonReadings.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
@@ -14,16 +14,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author Vincent J. Palodichuk
- *
+ * Utility collection class that assists in the automation of importing and exporting of Reading
+ * objects to and from a JSON file. Used by the JsonProcessor.
+ * 
+ * @author That Group
  */
 public class JsonReadings {
 	private List<JsonReading> patient_readings;
 	
 	/**
-	 * Returns the imported readings as a List.
+	 * Returns the imported readings as a List of Reading object references.
+	 * Called by the JsonProcessor after importing a JSON file to return.
 	 * 
-	 * @return the imported readings as a List.
+	 * @return the imported readings as a List of Reading object references.
 	 */
 	public List<Reading> getPatientReadings() {
 		List<Reading> answer = new LinkedList<>();
@@ -35,6 +38,11 @@ public class JsonReadings {
 		return answer;
 	}
 	
+	/**
+	 * Used by the JsonProcessor to preparing the Reading objects for exporting to a JSON file.
+	 * 
+	 * @param readings The list of Reading object references to export.
+	 */
 	public void setPatientReadings(List<Reading> readings) {
 		patient_readings = new LinkedList<>();
 		
@@ -43,6 +51,13 @@ public class JsonReadings {
 		}
 	}
 
+	/**
+	 * Used internally to facilitate automatic conversion from JSON to a Java object without having to muddy up the
+	 * domain objects with JSON specific information.
+	 * 
+	 * @author That Group
+	 *
+	 */
 	private class JsonReading {
 		private String patient_id;
 		private String reading_type;
@@ -51,6 +66,9 @@ public class JsonReadings {
 		private long reading_date;
 		
 		/**
+		 * A convenience constructor to convert a Reading object reference in to a 
+		 * JsonReading that is suitable for exporting to a JSON file.
+		 * 
 		 * @param patient_id
 		 * @param reading_type
 		 * @param reading_id
@@ -113,6 +131,11 @@ public class JsonReadings {
 			return answer; 
 		}
 		
+		/**
+		 * Used to convert this JsonReading in to a Reading object reference.
+		 * 
+		 * @return this reading converted to the correct Reading object reference.
+		 */
 		public Reading toReading() {
 			Reading answer = ReadingFactory.getReading(getReadingType());
 			answer.setPatientId(getPatientId());

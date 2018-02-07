@@ -1,3 +1,6 @@
+/**
+ * File: JsonProcessor.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.io.BufferedReader;
@@ -13,7 +16,24 @@ import com.google.gson.GsonBuilder;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
+/**
+ * The JsonProcessor is used for importing and exporting a List of Reading objects to and from a
+ * JSON file. It includes methods to read from a JSON file and write to a JSON file.
+ * 
+ * @author That Group
+ *
+ */
 public class JsonProcessor {
+	/**
+	 * Reads the specified JSON file and returns a List of Reading object references read from the
+	 * file.
+	 * 
+	 * @param filePath The file to import readings from. This file must exist and it must be in JSON format
+	 * 
+	 * @return A list of the readings that were read from the file.
+	 * 
+	 * @throws IOException indicates an error occurred while operating on the file.
+	 */
 	public static List<Reading> read(String filePath) throws IOException {
 		JsonReadings answer = null;
 		
@@ -27,13 +47,14 @@ public class JsonProcessor {
 		
 		return answer != null ? answer.getPatientReadings() : null;
 	}
+	
 	/**
-	 * Creates a GsonBuilder instance that can be used to build Gson with various configuration settings.
-	 *  GsonBuilder follows the builder pattern, and it is typically used by first invoking various configuration
-	 *   methods to set desired options, and finally calling create(). Tis Gson builder is liberal with what the parser will accept.
-	 * @param readings
-	 * @param filePathOut
-	 * @throws IOException
+	 * Writes a List of Reading objects to the specified file in JSON format
+	 * 
+	 * @param readings the list of readings to write to the file
+	 * @param filePathOut the file to write to. If it already exists, it is overwritten.
+	 *  
+	 * @throws IOException indicates an error occurred while operating on the file.
 	 */
 	public static void write(List<Reading> readings, String filePathOut) throws IOException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filePathOut)))) {
