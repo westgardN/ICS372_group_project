@@ -11,7 +11,7 @@ import javafx.stage.Popup;
 import javafx.stage.WindowEvent;
 
 /**
- * @author Vincent J. Palodichuk
+ * @author That Group
  *
  */
 public class PopupNotification {

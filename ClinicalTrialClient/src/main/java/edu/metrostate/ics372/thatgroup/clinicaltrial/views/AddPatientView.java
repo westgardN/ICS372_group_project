@@ -113,6 +113,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 
 	private boolean canEnableAddButton() {
 		return model != null && textField.getText() != null && !textField.getText().trim().isEmpty() && validatePtId() == true;
+
 	}
 	
 	private boolean validatePtId() {

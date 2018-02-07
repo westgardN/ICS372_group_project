@@ -26,8 +26,8 @@ public enum StringResource {
 	READING_NOT_ADDED_MSG ("Unable to add the reading. Please verify the Reading ID is unique for this patient."),
 		// Confirmation messages
 	PATIENT_ADDED_MSG("New Patient Added"),
-	READING_ADDED_MSG("Reading has been added.");
-	
+	READING_ADDED_MSG("Reading has been added."),
+	SPECIAL_CHAR_MSG("No special characters allowed.");
 	
 	private String literal;
 	
