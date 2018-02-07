@@ -92,20 +92,17 @@ public class ClinicalPatient extends Patient {
 		builder.append(id);
 		if (trialStartDate != null) {
 			if (trialEndDate == null) {
-				builder.append(" active in trial");
-				builder.append(trialId);
-				builder.append(" since ");
+				builder.append(": active ");
 				builder.append(trialStartDate.format(formatter));
+				builder.append(" has ");
 			} else {
-				builder.append(" inactive in trial");
-				builder.append(trialId);
+				builder.append(": inactive");
 				builder.append(" (");
 				builder.append(trialStartDate.format(formatter));
 				builder.append(" - ");
 				builder.append(trialEndDate.format(formatter));
-				builder.append(" )");
+				builder.append(") has ");
 			}
-			builder.append(" has ");
 			builder.append(journal.size());
 			builder.append(" reading");
 			if (journal.size() != 1) {
