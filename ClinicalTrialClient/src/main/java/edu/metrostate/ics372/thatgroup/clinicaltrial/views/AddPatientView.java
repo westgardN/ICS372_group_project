@@ -73,7 +73,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	 */
 	@FXML
 	public void addPatient(ActionEvent event) {
-		if (model.addPatient(textField.getText(), null)) {
+		if (model.addPatient(textField.getText().trim())) {
 			PopupNotification.showPopupMessage(StringResource.PATIENT_ADDED_MSG.get(), getScene());
 			textField.setText(StringResource.EMPTY.get());
 		} else {

@@ -222,4 +222,8 @@ public class ClinicalTrialViewModel {
 	public boolean hasPatientStartedTrial(Patient patient) {
 		return trial.hasPatientStartedTrial(patient);
 	}
+
+	public boolean addPatient(String patientId) {
+		return addPatient(patientId, null);
+	}
 }
