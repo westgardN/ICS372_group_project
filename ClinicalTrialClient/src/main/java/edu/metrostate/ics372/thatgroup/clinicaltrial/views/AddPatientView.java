@@ -91,32 +91,27 @@ public class AddPatientView extends AnchorPane implements Initializable {
 
 		textField.setOnKeyPressed((event) -> {
 			if (event.getCode() == KeyCode.ENTER) {
-				if (validate(textField.getText(), false)) {
+				if (validate(textField.getText())) {
 					addPatient(null);
 				}
 			}
 		});
 		textField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!validate(oldValue, false) && (validate(newValue, false))) {
+			if (validate(newValue) && addButton.isDisabled()) {
 				addButton.setDisable(false);
-			} else if (!validate(newValue, true)) {
+			} else if (!validate(newValue) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
-			} else if (validate(newValue, true)) {
-				addButton.setDisable(false);
+				PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
 			}
 		});
 	}
 
-	private boolean validate(String text, boolean popup) {
+	private boolean validate(String text) {
 		boolean answer = false;
 		
 		if (model != null && text != null && !text.trim().isEmpty()) {
 			if (text.matches("^[A-Za-z0-9_]+$")) {
 				answer = true;
-			} else {
-				if (popup) {
-					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
-				}
 			}
 		}
 		
