@@ -25,7 +25,7 @@ import javafx.scene.layout.AnchorPane;
  * This view is responsible for displaying the patients in a ListView for the
  * user to select to view or add readings
  * 
- * @author Vincent J. Palodichuk
+ * @author That Group
  *
  */
 public class PatientsView extends AnchorPane implements Initializable {

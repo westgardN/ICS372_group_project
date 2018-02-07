@@ -1,5 +1,5 @@
 /**
- * 
+ * File: ReadingsViews.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
@@ -24,7 +24,7 @@ import javafx.scene.layout.AnchorPane;
  * This view is responsible for displaying the readings in a TableView for a
  * selected patient
  * 
- * @author Vincent J. Palodichuk
+ * @author That Group
  *
  */
 public class ReadingsView extends AnchorPane implements Initializable {

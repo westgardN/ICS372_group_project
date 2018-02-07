@@ -1,3 +1,6 @@
+/**
+ * File: ReadingView.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
@@ -26,6 +29,7 @@ import javafx.scene.layout.VBox;
  * represents the input form required to perform the task of creating and adding
  * a new reading into a patient's journal
  *
+ * @author That Group
  */
 public class ReadingView extends AnchorPane implements Initializable {
 	private enum ErrCause {

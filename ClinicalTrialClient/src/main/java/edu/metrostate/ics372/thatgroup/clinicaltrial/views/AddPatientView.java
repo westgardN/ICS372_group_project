@@ -1,3 +1,6 @@
+/**
+ * File: AddPatientView.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import javafx.event.ActionEvent;
@@ -18,7 +21,7 @@ import java.util.ResourceBundle;
  * This view is responsible for displaying the form to add a new patient to the
  * system
  * 
- * @author Vincent J. Palodichuk
+ * @author That Group
  *
  */
 public class AddPatientView extends AnchorPane implements Initializable {

@@ -1,9 +1,13 @@
+/**
+ * File: StringResource.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 
 /**
  * Holds string literals used in the implementation of the user interface
  *
+ * @author That Group
  */
 public enum StringResource {
 	EMPTY(""),

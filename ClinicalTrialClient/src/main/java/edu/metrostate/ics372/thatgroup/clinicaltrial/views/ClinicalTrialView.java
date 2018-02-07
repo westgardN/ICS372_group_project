@@ -1,3 +1,6 @@
+/**
+ * File: ClinicalTrialView
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.File;
@@ -24,6 +27,8 @@ import javafx.stage.Stage;
 /**
  * This View is the main wrapper for the user interface and is responsible for
  * holding the the various views
+ * 
+ * @author That Group
  */
 public class ClinicalTrialView implements Initializable {
 	Stage stage;
