@@ -1,13 +1,18 @@
 /**
- * 
+ * File: Temp.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
- * @author Vincent J. Palodichuk
+ * A Temp reading consists of a single double as its value
+ * 
+ * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading
+ * 
+ * @author That Group
  *
  */
 public class Temp extends Reading {
@@ -15,7 +20,8 @@ public class Temp extends Reading {
 	protected double value;
 
 	/**
-	 * Initializes an empty temperature reading.
+	 * Initializes an empty temperature reading with the temperature initialized
+	 * to Double.NEGATIVE_INFINITY.
 	 */
 	public Temp() {
 		this(null, null, null, Double.NEGATIVE_INFINITY);
@@ -33,16 +39,16 @@ public class Temp extends Reading {
 		super(patientId, id, date, value);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#getValue()
+	/**
+	 * Returns the temperature of this reading as a double value.
 	 */
 	@Override
 	public Object getValue() {
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#setValue(java.lang.Object)
+	/**
+	 * @throws IllegalArgumentException indicates that value is not a double value greater than or equal to 0
 	 */
 	@Override
 	public void setValue(Object value) {
@@ -70,7 +76,7 @@ public class Temp extends Reading {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Temp taken ");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		String formattedDateTime = date.format(formatter);
 		builder.append(formattedDateTime);
 		builder.append(" is: ");

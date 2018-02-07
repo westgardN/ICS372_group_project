@@ -1,13 +1,18 @@
 /**
- * 
+ * File: Weight.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
- * @author Vincent J. Palodichuk
+ * A Weight reading consists of a single integer as its value
+ * 
+ * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading
+ * 
+ * @author That Group
  *
  */
 public class Weight extends Reading {
@@ -15,7 +20,7 @@ public class Weight extends Reading {
 	private int value;
 
 	/**
-	 * Initializes an empty weight reading.
+	 * Initializes an empty weight reading with the weight set to Integer.MIN_VALUE
 	 */
 	public Weight() {
 		this(null, null, null, Integer.MIN_VALUE);
@@ -33,16 +38,18 @@ public class Weight extends Reading {
 		super(patientId, id, date, value);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#getValue()
+	/**
+	 * Returns the weight of this reading as an integer value.
 	 */
 	@Override
 	public Object getValue() {
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#setValue(java.lang.Object)
+	/**
+	 * @param value sets the weight of this reading to the specified value.
+	 * @throws IllegalArgumentException indicates that value is not a number or value
+	 * is less than 0.
 	 */
 	@Override
 	public void setValue(Object value) {
@@ -74,7 +81,7 @@ public class Weight extends Reading {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Weight taken ");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		String formattedDateTime = date.format(formatter);
 		builder.append(formattedDateTime);
 		builder.append(" is: ");

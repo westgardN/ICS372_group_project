@@ -1,14 +1,20 @@
 /**
- * 
+ * File BloodPressure.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
- * @author Vincent J. Palodichuk
+ * A Blood Pressure specific reading for collecting systolic and diastolic pressure
+ * values.
+ * 
+ * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading
+ * 
+ * @author That Group
  *
  */
 public class BloodPressure extends Reading {
@@ -16,17 +22,19 @@ public class BloodPressure extends Reading {
 	private BloodPressureValue value;
 	
 	/**
-	 * 
+	 * Initializes a new empty reading.
 	 */
 	public BloodPressure() {
 		this(null, null, null, null);
 	}
 
 	/**
-	 * @param patientId
-	 * @param id
-	 * @param date
-	 * @param value
+	 * Initializes a new reading with the specified values
+	 * 
+	 * @param patientId the id of the patient this reading is associated with
+	 * @param id the id of this reading. If adding to a Set, this needs to be unique
+	 * @param date the date and time the reading was taken
+	 * @param value the blood pressure reading in this string format: sys/dia
 	 */
 	public BloodPressure(String patientId, String id, LocalDateTime date, Object value) {
 		super(patientId, id, date, value);
@@ -40,7 +48,13 @@ public class BloodPressure extends Reading {
 		return value;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Sets the value of this reading. The value can either be a String in systolic/diastolic format
+	 * and both systolic and diastolic are integer values or the value can be an instance
+	 * of a BloodPressureValue. 
+	 * 
+	 * @param value the new value for this reading. Cannot be null.
+	 * 
 	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#setValue(java.lang.Object)
 	 */
 	@Override
@@ -69,7 +83,7 @@ public class BloodPressure extends Reading {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Blood Pressure taken ");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		String formattedDateTime = date.format(formatter);
 		builder.append(formattedDateTime);
 		builder.append(" is: ");
@@ -79,24 +93,51 @@ public class BloodPressure extends Reading {
 		return builder.toString();
 	}
 	
+	/**
+	 * A simple bean to represent a blood pressure reading of systolic and diastolic values.
+	 * 
+	 * @author That Group
+	 *
+	 */
 	public class BloodPressureValue implements Serializable {
+		private static final int INDEX_DIASTOLIC = 1;
+		private static final int INDEX_SYSTOLIC = 0;
 		private static final long serialVersionUID = -6450411049437598250L;
 		private static final String DELIM = "/";
 		private int systolic;
 		private int diastolic;
 		
+		/**
+		 * Initializes a new value with both systolic and diastolic values set to Integer.MIN_VALUE
+		 */
 		public BloodPressureValue() {
 			this(Integer.MIN_VALUE, Integer.MIN_VALUE);
 		}
 		
+		/**
+		 * Initializes a new value with systolic and diastolic values set to the specified values.
+		 * 
+		 * @param value a String in systolic/diastolic format where systolic and diastolic are both
+		 * integer values both must be greater than or equal to 0.
+		 * @throws NumberFormatException indicates that value is not in systolic/diastolic format or
+		 * that systolic and diastolic are not integers
+		 * @throw IllegalArgumentException indicates that the string doesn't represent a systolic/diastolic value
+		 * or that the values are less than 0.
+		 */
 		public BloodPressureValue(String value) throws NumberFormatException {
 			
 			String[] vals = value.split(DELIM);
 			
 			if (vals.length == 2) {
 				try {
-					systolic = Integer.parseInt(vals[0]);
-					diastolic = Integer.parseInt(vals[1]);
+					int s = Integer.parseInt(vals[INDEX_SYSTOLIC]);
+					int d = Integer.parseInt(vals[INDEX_DIASTOLIC]);
+					
+					if (s < 0 || d < 0) {
+						throw new IllegalArgumentException("systolic and diastolic values must be greater than or equal to zero.");
+					}
+					systolic = s;
+					diastolic = d;
 				} catch (NumberFormatException ex) {
 					throw ex;
 				}
@@ -105,6 +146,15 @@ public class BloodPressure extends Reading {
 			}
 		}
 		
+		/**
+		 * Initializes a new value with systolic and diastolic values set to the specified values.
+		 * 
+		 * @param systolic the systolic pressure for this value. Must be greater than or equal to 0
+		 * @param diastolic the diastolic pressure for this value. Must be greater than or equal to 0
+		 * 
+		 * @throws IllegalArgumentException indicates that systolic or diastolic are less than 0
+		 * that systolic and diastolic are not integers
+		 */
 		public BloodPressureValue(int systolic, int diastolic) {
 			if (systolic < 0 || diastolic < 0) {
 				throw new IllegalArgumentException("systolic and diastolic values must be greater than or equal to zero.");
@@ -115,30 +165,38 @@ public class BloodPressure extends Reading {
 		}
 		
 		/**
-		 * @return the diastolic
+		 * @return the diastolic pressure for this value.
 		 */
 		public int getDiastolic() {
 			return diastolic;
 		}
 		
 		/**
-		 * @param diastolic the diastolic to set
+		 * @param diastolic the new diastolic pressure for this value. Must be greater than or equal to 0
 		 */
 		public void setDiastolic(int diastolic) {
+			if (diastolic < 0) {
+				throw new IllegalArgumentException("diastolic value must be greater than or equal to zero.");
+			}
+			
 			this.diastolic = diastolic;
 		}
 		
 		/**
-		 * @return the systolic
+		 * @return the systolic pressure for this value.
 		 */
 		public int getSystolic() {
 			return systolic;
 		}
 		
 		/**
-		 * @param systolic the systolic to set
+		 * @param systolic the new systolic pressure for this value. Must be greater than or equal to 0
 		 */
 		public void setSystolic(int systolic) {
+			if (systolic < 0) {
+				throw new IllegalArgumentException("systolic value must be greater than or equal to zero.");
+			}
+			
 			this.systolic = systolic;
 		}
 		
@@ -148,7 +206,7 @@ public class BloodPressure extends Reading {
 		@Override
 		public int hashCode() {
 			final int prime = 31;
-			int result = 1;
+			int result = INDEX_DIASTOLIC;
 			result = prime * result + diastolic;
 			result = prime * result + systolic;
 			return result;
@@ -181,6 +239,10 @@ public class BloodPressure extends Reading {
 			return String.format("%d%s%d", systolic, DELIM, diastolic);
 		}
 		
+		/* (non-Javadoc)
+		 * 
+		 * @see java.lang.Object#clone()
+		 */
 		@Override
 		public BloodPressureValue clone() {
 			// Clone a BloodPressureValue object
