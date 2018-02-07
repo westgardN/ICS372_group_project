@@ -1,5 +1,5 @@
 /**
- * 
+ * File: PopupNotification.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
@@ -11,11 +11,14 @@ import javafx.stage.Popup;
 import javafx.stage.WindowEvent;
 
 /**
+ * A utility class to pop-up a message on the screen.
+ * 
  * @author That Group
  *
  */
 public class PopupNotification {
-	public static Popup createPopup(final String message) {
+	
+	private static Popup createPopup(final String message) {
 	    final Popup popup = new Popup();
 	    popup.setAutoFix(true);
 	    popup.setAutoHide(true);
@@ -32,6 +35,12 @@ public class PopupNotification {
 	    return popup;
 	}
 
+	/**
+	 * Shows the specified message in a pop-up window centered on the screen.
+	 * 
+	 * @param message the message to display.
+	 * @param scene the JavaFX scene that owns the window.
+	 */
 	public static void showPopupMessage(final String message, final Scene scene) {
 	    final Popup popup = createPopup(message);
 	    popup.setOnShown(new EventHandler<WindowEvent>() {

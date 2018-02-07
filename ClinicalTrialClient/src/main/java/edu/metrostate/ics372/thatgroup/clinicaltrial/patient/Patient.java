@@ -13,8 +13,10 @@ import java.util.Set;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
 /**
+ * The patient contains an id and a journal that contains all of the Readings for the patient. Additionally,
+ * the patient has a trial start and end date to track when they enter and leave the clinical trial.
  * 
- * @author 
+ * @author That Group 
  *
  */
 public abstract class Patient implements Serializable {
@@ -62,6 +64,16 @@ public abstract class Patient implements Serializable {
 		pcs = new PropertyChangeSupport(this);
 	}
 
+
+	/**
+	 * Add a PropertyChangeListener to the listener list. The listener is registered
+	 * for all properties. The same listener object may be added more than once, and
+	 * will be called as many times as it is added. If listener is null, no
+	 * exception is thrown and no action is taken.
+	 * 
+	 * @param listener
+	 *            - The PropertyChangeListener to be added
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
@@ -69,8 +81,9 @@ public abstract class Patient implements Serializable {
 	/**
 	 * Adds a reading to this patient's Journal. Behavior of this method is defined
 	 * by the specific type of patient.
-	 * @param reading
-	 * @return
+	 * 
+	 * @param reading The reading to add
+	 * @return True if the reading was added to the journal; Otherwise false.
 	 */
 	public abstract boolean addReading(Reading reading);
 
@@ -82,7 +95,7 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
-	 * @param id the new id for this patient.
+	 * @param id the new id for this patient. Cannot be null.
 	 */
 	public void setId(String id) {
 		if (!Objects.equals(this.id, id)) {
@@ -136,14 +149,15 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
-	 * @return a reference to this patient's journal.
+	 * @return an independent set to this patient's journal. Modifications made to 
+	 * the returned set do not affect this patient's journal.
 	 */
 	public Set<Reading> getJournal() {
 		return new HashSet<>(journal);
 	}
 
 	/**
-	 * @param journal the new journal for this patient.
+	 * @param journal the new journal for this patient. Cannot be null.
 	 */
 	protected void setJournal(Set<Reading> journal) {
 		if (!Objects.equals(this.journal, journal)) {
@@ -154,6 +168,8 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
+	 * Removes the specified reading from this patient's journal if it exists.
+	 * 
 	 * @param The reading to remove from this patient's journal.
 	 */
 	public void removeReading(Reading reading) {
@@ -177,15 +193,12 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
-	 * @return true if the specified reading is contained in this patient's journal.
+	 * @return true if the specified reading is contained in this patient's journal; otherwise false.
 	 */
 	public boolean containsReading(Reading reading) {
 		return reading != null ? journal.contains(reading) : false;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -195,9 +208,6 @@ public abstract class Patient implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -237,9 +247,6 @@ public abstract class Patient implements Serializable {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
@@ -264,14 +271,15 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
-	 * @return the trialId
+	 * @return the id of the trial that this patient belongs to.
 	 */
 	public String getTrialId() {
 		return trialId;
 	}
 
 	/**
-	 * @param trialId the trialId to set
+	 * @param trialId the new id of the trial that this patient belongs to.
+	 * May be null is this patient doesn't belong to any trial.
 	 */
 	public void setTrialId(String trialId) {
 		if (!Objects.equals(this.trialId, trialId)) {

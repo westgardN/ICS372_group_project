@@ -276,8 +276,8 @@ public class Trial implements Serializable {
 	}
 
 	/**
-	 * The number of patients in considered to be or have been a part of this trial.
-	 * @return the number of patients in considered to be or have been a part of this trial. 
+	 * The number of patients in the list that are considered to be or have been a part of this trial.
+	 * @return the number of patients in the list that are considered to be or have been a part of this trial. 
 	 */
 	public int getNumPatients() {
 		return patients.size();

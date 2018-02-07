@@ -8,7 +8,7 @@ import java.util.Set;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
 /**
- * The Patient class represents a patient in a clinical trial. Because of this, the patient
+ * The Patient class represents a patient in a clinical trial. The patient
  * contains an id and a journal that contains all of the Readings for the patient. Additionally,
  * the patient has a trial start and end date to track when they enter and leave the clinical trial.
  * <p>
@@ -16,7 +16,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
  * <ul><li>If the trial end date has been set for the patient, then when you activate the add
  * method, the date of the reading must be on or before the end date of the trial.</li></ul>
  *  
- * @author 
+ * @author That Group
  *
  */
 public class ClinicalPatient extends Patient {
@@ -30,12 +30,12 @@ public class ClinicalPatient extends Patient {
 	}
 	
 	/**
-	 * Creates a new Patient object with the specified parameters
+	 * Initializes a new Patient object with the specified parameters
 	 * 
 	 * @param id
-	 *            the new id for this patient
+	 *            the id for this patient
 	 * @param journal
-	 *            the new journal for this patient.
+	 *            the journal for this patient.
 	 * @param startDate
 	 * 			  the date this patient entered the trial 
 	 * @param endDate
@@ -82,9 +82,6 @@ public class ClinicalPatient extends Patient {
 		return answer;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
