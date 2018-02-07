@@ -18,7 +18,7 @@ public class ClinicalTrialClient extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Patient Trial Client");
-		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + "resources" + File.separator + "logo256x256.png"));
+		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + "resources" + File.separator + "logov2_256x256.png"));
 		stage.getIcons().add(applicationIcon);
 		Pane pane = loadMainPane();
 		stage.setScene(createScene(pane));
