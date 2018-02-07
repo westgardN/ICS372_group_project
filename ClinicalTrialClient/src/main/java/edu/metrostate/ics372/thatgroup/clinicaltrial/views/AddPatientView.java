@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This view is responsible for displaying the form to add a new patient to the
@@ -110,6 +112,15 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	}
 
 	private boolean canEnableAddButton() {
-		return model != null && textField.getText() != null && !textField.getText().trim().isEmpty();
+		return model != null && textField.getText() != null && !textField.getText().trim().isEmpty() && validatePtId() == true;
+	}
+	
+	private boolean validatePtId() {
+		if (model.addPatient(textField.getText(), null)) {
+		     Pattern p = Pattern.compile("[^A-Za-z0-9_]", Pattern.CASE_INSENSITIVE	);
+		     Matcher m = p.matcher(textField.getText());
+			return false;
+			}
+		return true;
 	}
 }
