@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This view is responsible for displaying the form to add a new patient to the
@@ -94,34 +92,35 @@ public class AddPatientView extends AnchorPane implements Initializable {
 
 		textField.setOnKeyPressed((event) -> {
 			if (event.getCode() == KeyCode.ENTER) {
-				if (canEnableAddButton()) {
+				if (validate(textField.getText(), false)) {
 					addPatient(null);
 				}
 			}
 		});
 		textField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if ((oldValue == null || oldValue.trim().isEmpty()) && (newValue != null && !newValue.trim().isEmpty())) {
-				if (canEnableAddButton()) {
-					addButton.setDisable(false);
-				}
-			} else if ((oldValue != null && !oldValue.trim().isEmpty())
-					&& (newValue == null || newValue.trim().isEmpty())) {
+			if (!validate(oldValue, false) && (validate(newValue, false))) {
+				addButton.setDisable(false);
+			} else if (!validate(newValue, true)) {
 				addButton.setDisable(true);
+			} else if (validate(newValue, true)) {
+				addButton.setDisable(false);
 			}
 		});
 	}
 
-	private boolean canEnableAddButton() {
-		return model != null && textField.getText() != null && !textField.getText().trim().isEmpty() && validatePtId() == true;
-
-	}
-	
-	private boolean validatePtId() {
-		if (model.addPatient(textField.getText(), null)) {
-		     Pattern p = Pattern.compile("[^A-Za-z0-9_]", Pattern.CASE_INSENSITIVE	);
-		     Matcher m = p.matcher(textField.getText());
-			return false;
+	private boolean validate(String text, boolean popup) {
+		boolean answer = false;
+		
+		if (model != null && text != null && !text.trim().isEmpty()) {
+			if (text.matches("^[A-Za-z0-9_]+$")) {
+				answer = true;
+			} else {
+				if (popup) {
+					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
+				}
 			}
-		return true;
+		}
+		
+		return answer;
 	}
 }
