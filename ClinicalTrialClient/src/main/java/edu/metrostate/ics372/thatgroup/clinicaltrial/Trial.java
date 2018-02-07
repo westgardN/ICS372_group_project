@@ -118,7 +118,7 @@ public class Trial implements Serializable {
 	}
 	
 	/**
-	 * Retruns true is Patient was successfully added to a trial.
+	 * Returns true is Patient was successfully added to a trial.
 	 * @param patientId
 	 * @return patientId that was added
 	 */
@@ -201,7 +201,7 @@ public class Trial implements Serializable {
 	 * This method returns an integer whose sign is that of calling compareTo with normalized versions of the strings 
 	 * where case differences have been eliminated by calling Character.toLowerCase(Character.toUpperCase(character)) on each character.
 	 * 
-	 * @returns boolean
+	 * @returns true if equals, else false
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -229,8 +229,10 @@ public class Trial implements Serializable {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/*
+	 * @returns builder 
+	 * Returns a string containing the characters in this sequence in the same order as this sequence. 
+	 * The length of the string will be the length of this sequence.
 	 */
 	@Override
 	public String toString() {
@@ -246,11 +248,24 @@ public class Trial implements Serializable {
 		return builder.toString();
 	}
 
+	/**
+	 * 
+	 * @param patientId
+	 * @return answer
+	 * Returns a sequential Stream with patients as its source that match a patient to thier unique Id.
+	 * 
+	 */
 	public Patient getPatient(String patientId) {
 		Optional<Patient> answer = patients.stream().filter(patient -> patientId.equals(patient.getId())).findAny();
 		return answer != null && answer.isPresent() ? answer.get() : null;
 	}
 
+	/**
+	 * 
+	 * @return An integer representing the number of patients
+	 * Returns the number of patients in this set (its cardinality). 
+	 * 
+	 */
 	public int getNumPatients() {
 		return patients.size();
 	}
