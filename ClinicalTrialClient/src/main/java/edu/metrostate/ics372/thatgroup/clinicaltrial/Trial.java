@@ -100,6 +100,8 @@ public class Trial implements Serializable {
 	/**
 	 * Returns a set of the patients in the trial list. Modifications made to the
 	 * returned set do not affect the set of patients in this trial.
+	 * 
+	 * @return a set of the patients in the trial list.
 	 */
 	public Set<Patient> getPatients() {
 		return new HashSet<>(patients);
@@ -179,7 +181,7 @@ public class Trial implements Serializable {
 	 * 
 	 * @param patient
 	 *            The patient to check. Cannot be null.
-	 * @return answer true if the patient is considered to be in the trial;
+	 * @return true if the patient is considered to be in the trial;
 	 *         otherwise false.
 	 */
 	public boolean isPatientInTrial(Patient patient) {

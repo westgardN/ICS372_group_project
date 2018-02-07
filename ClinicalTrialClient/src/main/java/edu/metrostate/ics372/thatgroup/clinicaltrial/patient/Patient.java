@@ -170,7 +170,7 @@ public abstract class Patient implements Serializable {
 	/**
 	 * Removes the specified reading from this patient's journal if it exists.
 	 * 
-	 * @param The reading to remove from this patient's journal.
+	 * @param reading The reading to remove from this patient's journal.
 	 */
 	public void removeReading(Reading reading) {
 		if (reading != null && journal.contains(reading)) {
@@ -193,6 +193,10 @@ public abstract class Patient implements Serializable {
 	}
 
 	/**
+	 * Returns true if the specified reading is in this patient's journal
+	 * 
+	 * @param reading the reading to check if it exists in this patient's journal
+	 * 
 	 * @return true if the specified reading is contained in this patient's journal; otherwise false.
 	 */
 	public boolean containsReading(Reading reading) {

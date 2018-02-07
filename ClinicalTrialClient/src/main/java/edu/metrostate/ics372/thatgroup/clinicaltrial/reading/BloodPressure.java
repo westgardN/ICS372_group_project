@@ -121,7 +121,7 @@ public class BloodPressure extends Reading {
 		 * integer values both must be greater than or equal to 0.
 		 * @throws NumberFormatException indicates that value is not in systolic/diastolic format or
 		 * that systolic and diastolic are not integers
-		 * @throw IllegalArgumentException indicates that the string doesn't represent a systolic/diastolic value
+		 * @throws IllegalArgumentException indicates that the string doesn't represent a systolic/diastolic value
 		 * or that the values are less than 0.
 		 */
 		public BloodPressureValue(String value) throws NumberFormatException {

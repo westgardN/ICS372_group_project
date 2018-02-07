@@ -184,7 +184,7 @@ public abstract class Reading implements Serializable {
 	}
 
 	/**
-	 * @param the new date and time this reading was taken.
+	 * @param date the new date and time this reading was taken.
 	 */
 	public void setDate(LocalDateTime date) {
 		this.date = date;
