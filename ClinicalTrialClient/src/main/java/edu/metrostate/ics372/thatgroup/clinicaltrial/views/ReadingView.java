@@ -37,6 +37,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 	 * entered are of the correct format for their respective fields
 	 */
 	private class ReadingFormValidator {
+		private final String ALPHANUMERIC = "^[a-zA-Z0-9]+$"; // Only numbers and or letters
 		private final String INT_INPUT = "^[0-9]*$"; // Only numbers
 		private final String DECIMAL_INPUT = "[-+]?[0-9]*\\.?[0-9]+"; // Only numbers or decimals
 		private final String HOURS = "^0*([0-9]|1[0-9]|2[0-3])$"; // Only numbers between 0 & 23
@@ -53,7 +54,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 				generateErrorMessage(ErrCause.TIME);
 				return false;
 			}
-			if (!isFilled(id)) {
+			if (!isFilled(id) || !id.getText().matches(ALPHANUMERIC)) {
 				generateErrorMessage(ErrCause.ID);
 				return false;
 			}

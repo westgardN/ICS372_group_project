@@ -73,7 +73,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	 */
 	@FXML
 	public void addPatient(ActionEvent event) {
-		if (model.addPatient(textField.getText(), null)) {
+		if (model.addPatient(textField.getText().trim())) {
 			PopupNotification.showPopupMessage(StringResource.PATIENT_ADDED_MSG.get(), getScene());
 			textField.setText(StringResource.EMPTY.get());
 		} else {
@@ -91,32 +91,27 @@ public class AddPatientView extends AnchorPane implements Initializable {
 
 		textField.setOnKeyPressed((event) -> {
 			if (event.getCode() == KeyCode.ENTER) {
-				if (validate(textField.getText(), false)) {
+				if (validate(textField.getText())) {
 					addPatient(null);
 				}
 			}
 		});
 		textField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!validate(oldValue, false) && (validate(newValue, false))) {
+			if (validate(newValue) && addButton.isDisabled()) {
 				addButton.setDisable(false);
-			} else if (!validate(newValue, true)) {
+			} else if (!validate(newValue) && !textField.getText().equals(StringResource.EMPTY.get()) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
-			} else if (validate(newValue, true)) {
-				addButton.setDisable(false);
+				PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
 			}
 		});
 	}
 
-	private boolean validate(String text, boolean popup) {
+	private boolean validate(String text) {
 		boolean answer = false;
 		
 		if (model != null && text != null && !text.trim().isEmpty()) {
 			if (text.matches("^[A-Za-z0-9_]+$")) {
 				answer = true;
-			} else {
-				if (popup) {
-					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
-				}
 			}
 		}
 		

@@ -14,7 +14,7 @@ public enum StringResource {
 	TEMP_VALUE("temp"),
 	
 	// Messages 
-		// Error Messages
+		// Error messages
 	ERR_DATE_MSG("Date can not be empty."),
 	ERR_TIME_MSG("Invalid time detected.  Please check the time input fields for errors."),
 	ERR_ID_MSG("Invalid reading id detected.  Please check the reading id input fields for errors."),
