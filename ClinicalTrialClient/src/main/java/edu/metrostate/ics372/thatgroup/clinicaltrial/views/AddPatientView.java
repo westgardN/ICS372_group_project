@@ -42,8 +42,6 @@ public class AddPatientView extends AnchorPane implements Initializable {
 		} catch (IOException | IllegalStateException exception) {
 			throw new RuntimeException(exception);
 		}
-
-		addButton.setDisable(true);
 	}
 
 	/**
@@ -89,6 +87,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		addButton.setDisable(true);
 
 		textField.setOnKeyPressed((event) -> {
 			if (event.getCode() == KeyCode.ENTER) {
