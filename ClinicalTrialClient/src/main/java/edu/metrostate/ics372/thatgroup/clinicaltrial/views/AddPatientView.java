@@ -1,6 +1,3 @@
-/**
- * File: AddPatientView.java
- */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import javafx.event.ActionEvent;
