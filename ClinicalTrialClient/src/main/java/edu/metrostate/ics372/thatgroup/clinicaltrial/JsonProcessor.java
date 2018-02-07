@@ -27,7 +27,14 @@ public class JsonProcessor {
 		
 		return answer != null ? answer.getPatientReadings() : null;
 	}
-	
+	/**
+	 * Creates a GsonBuilder instance that can be used to build Gson with various configuration settings.
+	 *  GsonBuilder follows the builder pattern, and it is typically used by first invoking various configuration
+	 *   methods to set desired options, and finally calling create(). Tis Gson builder is liberal with what the parser will accept.
+	 * @param readings
+	 * @param filePathOut
+	 * @throws IOException
+	 */
 	public static void write(List<Reading> readings, String filePathOut) throws IOException {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filePathOut)))) {
 			Gson gson = new GsonBuilder().setPrettyPrinting().setLenient().create();

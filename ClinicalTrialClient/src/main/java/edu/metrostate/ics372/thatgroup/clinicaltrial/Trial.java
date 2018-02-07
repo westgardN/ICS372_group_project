@@ -14,7 +14,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
 
 /**
  * 
- * @author 
+ * @author That Group
  *
  */
 public class Trial implements Serializable {
@@ -42,6 +42,7 @@ public class Trial implements Serializable {
 	}
 	
 	/**
+	 * Trials have an id. Each trial has its own unique Id.
 	 * @return the id of this trial.
 	 */
 	public String getId() {
@@ -49,6 +50,9 @@ public class Trial implements Serializable {
 	}
 
 	/**
+	 * Sets the trailId Id of a trial. Reports a bound property update to 
+	 * listeners that have been registered to track updates of all properties 
+	 * or a property with the specified name. No event is fired if old and new trialIds are equal and non-null.
 	 * @param trialId the new id of this trial.
 	 */
 	public void setId(String trialId) {
@@ -59,11 +63,17 @@ public class Trial implements Serializable {
 		}
 	}
 
+	/**
+	 * Adds a listener to the list of patients. 
+	 * @param listener
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 	
 	/**
+	 * Constructs a new set containing the Patients in the specified collection. 
+	 * The HashMap is created with default load factor (0.75) and an initial capacity sufficient to contain the elements in the specified collection.
 	 * @return a reference to the patients in this trial as a Set
 	 */
 	public Set<Patient> getPatients() {
@@ -72,6 +82,10 @@ public class Trial implements Serializable {
 	}
 
 	/**
+	 * Sets the Patients in the patient list. If there is a change:
+	 * Reports a bound property update to listeners that have been registered to track updates 
+	 * of all properties or a property with the specified name.
+	 * No event is fired if old and new values are equal and non-null.
 	 * @param patients the new set of patients for this trial.
 	 */
 	protected void setPatients(Set<Patient> patients) {
@@ -103,10 +117,21 @@ public class Trial implements Serializable {
 		return answer;
 	}
 	
+	/**
+	 * Retruns true is Patient was successfully added to a trial.
+	 * @param patientId
+	 * @return patientId that was added
+	 */
 	public boolean addPatient(String patientId) {
 		return addPatient(patientId, null);
 	}
 	
+	/**
+	 *Returns true, If a Patient has a trial Id and a trial start date, 
+	 *and start date is not null and the patient has no end date, else false.
+	 * @param patient
+	 * @return answer 
+	 */
 	public boolean hasPatientStartedTrial(Patient patient) {
 		boolean answer = false;
 		
@@ -117,6 +142,12 @@ public class Trial implements Serializable {
 		return answer;
 	}
 	
+	/**
+	 * Returns true if the patient is in the patient list and has a trialId  and has the
+	 * same Id of patient that has a trial start date. Else patient is not in a trial.
+	 * @param patient
+	 * @return answer
+	 */
 	public boolean isPatientInTrial(Patient patient) {
 		boolean answer = false;
 		
@@ -127,6 +158,14 @@ public class Trial implements Serializable {
 		return answer;
 	}
 
+		/**
+		 * Returns true if:  the patient was added to a "clinical trial and sets the trial start date. The start date 
+		 * cannot be false
+		 * else false.
+		 * @param patientId
+		 * @param startDate
+		 * @return answer
+		 */
 	public boolean addPatient(String patientId, LocalDate startDate) {
 		boolean answer = false;
 		Patient patient = PatientFactory.getPatient("clinical");
@@ -140,8 +179,11 @@ public class Trial implements Serializable {
 		return answer;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/*
+	 * Returns a hash code value for the object. This method is supported for the benefit of 
+	 * hash tables such as those provided by java.util.HashMap.
+	 * @returns result
+	 * 
 	 */
 	@Override
 	public int hashCode() {
@@ -152,8 +194,14 @@ public class Trial implements Serializable {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/* 
+	 * Indicates whether some other object is "equal to" this one. In the case that a trialId is
+	 * equal to a trialId it returns true. If the trialId is a different instance of a trial it returns false.
+	 * If a trialId has differences in case it compares two strings lexicographically, ignoring case differences. 
+	 * This method returns an integer whose sign is that of calling compareTo with normalized versions of the strings 
+	 * where case differences have been eliminated by calling Character.toLowerCase(Character.toUpperCase(character)) on each character.
+	 * 
+	 * @returns boolean
 	 */
 	@Override
 	public boolean equals(Object obj) {
