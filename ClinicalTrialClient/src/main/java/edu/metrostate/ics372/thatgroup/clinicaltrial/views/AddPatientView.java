@@ -30,13 +30,14 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	@FXML
 	private Button addButton;
 	private ClinicalTrialViewModel model;
+	private boolean clear;
 
 	/**
 	 * Constructs a new AddPatientView instance
 	 */
 	public AddPatientView() {
 		model = null;
-
+		clear = false;
 		try (InputStream stream = getClass().getResourceAsStream("AddPatientView.fxml")) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
@@ -78,6 +79,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	public void addPatient(ActionEvent event) {
 		if (model.addPatient(textField.getText().trim())) {
 			PopupNotification.showPopupMessage(StringResource.PATIENT_ADDED_MSG.get(), getScene());
+			clear = true;
 			textField.setText(StringResource.EMPTY.get());
 		} else {
 			PopupNotification.showPopupMessage(StringResource.PATIENT_NOT_ADDED_MSG.get(), getScene());
@@ -102,9 +104,12 @@ public class AddPatientView extends AnchorPane implements Initializable {
 		textField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (validate(newValue) && addButton.isDisabled()) {
 				addButton.setDisable(false);
-			} else if (!validate(newValue) && !textField.getText().equals(StringResource.EMPTY.get()) && !addButton.isDisabled()) {
+			} else if (!validate(newValue) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
-				PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
+				if (!clear) {
+					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
+				}
+				clear = false;
 			}
 		});
 	}
