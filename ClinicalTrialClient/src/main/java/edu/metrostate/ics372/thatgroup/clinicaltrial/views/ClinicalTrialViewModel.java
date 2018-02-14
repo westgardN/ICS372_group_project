@@ -435,6 +435,11 @@ public class ClinicalTrialViewModel {
 		return addPatient(patientId, null);
 	}
 	
+	/**
+	 * Serializes the Trial to the specified file represented by the path.
+	 * 
+	 * @param path the file to write out the Trial's state to.
+	 */
 	public void serializeTrial(Path path) {
 		try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path.toFile()));
 				ObjectOutputStream oos = new ObjectOutputStream(bos);){
@@ -445,6 +450,11 @@ public class ClinicalTrialViewModel {
 		}
 	}
 	
+	/**
+	 * Deserializes the trial from the specified file represented by the path.
+	 * 
+	 * @param path the file to read the trial's state from.
+	 */
 	public void deserializeTrial(Path path) {
 		try (BufferedInputStream bos = new BufferedInputStream(new FileInputStream(path.toFile()));
 				ObjectInputStream oos = new ObjectInputStream(bos);){

@@ -158,6 +158,9 @@ public class ClinicalTrialView implements Initializable {
 	}
 
 	/**
+	 * Sets the stage for the view and registers an OnCloseRequest() handler to
+	 * save the trial's state and exit the application.
+	 * 
 	 * @param stage
 	 *            the stage to set
 	 */
@@ -171,7 +174,9 @@ public class ClinicalTrialView implements Initializable {
 
 	/**
 	 * Initializes this view and sets the view-model for the Add Patient View,
-	 * Patients View, ReadingView, and Readings View
+	 * Patients View, ReadingView, and Readings View. If the application's state
+	 * has been written to the file system, it is loaded and the views are updated
+	 * to reflect the change in the model.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
