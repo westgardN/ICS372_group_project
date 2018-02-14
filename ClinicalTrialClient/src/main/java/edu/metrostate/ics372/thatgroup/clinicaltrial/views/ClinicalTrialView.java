@@ -192,12 +192,6 @@ public class ClinicalTrialView implements Initializable {
 		
 		if (Files.exists(path)) {
 			model.deserializeTrial(path);
-			try {
-				Files.delete(path);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 }
