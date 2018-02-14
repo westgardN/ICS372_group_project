@@ -37,7 +37,7 @@ public class Trial implements Serializable {
 	public static final String PROP_ID = "id";
 
 	private static final long serialVersionUID = 4128763071142480689L;
-	private transient final PropertyChangeSupport pcs;
+	private transient PropertyChangeSupport pcs;
 	private String id;
 	private Set<Patient> patients;
 
@@ -69,6 +69,13 @@ public class Trial implements Serializable {
 		return id;
 	}
 
+	private PropertyChangeSupport getPcs() {
+		if (pcs == null) {
+			pcs = new PropertyChangeSupport(this);
+		}
+		
+		return pcs;
+	}
 	/**
 	 * Sets the trailId Id of a trial. If the id is different from what was
 	 * currently set, a change notification is fired.
@@ -80,7 +87,7 @@ public class Trial implements Serializable {
 		if (!Objects.equals(id, trialId)) {
 			String oldId = this.id;
 			this.id = trialId;
-			pcs.firePropertyChange(PROP_ID, oldId, this.id);
+			getPcs().firePropertyChange(PROP_ID, oldId, this.id);
 		}
 	}
 
@@ -94,7 +101,7 @@ public class Trial implements Serializable {
 	 *            - The PropertyChangeListener to be added
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(listener);
+		getPcs().addPropertyChangeListener(listener);
 	}
 
 	/**
@@ -119,7 +126,7 @@ public class Trial implements Serializable {
 		if (!Objects.equals(this.patients, patients)) {
 			Set<Patient> oldValue = this.patients;
 			this.patients = patients;
-			pcs.firePropertyChange(PROP_PATIENTS, oldValue, this.patients);
+			getPcs().firePropertyChange(PROP_PATIENTS, oldValue, this.patients);
 		}
 	}
 
@@ -139,7 +146,7 @@ public class Trial implements Serializable {
 			int oldValue = patients.size();
 			answer = patients.add(patient);
 			if (answer) {
-				pcs.firePropertyChange(PROP_PATIENTS, oldValue, patients.size());
+				getPcs().firePropertyChange(PROP_PATIENTS, oldValue, patients.size());
 			}
 		}
 		return answer;

@@ -33,7 +33,7 @@ import java.time.format.FormatStyle;
  */
 public abstract class Reading implements Serializable {
 	private static final long serialVersionUID = 8166141304679594433L;
-	private transient final PropertyChangeSupport pcs;
+	private transient PropertyChangeSupport pcs;
 	protected String patientId;
 	protected String id;
 	protected LocalDateTime date;
@@ -72,9 +72,17 @@ public abstract class Reading implements Serializable {
 	 *            - The PropertyChangeListener to be added
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
+		getPcs().addPropertyChangeListener(listener);
     }
 	
+	protected PropertyChangeSupport getPcs() {
+		if (pcs == null) {
+			pcs = new PropertyChangeSupport(this);
+		}
+		
+		return pcs;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

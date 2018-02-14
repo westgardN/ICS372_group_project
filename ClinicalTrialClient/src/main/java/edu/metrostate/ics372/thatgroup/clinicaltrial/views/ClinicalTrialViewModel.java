@@ -6,6 +6,14 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -425,5 +433,34 @@ public class ClinicalTrialViewModel {
 	 */
 	public boolean addPatient(String patientId) {
 		return addPatient(patientId, null);
+	}
+	
+	public void serializeTrial(Path path) {
+		try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path.toFile()));
+				ObjectOutputStream oos = new ObjectOutputStream(bos);){
+			oos.writeObject(trial);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deserializeTrial(Path path) {
+		try (BufferedInputStream bos = new BufferedInputStream(new FileInputStream(path.toFile()));
+				ObjectInputStream oos = new ObjectInputStream(bos);){
+			Object obj = oos.readObject();
+			if (obj instanceof Trial) {
+				int oldVal = trial.getNumPatients();
+				trial = (Trial)obj;
+				int newVal = trial.getNumPatients();
+				for (Patient patient : trial.getPatients()) {
+					patients.add(patient);				
+				}
+				pcs.firePropertyChange(PROP_PATIENTS, oldVal, newVal);
+			}
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

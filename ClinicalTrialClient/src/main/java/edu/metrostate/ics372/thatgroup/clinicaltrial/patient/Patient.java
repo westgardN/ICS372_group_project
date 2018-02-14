@@ -26,7 +26,7 @@ public abstract class Patient implements Serializable {
 	public static final String PROP_JOURNAL = "journal";
 	public static final String PROP_JOURNAL_SIZE = "journalSize";
 	private static final long serialVersionUID = 8450664877127813850L;
-	protected transient final PropertyChangeSupport pcs;
+	protected transient PropertyChangeSupport pcs;
 	protected String id;
 	protected String trialId;
 	protected LocalDate trialStartDate;
@@ -65,6 +65,14 @@ public abstract class Patient implements Serializable {
 	}
 
 
+	protected PropertyChangeSupport getPcs() {
+		if (pcs == null) {
+			pcs = new PropertyChangeSupport(this);
+		}
+		
+		return pcs;
+	}
+
 	/**
 	 * Add a PropertyChangeListener to the listener list. The listener is registered
 	 * for all properties. The same listener object may be added more than once, and
@@ -75,7 +83,7 @@ public abstract class Patient implements Serializable {
 	 *            - The PropertyChangeListener to be added
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
+		getPcs().addPropertyChangeListener(listener);
     }
 	
 	/**
@@ -101,7 +109,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.id, id)) {
 			String oldValue = this.id;
 			this.id = id;
-			pcs.firePropertyChange(PROP_ID, oldValue, this.id);
+			getPcs().firePropertyChange(PROP_ID, oldValue, this.id);
 		}
 	}
 
@@ -119,7 +127,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.trialStartDate, trialStartDate)) {
 			LocalDate oldValue = this.trialStartDate;
 			this.trialStartDate = trialStartDate;
-			pcs.firePropertyChange(PROP_TRIAL_START_DATE, oldValue, this.trialStartDate);
+			getPcs().firePropertyChange(PROP_TRIAL_START_DATE, oldValue, this.trialStartDate);
 		}
 	}
 
@@ -144,7 +152,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.trialEndDate, trialEndDate)) {
 			LocalDate oldValue = this.trialEndDate;
 			this.trialEndDate = trialEndDate;
-			pcs.firePropertyChange(PROP_TRIAL_END_DATE, oldValue, this.trialEndDate);
+			getPcs().firePropertyChange(PROP_TRIAL_END_DATE, oldValue, this.trialEndDate);
 		}
 	}
 
@@ -163,7 +171,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.journal, journal)) {
 			Set<Reading> oldValue = this.journal;
 			this.journal = journal;
-			pcs.firePropertyChange(PROP_JOURNAL, oldValue, this.journal);
+			getPcs().firePropertyChange(PROP_JOURNAL, oldValue, this.journal);
 		}
 	}
 
@@ -176,7 +184,7 @@ public abstract class Patient implements Serializable {
 		if (reading != null && journal.contains(reading)) {
 			int oldValue = journal.size();
 			if(journal.remove(reading)) {
-				pcs.firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
+				getPcs().firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
 			}
 		}
 	}
@@ -188,7 +196,7 @@ public abstract class Patient implements Serializable {
 		if (!journal.isEmpty()) {
 			int oldValue = journal.size();
 			journal.clear();
-			pcs.firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
+			getPcs().firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
 		}
 	}
 
@@ -289,7 +297,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.trialId, trialId)) {
 			String oldValue = this.trialId;
 			this.trialId = trialId;
-			pcs.firePropertyChange("trialId", oldValue, this.trialId);
+			getPcs().firePropertyChange("trialId", oldValue, this.trialId);
 		}
 	}
 }

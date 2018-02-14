@@ -6,6 +6,9 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +144,7 @@ public class ClinicalTrialView implements Initializable {
 	 *            the triggering entity of this action
 	 */
 	public void exit(ActionEvent event) {
+		model.serializeTrial(Paths.get("." + File.separator + "data" + File.separator + "state.dat"));
 		Platform.exit();
 	}
 
@@ -174,5 +178,11 @@ public class ClinicalTrialView implements Initializable {
 		patientsView.setModel(model);
 		readingView.setModel(model);
 		readingsView.setModel(model);
+		
+		Path path = Paths.get("." + File.separator + "data" + File.separator + "state.dat");
+		
+		if (Files.exists(path)) {
+			model.deserializeTrial(path);
+		}
 	}
 }
