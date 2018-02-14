@@ -163,6 +163,10 @@ public class ClinicalTrialView implements Initializable {
 	 */
 	public void setStage(Stage stage) {
 		this.stage = stage;
+		
+		stage.setOnCloseRequest((event) -> {
+			exit(null);
+		});
 	}
 
 	/**
@@ -183,6 +187,12 @@ public class ClinicalTrialView implements Initializable {
 		
 		if (Files.exists(path)) {
 			model.deserializeTrial(path);
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
