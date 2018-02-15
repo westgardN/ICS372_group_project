@@ -21,7 +21,13 @@ dependencies {
 	// Use the GSON library
     compile 'com.google.code.gson:gson:2.8.2'
 	
-    // Use JUnit test framework
+    // JUnit test framework
     testImplementation 'junit:junit:4.12'
+    // Mockito
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    // JUnitParams
+    testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+    // Cucumber
+    testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
 }
 
