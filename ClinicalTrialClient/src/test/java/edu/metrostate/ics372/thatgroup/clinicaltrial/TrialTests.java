@@ -1,9 +1,6 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import static org.junit.Assert.*;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
@@ -21,13 +18,13 @@ public class TrialTests {
 		assertNotNull(trial);
 		assertEquals("", trial.getId());
 		Trial trial1 = new Trial("abc");
+		trial1.setId("abc");
 		assertNotNull(trial1);
 		assertEquals("abc", trial1.getId());
 	}
 
 	@Test
-	public void testAddPropertyChangeListener() throws NoSuchMethodException, SecurityException,
-			IllegalArgumentException, IllegalAccessException, NoSuchFieldException {
+	public void testAddPropertyChangeListener() throws NoSuchMethodException, IllegalAccessException, NoSuchFieldException {
 		Trial trial = new Trial();
 		Field pcs = trial.getClass().getDeclaredField("pcs");
 		pcs.setAccessible(true);
@@ -35,11 +32,7 @@ public class TrialTests {
 		Method getPcs = trial.getClass().getDeclaredMethod("getPcs");
 		getPcs.setAccessible(true);
 		assertNotNull(getPcs);
-		trial.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-			}
-		});
+		trial.addPropertyChangeListener(null);
 	}
 
 	@Test
@@ -61,12 +54,14 @@ public class TrialTests {
 		Patient patient;
 		int numOfPatientsToAdd = 10;
 		Set<Patient> patients = new HashSet<>();
+		Set<Patient> patients1 = patients;
 		for (int i = 0; i < numOfPatientsToAdd; i++) {
 			patient = PatientFactory.getPatient("clinical");
 			patient.setId(String.format("%d", i));
 			patients.add(patient);
 		}
 		trial.setPatients(patients);
+		trial.setPatients(patients1);
 		assertEquals(numOfPatientsToAdd, trial.getNumPatients());
 		assertEquals(trial.getPatients(), patients);
 	}
@@ -158,8 +153,10 @@ public class TrialTests {
 	public void testToString() {
 		Trial trial = new Trial();
 		trial.setId("foo");
-		String result = String.format("Trial %s has %d patient%s", trial.getId(), trial.getNumPatients(),
-				trial.getNumPatients() != 1 ? "s" : "");
-		assertEquals(result, trial.toString());
+		assertEquals(String.format("Trial %s has %d patient%s", trial.getId(), trial.getNumPatients(),
+				trial.getNumPatients() != 1 ? "s" : ""), trial.toString());
+		trial.addPatient(PatientFactory.getPatient("clinical"));
+		assertEquals(String.format("Trial %s has %d patient%s", trial.getId(), trial.getNumPatients(),
+				trial.getNumPatients() != 1 ? "s" : ""), trial.toString());
 	}
 }
