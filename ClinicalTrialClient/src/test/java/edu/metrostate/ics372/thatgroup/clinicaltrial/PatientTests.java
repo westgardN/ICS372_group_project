@@ -1,6 +1,7 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import static org.junit.Assert.*;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +36,8 @@ public class PatientTests {
 		assertTrue(isEmptyPatient(patientSpy));
 		Constructor<?> constructor = patientSpy.getClass().getConstructor(argTypes);
 		Set<Reading> mySet = null;
-		Patient p1 = (Patient) constructor.newInstance(PATIENT_ID, TRIAL_ID, mySet, LocalDate.now(), LocalDate.now().plusDays(24));
+		Patient p1 = (Patient) constructor.newInstance(PATIENT_ID, TRIAL_ID, mySet, LocalDate.now(),
+				LocalDate.now().plusDays(24));
 		assertTrue(wasConstructedWithParams(p1));
 		p1 = (Patient) constructor.newInstance(PATIENT_ID, TRIAL_ID, new HashSet<>(), LocalDate.now(),
 				LocalDate.now().plusDays(24));
@@ -44,12 +46,16 @@ public class PatientTests {
 		assertTrue(wasConstructedWithParams(
 				new ClinicalPatient(PATIENT_ID, mySet, LocalDate.now(), LocalDate.now().plusDays(24))));
 	}
-	
+
+	/*
+	 * Test IllegelArgumentException is thrown by trying to get a Patient with an
+	 * incorrect type argument
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateIncorrectPatientType() {
 		PatientFactory.getPatient("patient");
 	}
-	
+
 	@Test
 	public void testGetClinicalPatient() {
 		assertTrue(new PatientFactory() instanceof PatientFactory);
@@ -57,20 +63,27 @@ public class PatientTests {
 		assertTrue(PatientFactory.getPatient("CLINICAL") instanceof ClinicalPatient);
 		assertTrue(PatientFactory.getPatient("ClInICal") instanceof ClinicalPatient);
 	}
-	
+
 	@Test
 	public void testGetPatientType() {
 		Patient p1;
 		p1 = PatientFactory.getPatient("clinical");
 		assertEquals("clinical", PatientFactory.getPatientType(p1));
-		assertTrue(p1 instanceof ClinicalPatient);
 	}
-	
+
+	/*
+	 * Test IllegelArgumentException is thrown by trying to get an incorrect Patient
+	 * type from PatientFactory. Only patients of type "clinical" are allowed
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testgetIncorrectPatientType() {
 		PatientFactory.getPatientType(patientSpy);
 	}
 
+	/*
+	 * Test to see if PropertyChangeSupport can be added to an instance of an object
+	 * of type Patient
+	 */
 	@Test
 	public void testAddPropertyChangeSupport() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException, NoSuchMethodException {
@@ -80,7 +93,7 @@ public class PatientTests {
 		Method getPcs = Patient.class.getDeclaredMethod("getPcs");
 		getPcs.setAccessible(true);
 		assertNotNull(getPcs);
-		patientSpy.addPropertyChangeListener(null);
+		patientSpy.addPropertyChangeListener(Mockito.mock(PropertyChangeListener.class));
 	}
 
 	@Test
@@ -103,22 +116,24 @@ public class PatientTests {
 	}
 
 	@Test
-	public void testSetTrialStartDate() {
-		patientSpy.setTrialStartDate(LocalDate.now());
-		assertEquals(patientSpy.getTrialStartDate(), LocalDate.now());
-		patientSpy.setTrialStartDate(LocalDate.now());
-		assertEquals(patientSpy.getTrialStartDate(), LocalDate.now());
-		patientSpy.setTrialStartDate(LocalDate.now().plusDays(24));
-		assertEquals(patientSpy.getTrialStartDate(), LocalDate.now().plusDays(24));
+	public void testSetTrialStartDateEndDate() {
+		testDates(patientSpy);
+		testDates(clinicalPatient);
 	}
 
-	@Test
-	public void testSetTrialEndDate() {
-		LocalDate now = LocalDate.now();
-		LocalDate now1 = LocalDate.now();
-		clinicalPatient.setTrialEndDate(now);
-		clinicalPatient.setTrialEndDate(now1);
-		assertEquals(now, clinicalPatient.getTrialEndDate());
+	private void testDates(Patient patient) {
+		LocalDate d1 = LocalDate.now();
+		LocalDate d2 = LocalDate.now().plusDays(24);
+
+		patient.setTrialStartDate(d1);
+		assertEquals(patient.getTrialStartDate(), d1);
+		patient.setTrialStartDate(d1);
+		assertEquals(patient.getTrialStartDate(), d1);
+		assertFalse(patient.getTrialStartDate().equals(d2));
+
+		patient.setTrialStartDate(d2);
+		assertEquals(patient.getTrialStartDate(), d2);
+		assertFalse(patient.getTrialStartDate().equals(d1));
 	}
 
 	@Test
@@ -241,51 +256,50 @@ public class PatientTests {
 
 	@Test
 	public void testToString()
-			throws NoSuchMethodException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Constructor<?> constructor = patientSpy.getClass().getConstructor(argTypes);
-		Set<Reading> readings = new HashSet<>();
-		Reading reading;
-		int i = 0;
-		new ReadingFactory();
-		for (String type : ReadingFactory.getReadingTypes()) {
-			reading = ReadingFactory.getReading(type);
-			reading.setId(String.format("%d", i++));
-			readings.add(reading);
-		}
-		Patient p1 = (Patient) constructor.newInstance(PATIENT_ID, TRIAL_ID, readings, LocalDate.now(),
-				LocalDate.now().plusDays(24));
+		Patient p1 = (Patient) constructor.newInstance(PATIENT_ID, TRIAL_ID, null, LocalDate.now(), LocalDate.now().plusDays(24));
+		Patient p2 = PatientFactory.getPatient(PatientFactory.PATIENT_CLINICAL);
+		p2.setId(OTHER_PATIENT_ID);
+		p2.setTrialStartDate(LocalDate.now());
+
+		createAndAddReadingsForPatients(p1, p2);
 		assertEquals(createReadingString(p1), p1.toString());
-		for (int j = 0; j < 3; j++) {
-			Reading r = p1.getJournal().iterator().next();
-			p1.removeReading(r);
-		}
+		assertEquals(createReadingString(p2), p2.toString());
+
+		removeReadingsForPatients(p1, p2);
+
 		assertEquals(createReadingString(p1), p1.toString());
 		p1.setTrialEndDate(null);
 		assertEquals(createReadingString(p1), p1.toString());
+		
+		assertEquals(createReadingString(p2), p2.toString());
+		p2.setTrialEndDate(LocalDate.now());
+		assertEquals(createReadingString(p2), p2.toString());
+		p2.setTrialStartDate(null);
+		assertEquals(createReadingString(p2), p2.toString());
 	}
 
-	@Test
-	public void testClinicalPatientToString() {
-		Patient p1 = PatientFactory.getPatient(PatientFactory.PATIENT_CLINICAL);
+	private void createAndAddReadingsForPatients(Patient p1, Patient p2) throws NoSuchMethodException, SecurityException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Method setJournal = p1.getClass().getDeclaredMethod("setJournal", Set.class);
+		setJournal.setAccessible(true);
 		new ReadingFactory();
-		int i = 0;
+		Set<Reading> readings = new HashSet<>();
 		for (String type : ReadingFactory.getReadingTypes()) {
-			Reading reading = ReadingFactory.getReading(type);
-			p1.setId(String.format("%d", i++));
-			p1.addReading(reading);
+			readings.add(RandomReadingGenerator.getRandomReading(type, p1));
+			p2.addReading(RandomReadingGenerator.getRandomReading(type, null));
 		}
-		p1.setTrialStartDate(LocalDate.now());
-		assertEquals(createReadingString(p1), p1.toString());
-		for (int j = 0; j < 3; j++) {
-			Reading r = p1.getJournal().iterator().next();
-			p1.removeReading(r);
-		}
-		assertEquals(createReadingString(p1), p1.toString());
-		p1.setTrialEndDate(LocalDate.now());
-		assertEquals(createReadingString(p1), p1.toString());
-		p1.setTrialStartDate(null);
-		assertEquals(createReadingString(p1), p1.toString());
+		setJournal.invoke(p1, readings);
+	}
+	
+	private void removeReadingsForPatients(Patient p1, Patient p2) {
+			for (int i = 0; i < 3; i++) {
+				Reading r1 = p1.getJournal().iterator().next();
+				p1.removeReading(r1);
+				Reading r2 = p2.getJournal().iterator().next();
+				p2.removeReading(r2);
+			}
 	}
 
 	private String createReadingString(Patient patient) {
@@ -306,7 +320,9 @@ public class PatientTests {
 							? String.format(": active %s has ", patient.getTrialStartDate().format(formatter))
 							: String.format(": inactive (%s - %s) has ", patient.getTrialStartDate().format(formatter),
 									patient.getTrialEndDate().format(formatter)),
-							patient.getJournalSize(), String.format(" reading%s", patient.getJournalSize() != 1 ? "s" : StringResource.EMPTY.get()))
+							patient.getJournalSize(),
+							String.format(" reading%s",
+									patient.getJournalSize() != 1 ? "s" : StringResource.EMPTY.get()))
 					: " has not started the trial");
 		}
 		System.out.println(result);
