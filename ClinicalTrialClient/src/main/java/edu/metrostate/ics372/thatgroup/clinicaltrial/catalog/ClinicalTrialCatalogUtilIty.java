@@ -89,8 +89,4 @@ public class ClinicalTrialCatalogUtilIty {
 		}
 		return answer;
 	}
-	 static class HibernateUtil {
-		 
-		 // /ClinicalTrialClient/src/
-	 }
 }

@@ -27,6 +27,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	@Override
 	public boolean init() {
+		catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
 		boolean wasPathSet = false;
 		if (!Files.exists(Paths.get(catalogStoragePath))) {
 			if (new File(catalogStoragePath).mkdirs()) {
