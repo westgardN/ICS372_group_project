@@ -8,25 +8,49 @@
 
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java-library'
+apply plugin: 'eclipse'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
 }
 
 dependencies {
 
-	// Use the GSON library
+	// GSON
     compile 'com.google.code.gson:gson:2.8.2'
+    
+    // SQLite
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
+    
+    // Hibernate
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.0.CR1'
+
+    // Hibernate SQLite Dialect
+	compile group: 'org.hibernate.dialect', name: 'sqlite-dialect', version: '0.1.0'
+    
+    // Spring JPA Starter
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.0.0.RELEASE'
 	
-    // JUnit test framework
+	// SLJF4 Simple Binding
+	//compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+	
+	// Javassist
+	//compile group: 'org.javassist', name: 'javassist', version: '3.22.0-GA'
+
+	// Commons Database Connection Pooling
+	//compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+
+    // JUnit
     testImplementation 'junit:junit:4.12'
+    
     // Mockito
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    
     // JUnitParams
     testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+    
     // Cucumber
     testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
 }
