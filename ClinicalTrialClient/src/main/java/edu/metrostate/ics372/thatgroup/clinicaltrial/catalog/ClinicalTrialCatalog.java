@@ -1,6 +1,7 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -20,101 +21,115 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
 
 public class ClinicalTrialCatalog implements TrialCatalog {
-	private Connection connection;
 	private String catalogStoragePath;
-	private PreparedStatement pstmt;
-	private ResultSet queryResult;
+	private Trial trial;
 
 	@Override
-	public boolean init() {
+	public boolean init(Trial trial) throws TrialCatalogException {
+		boolean answer = true;
+		
 		catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
-		boolean wasPathSet = false;
 		if (!Files.exists(Paths.get(catalogStoragePath))) {
-			if (new File(catalogStoragePath).mkdirs()) {
-				wasPathSet = true;
+			if (!Paths.get(catalogStoragePath).toFile().mkdirs()) {
+				answer = false;
 			}
 		}
-		return wasPathSet;
+		if (answer) {
+				answer = createTrialCatalog(trial);
+			if (answer) {
+				this.trial = trial;
+			}
+		}
+		return answer;
+	}
+	
+	@Override
+	public boolean isInit() {
+		return trial != null;
 	}
 
-	@Override
-	public boolean createTrialCatalog(Trial trial) {
-		boolean catalogWasCreated = false;
+	/**
+	 * Creates a new ClinicalTrialCatalog in the catalogs directory.
+	 * 
+	 * @param trial
+	 *            the <code>Trial</code> that is to be made into a Trial Catalog
+	 * @return true if the <code>ClinicalTrialCatalog</code> creation was
+	 *         successful, else false
+	 * @throws SQLException 
+	 * @throws IOException 
+	 */
+	private boolean createTrialCatalog(Trial trial) throws TrialCatalogException {
+		boolean answer = false;
 		String trialName = trial.getId();
 		String catalogFilePath = catalogStoragePath + trialName.concat(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION);
-		if (!Files.exists(Paths.get(catalogFilePath))) {
-			if (ClinicalTrialCatalogUtilIty.writeAndInitializeCatalogFile(new File(catalogFilePath), trialName)) {
-				catalogWasCreated = true;
+		try {
+			if (!Files.exists(Paths.get(catalogFilePath))) {
+					if (ClinicalTrialCatalogUtilIty.writeAndInitializeCatalogFile(Paths.get(catalogFilePath).toFile(), trialName)) {
+						answer = true;
+					}
 			}
+		} catch (SQLException | IOException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
 		}
-		return catalogWasCreated;
+		return answer;
 	}
 
 	@Override
-	public boolean insertClinic(Clinic clinic) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.INSERT_CLINIC.getStatement());
+	public boolean insertClinic(Clinic clinic) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.INSERT_CLINIC);){
 			pstmt.setString(1, clinic.getId());
 			pstmt.setString(2, clinic.getName());
-			pstmt.executeUpdate();
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			return pstmt.executeUpdate() == 1;
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	public Clinic getClinic(String clinicId) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+	public Clinic getClinic(String clinicId) throws TrialCatalogException {
 		Clinic clinic = null;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.GET_CLINIC.getStatement());
+		try(Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.GET_CLINIC);){
 			pstmt.setString(1, clinicId);
-			queryResult = pstmt.executeQuery();
+			ResultSet queryResult = pstmt.executeQuery();
 			clinic = getClinicList(queryResult).get(0);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
 		}
 		return clinic;
 	}
 
 	@Override
-	public boolean updateClinic(Clinic clinic) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.UPDATE_CLINIC.getStatement());
+	public boolean updateClinic(Clinic clinic) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.UPDATE_CLINIC);){
 			pstmt.setString(1, clinic.getId());
 			pstmt.setString(2, clinic.getName());
 			pstmt.setString(3, clinic.getId());
-			queryResult = pstmt.executeQuery();
+			pstmt.executeUpdate();
 			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	public boolean removeClinic(Clinic clinic) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.REMOVE_CLINIC.getStatement());
+	public boolean removeClinic(Clinic clinic) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.UPDATE_CLINIC);) {
 			pstmt.setString(1, clinic.getId());
 			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public boolean insertPatient(Patient patient) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.INSERT_PATIENT.getStatement());
+	public boolean insertPatient(Patient patient) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.INSERT_PATIENT);) {
 			pstmt.setString(1, patient.getId());
 			pstmt.setInt(2, patient.getJournalSize());
 			pstmt.setDate(3, Date.valueOf(patient.getTrialStartDate()));
@@ -122,107 +137,96 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public Patient getPatient(String patientId) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+	public Patient getPatient(String patientId) throws TrialCatalogException {
 		Patient patient = null;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.GET_PATIENT.getStatement());
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.GET_PATIENT);) {
 			pstmt.setString(1, patientId);
-			queryResult = pstmt.executeQuery();
+			ResultSet queryResult = pstmt.executeQuery();
 			patient = getPatientList(queryResult).get(0);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return patient;
 	}
 
 	@Override
-	public boolean updatePatient(Patient patient) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.UPDATE_PATIENT.getStatement());
+	public boolean updatePatient(Patient patient) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.UPDATE_PATIENT);) {
 			pstmt.setString(1, patient.getId());
 			pstmt.setInt(2, patient.getJournalSize());
 			pstmt.setDate(3, Date.valueOf(patient.getTrialStartDate()));
 			pstmt.setDate(4, Date.valueOf(patient.getTrialEndDate()));
 			pstmt.setString(5, patient.getId());
-			queryResult = pstmt.executeQuery();
+			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public boolean removePatient(Patient patient) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.REMOVE_PATIENT.getStatement());
+	public boolean removePatient(Patient patient) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.REMOVE_PATIENT);) {
 			pstmt.setString(1, patient.getId());
 			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public boolean insertReading(Reading reading) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.INSERT_CLINIC.getStatement());
+	public boolean insertReading(Reading reading) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.REMOVE_PATIENT);) {
 			pstmt.setString(1, reading.getId());
 			pstmt.setString(2, reading.getPatientId());
 			// pstmt.setString(3, reading.getClinicId()); TODO
 			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public Reading getReading(String readingId) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+	public Reading getReading(String readingId) throws TrialCatalogException {
 		Reading reading = null;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.GET_READING.getStatement());
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.GET_READING);) {
 			pstmt.setString(1, readingId);
-			queryResult = pstmt.executeQuery();
+			ResultSet queryResult = pstmt.executeQuery();
 			reading = getReadingList(queryResult).get(0);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return reading;
 	}
 
 	@Override
 	public boolean updateReading(Reading reading) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+		//connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean removeReading(Reading reading) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		try {
-			pstmt = connection.prepareStatement(ClinicalStatement.REMOVE_READING.getStatement());
+	public boolean removeReading(Reading reading) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.REMOVE_READING);) {
 			pstmt.setString(1, reading.getId());
 			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 	}
 
@@ -237,88 +241,84 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	}
 
 	@Override
-	public List<Clinic> getAllClinics() {
+	public List<Clinic> getAllClinics() throws TrialCatalogException {
 		return getClinicList(getResultSetForGetAllStatement(ClinicalStatement.GET_ALL_CLINICS));
 	}
 
 	@Override
-	public List<Patient> getAllPatients() {
+	public List<Patient> getAllPatients() throws TrialCatalogException {
 		return getPatientList(getResultSetForGetAllStatement(ClinicalStatement.GET_ALL_PATIENTS));
 	}
 
 	@Override
-	public List<Reading> getAllReadings() {
+	public List<Reading> getAllReadings() throws TrialCatalogException {
 		return getReadingList(getResultSetForGetAllStatement(ClinicalStatement.GET_ALL_READINGS));
 	}
 
 	@Override
-	public List<Reading> getReadingsForPatient(Patient patient) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+	public List<Reading> getReadingsForPatient(Patient patient) throws TrialCatalogException {
 		List<Reading> patientReadings = null;
-		try {
-			PreparedStatement pstmt = connection
-					.prepareStatement(ClinicalStatement.GET_PATIENT_READINGS.getStatement());
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.GET_PATIENT_READINGS);) {
 			pstmt.setString(1, patient.getId());
-			queryResult = pstmt.executeQuery(pstmt.toString());
+			ResultSet queryResult = pstmt.executeQuery();
 			patientReadings = getReadingList(queryResult);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return patientReadings;
 	}
 
 	@Override
-	public List<Reading> getReadingsForClinic(Clinic clinic) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+	public List<Reading> getReadingsForClinic(Clinic clinic) throws TrialCatalogException {
 		List<Reading> clinicReadings = null;
-		try {
-			PreparedStatement pstmt = connection.prepareStatement(ClinicalStatement.GET_CLINIC_READINGS.getStatement());
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.GET_CLINIC_READINGS);) {
 			pstmt.setString(1, clinic.getId());
-			queryResult = pstmt.executeQuery(pstmt.toString());
+			ResultSet queryResult = pstmt.executeQuery();
 			clinicReadings = getReadingList(queryResult);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return clinicReadings;
 	}
 
 	//////////////////////// End of Interface /////////////////////////////////////
 
-	private ResultSet getResultSetForGetAllStatement(ClinicalStatement statement) {
-		connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
+	private ResultSet getResultSetForGetAllStatement(String statement) throws TrialCatalogException {
 		ResultSet queryResult = null;
-		try {
-			PreparedStatement pstmt = connection.prepareStatement(statement.getStatement());
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(statement);) {
 			queryResult = pstmt.executeQuery();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return queryResult;
 	}
 
-	private List<Clinic> getClinicList(ResultSet queryResult) {
+	private List<Clinic> getClinicList(ResultSet queryResult) throws TrialCatalogException {
 		List<Clinic> clinics = new ArrayList<>();
 		try {
 			while (queryResult.next()) {
 				Clinic clinic = new Clinic();
 				clinic.setId(queryResult.getString("id"));
 				clinic.setName(queryResult.getString("name"));
-				clinic.setTrialId(ClinicalTrialCatalogUtilIty.currentCatalogName);
+				clinic.setTrialId(trial.getId());
 				clinics.add(clinic);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return clinics;
 	}
 
-	private List<Patient> getPatientList(ResultSet queryResult) {
+	private List<Patient> getPatientList(ResultSet queryResult) throws TrialCatalogException {
 		List<Patient> patients = new ArrayList<>();
 		try {
 			while (queryResult.next()) {
 				Patient patient = PatientFactory.getPatient(PatientFactory.PATIENT_CLINICAL);
 				patient.setId(queryResult.getString("id"));
-				patient.setTrialId(ClinicalTrialCatalogUtilIty.currentCatalogName);
+				patient.setTrialId(trial.getId());
 				patient.setTrialStartDate(queryResult.getDate("trial_start_date").toLocalDate());
 				patient.setTrialEndDate(queryResult.getDate("trial_end_date").toLocalDate());
 				for (Reading reading : getReadingsForPatient(patient)) {
@@ -327,12 +327,12 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 				patients.add(patient);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return patients;
 	}
 
-	private List<Reading> getReadingList(ResultSet queryResult) {
+	private List<Reading> getReadingList(ResultSet queryResult) throws TrialCatalogException {
 		List<Reading> readings = new ArrayList<>();
 		try {
 			while (queryResult.next()) {
@@ -345,8 +345,9 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 				readings.add(reading);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new TrialCatalogException(e.getMessage(), e);
 		}
 		return readings;
 	}
 }
+

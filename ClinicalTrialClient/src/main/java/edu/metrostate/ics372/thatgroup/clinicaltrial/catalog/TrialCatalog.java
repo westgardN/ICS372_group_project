@@ -1,5 +1,7 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
@@ -16,19 +18,13 @@ public interface TrialCatalog {
 	 * will be stored. If the Directory does not exist, it will be created
 	 * 
 	 * @return true if the directory was successfully created, else false
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	boolean init();
+	public boolean init(Trial trial) throws TrialCatalogException;
 
-	/**
-	 * Creates a new ClinicalTrialCatalog in the catalogs directory.
-	 * 
-	 * @param trial
-	 *            the <code>Trial</code> that is to be made into a Trial Catalog
-	 * @return true if the <code>ClinicalTrialCatalog</code> creation was
-	 *         successful, else false
-	 */
-	boolean createTrialCatalog(Trial trial);
-
+	public boolean isInit();
+	
 	/**
 	 * Inserts a new <code>Clinic</code> into the "clinics" table of the currently
 	 * selected <code>ClinicalTrialCatalog</code>
@@ -36,8 +32,9 @@ public interface TrialCatalog {
 	 * @param clinic
 	 *            the <code>Clinic</code> to be inserted
 	 * @return
+	 * @throws TrialCatalogException 
 	 */
-	boolean insertClinic(Clinic clinic);
+	public boolean insertClinic(Clinic clinic) throws TrialCatalogException;
 
 	/**
 	 * Gets a new <code>Clinic</code> object from the "clinics" table of the
@@ -48,7 +45,7 @@ public interface TrialCatalog {
 	 * @return a new <code>Clinic</code> object derived from the
 	 *         <code>clinicId</code>
 	 */
-	Clinic getClinic(String clinicId);
+	public Clinic getClinic(String clinicId) throws TrialCatalogException;
 
 	/**
 	 * Updates the information of the corresponding <code>Clinic</code> record in
@@ -58,42 +55,42 @@ public interface TrialCatalog {
 	 *            the <code>Clinic</code> to be updated
 	 * @return true if the update was successful, else false
 	 */
-	boolean updateClinic(Clinic clinic);
+	public boolean updateClinic(Clinic clinic) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param clinic
 	 * @return
 	 */
-	boolean removeClinic(Clinic clinic);
+	public boolean removeClinic(Clinic clinic) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param patient
 	 * @return
 	 */
-	boolean insertPatient(Patient patient);
+	public boolean insertPatient(Patient patient) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param patientId
 	 * @return
 	 */
-	Patient getPatient(String patientId);
+	public Patient getPatient(String patientId) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param patient
 	 * @return
 	 */
-	boolean updatePatient(Patient patient);
+	public boolean updatePatient(Patient patient) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param patient
 	 * @return
 	 */
-	boolean removePatient(Patient patient);
+	public boolean removePatient(Patient patient) throws TrialCatalogException;
 
 	/**
 	 * 
@@ -101,64 +98,64 @@ public interface TrialCatalog {
 	 * @param reading
 	 * @return
 	 */
-	boolean insertReading(Reading reading);
+	public boolean insertReading(Reading reading) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param readingId
 	 * @return
 	 */
-	Reading getReading(String readingId);
+	public Reading getReading(String readingId) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param reading
 	 * @return
 	 */
-	boolean updateReading(Reading reading);
+	boolean updateReading(Reading reading) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param reading
 	 * @return
 	 */
-	boolean removeReading(Reading reading);
+	public boolean removeReading(Reading reading) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @return
 	 */
-	List<String> getAllTrialCatalogNamesInDirectory();
+	public List<String> getAllTrialCatalogNamesInDirectory();
 
 	/**
 	 * 
 	 * @return
 	 */
-	List<Clinic> getAllClinics();
+	public List<Clinic> getAllClinics() throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @return
 	 */
-	List<Patient> getAllPatients();
+	public List<Patient> getAllPatients() throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @return
 	 */
-	List<Reading> getAllReadings();
+	public List<Reading> getAllReadings() throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param patient
 	 * @return
 	 */
-	List<Reading> getReadingsForPatient(Patient patient);
+	public List<Reading> getReadingsForPatient(Patient patient) throws TrialCatalogException;
 
 	/**
 	 * 
 	 * @param clinic
 	 * @return
 	 */
-	List<Reading> getReadingsForClinic(Clinic clinic);
+	public List<Reading> getReadingsForClinic(Clinic clinic) throws TrialCatalogException;
 }

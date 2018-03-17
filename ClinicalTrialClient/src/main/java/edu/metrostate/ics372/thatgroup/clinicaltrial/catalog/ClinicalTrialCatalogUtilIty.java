@@ -10,33 +10,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ClinicalTrialCatalogUtilIty {
-	static String catalogStoragePath = getEnvironmentSpecificStoragePath();
-	final static String CATALOG_EXTENSION = ".db";
-	static Connection currentCatalogConnection;
-	public static String currentCatalogName;
-
-	public static Connection connectToTrialCatalog(String trialName) {
-		final String CONNECTOR_PREFIX = "jdbc:sqlite:";
-		String connectionUrl = CONNECTOR_PREFIX + catalogStoragePath + trialName.concat(CATALOG_EXTENSION);
-			try {
-				if (currentCatalogConnection != null && !currentCatalogConnection.isClosed()) {
-					disconnectFromCatalog();
-				} else {
-					currentCatalogConnection = DriverManager.getConnection(connectionUrl);
-					currentCatalogName = trialName;
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		return currentCatalogConnection;
-	}
+	private static String catalogStoragePath = getEnvironmentSpecificStoragePath();
+	public final static String CATALOG_EXTENSION = ".db";
+	private static String currentCatalogName;
 	
-	public static void disconnectFromCatalog() {
+	/**
+	 * @return the currentCatalogName
+	 */
+	public static String getCurrentCatalogName() {
+		return currentCatalogName;
+	}
+
+
+	public static Connection getConnection(String trialName) throws SQLException {
+		final String CONNECTOR_PREFIX = "jdbc:sqlite:";
+		Connection answer = null;
+		String connectionUrl = CONNECTOR_PREFIX + catalogStoragePath + trialName.concat(CATALOG_EXTENSION);
 		try {
-			currentCatalogConnection.close();
+			answer = DriverManager.getConnection(connectionUrl);
+			currentCatalogName = trialName;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw e;
 		}
+		return answer;
 	}
 
 	public static String getEnvironmentSpecificStoragePath() {
@@ -62,30 +58,28 @@ public class ClinicalTrialCatalogUtilIty {
 		return (path + File.separator).toString();
 	}
 
-	 static boolean writeAndInitializeCatalogFile(File catalogFile, String trialName) {
+	 static boolean writeAndInitializeCatalogFile(File catalogFile, String trialName) throws SQLException, IOException {
 		boolean answer = false;
 		String[] initializationStatements = new String[] { 
-				ClinicalStatement.CREATE_TABLE_TRIAL.getStatement(),
-				ClinicalStatement.CREATE_TABLE_CLINICS.getStatement(),
-				ClinicalStatement.CREATE_TABLE_PATIENTS.getStatement(),
-				ClinicalStatement.CREATE_TABLE_READINGS.getStatement(),
+				ClinicalStatement.CREATE_TABLE_TRIAL,
+				ClinicalStatement.CREATE_TABLE_CLINICS,
+				ClinicalStatement.CREATE_TABLE_PATIENTS,
+				ClinicalStatement.CREATE_TABLE_READINGS,
 				};
 		try {
 			if (catalogFile.createNewFile()) {
 				answer = true;
 				for (String statement : initializationStatements) {
-					try {
-						currentCatalogConnection = connectToTrialCatalog(trialName);
-						Statement stmt = currentCatalogConnection.createStatement();
+					try (Connection conn = getConnection(trialName);
+							Statement stmt = conn.createStatement();) {
 						stmt.execute(statement);
-						disconnectFromCatalog();
 					} catch (SQLException e) {
-						e.printStackTrace();
+						throw e;
 					}
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		}
 		return answer;
 	}
