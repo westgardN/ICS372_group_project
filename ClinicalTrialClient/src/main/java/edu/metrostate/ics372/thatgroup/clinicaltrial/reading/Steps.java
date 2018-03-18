@@ -23,7 +23,7 @@ public class Steps extends Reading {
 	 * Initializes an empty steps reading with the number of steps set to Integer.MIN_VALUE.
 	 */
 	public Steps() {
-		this(null, null, null, Integer.MIN_VALUE);
+		this(null, null, null, Integer.MIN_VALUE, null);
 	}
 
 	/**
@@ -34,8 +34,8 @@ public class Steps extends Reading {
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. Must be a Number
 	 */
-	public Steps(String patientId, String id, LocalDateTime date, Object value) {
-		super(patientId, id, date, value);
+	public Steps(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
+		super(patientId, id, date, value, clinicId);
 	}
 
 	/**

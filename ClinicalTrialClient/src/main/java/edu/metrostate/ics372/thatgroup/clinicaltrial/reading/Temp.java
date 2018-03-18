@@ -24,7 +24,7 @@ public class Temp extends Reading {
 	 * to Double.NEGATIVE_INFINITY.
 	 */
 	public Temp() {
-		this(null, null, null, Double.NEGATIVE_INFINITY);
+		this(null, null, null, Double.NEGATIVE_INFINITY, null);
 	}
 
 	/**
@@ -35,8 +35,8 @@ public class Temp extends Reading {
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. Must be a Number
 	 */
-	public Temp(String patientId, String id, LocalDateTime date, Object value) {
-		super(patientId, id, date, value);
+	public Temp(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
+		super(patientId, id, date, value, clinicId);
 	}
 
 	/**

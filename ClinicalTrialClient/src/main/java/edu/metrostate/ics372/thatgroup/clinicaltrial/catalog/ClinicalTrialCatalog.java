@@ -107,8 +107,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 			pstmt.setString(1, clinic.getId());
 			pstmt.setString(2, clinic.getName());
 			pstmt.setString(3, clinic.getId());
-			pstmt.executeUpdate();
-			return true;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException ex) {
 			throw new TrialCatalogException(ex.getMessage(), ex);
 		}
@@ -119,8 +118,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
 				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.UPDATE_CLINIC);) {
 			pstmt.setString(1, clinic.getId());
-			pstmt.executeUpdate();
-			return true;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
 		}
@@ -134,8 +132,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 			pstmt.setInt(2, patient.getJournalSize());
 			pstmt.setDate(3, Date.valueOf(patient.getTrialStartDate()));
 			pstmt.setDate(4, Date.valueOf(patient.getTrialEndDate()));
-			pstmt.executeUpdate();
-			return true;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
 		}
@@ -164,8 +161,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 			pstmt.setDate(3, Date.valueOf(patient.getTrialStartDate()));
 			pstmt.setDate(4, Date.valueOf(patient.getTrialEndDate()));
 			pstmt.setString(5, patient.getId());
-			pstmt.executeUpdate();
-			return true;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
 		}
@@ -176,8 +172,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
 				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.REMOVE_PATIENT);) {
 			pstmt.setString(1, patient.getId());
-			pstmt.executeUpdate();
-			return true;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
 		}
@@ -189,9 +184,8 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.REMOVE_PATIENT);) {
 			pstmt.setString(1, reading.getId());
 			pstmt.setString(2, reading.getPatientId());
-			// pstmt.setString(3, reading.getClinicId()); TODO
-			pstmt.executeUpdate();
-			return true;
+			pstmt.setString(3, reading.getClinicId());
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
 		}
@@ -212,10 +206,19 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	}
 
 	@Override
-	public boolean updateReading(Reading reading) {
-		//connection = ClinicalTrialCatalogUtilIty.currentCatalogConnection;
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateReading(Reading reading) throws TrialCatalogException {
+		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
+				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.UPDATE_READING);) {
+			pstmt.setString(1, reading.getId());
+			pstmt.setString(2, reading.getPatientId());
+			pstmt.setString(3, reading.getClinicId());
+			pstmt.setString(4, ReadingFactory.getReadingType(reading));
+			pstmt.setDate(5, Date.valueOf(reading.getDate().toString()));
+			pstmt.setString(6, reading.getId());
+			return pstmt.executeUpdate() == 1;
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -223,8 +226,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		try (Connection conn = ClinicalTrialCatalogUtilIty.getConnection(trial.getId());
 				PreparedStatement pstmt = conn.prepareStatement(ClinicalStatement.REMOVE_READING);) {
 			pstmt.setString(1, reading.getId());
-			pstmt.executeUpdate();
-			return true;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
 		}

@@ -25,7 +25,7 @@ public class BloodPressure extends Reading {
 	 * Initializes a new empty reading.
 	 */
 	public BloodPressure() {
-		this(null, null, null, null);
+		this(null, null, null, null, null);
 	}
 
 	/**
@@ -36,8 +36,8 @@ public class BloodPressure extends Reading {
 	 * @param date the date and time the reading was taken
 	 * @param value the blood pressure reading in this string format: sys/dia
 	 */
-	public BloodPressure(String patientId, String id, LocalDateTime date, Object value) {
-		super(patientId, id, date, value);
+	public BloodPressure(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
+		super(patientId, id, date, value, clinicId);
 	}
 
 	/* (non-Javadoc)

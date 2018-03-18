@@ -25,7 +25,6 @@ public class ClinicalStatement {
             + "	type varchar(32) NOT NULL,\n"
             + "	value varchar(32) NOT NULL,\n"
             + "	date date NOT NULL,\n"
-            + "	submitted_by varchar(32),\n"
             + "	FOREIGN KEY (patient_id) REFERENCES patients(id),\n"
             + "	FOREIGN KEY (clinic_id) REFERENCES clinics(id)\n"
             + ");";
@@ -36,15 +35,15 @@ public class ClinicalStatement {
 	public static final String REMOVE_CLINIC = "DELETE FROM clinics WHERE id = ?";
 	
 	// Patients
-	public static final String INSERT_PATIENT = "INSERT INTO patients (id, num_readings, trial_start_date, trial_end_date) VALUES(?,?,?,?)";
+	public static final String INSERT_PATIENT = "INSERT INTO patients (id, trial_start_date, trial_end_date) VALUES(?,?,?)";
 	public static final String GET_PATIENT = "SELECT * FROM patients WHERE id = ?";
-	public static final String UPDATE_PATIENT = "UPDATE patients SET id = ?, num_readings = ?, trial_start_date = ?, trial_end_date = ? WHERE id = ?";
+	public static final String UPDATE_PATIENT = "UPDATE patients SET id = ?, trial_start_date = ?, trial_end_date = ? WHERE id = ?";
 	public static final String REMOVE_PATIENT = "DELETE FROM patients WHERE id = ?";
 	
 	// Readings
 	public static final String INSERT_READING = "INSERT INTO readings(id, patient_id, clinic_id, type, value, date) VALUES(?,?,?,?,?,?)";
 	public static final String GET_READING = "SELECT * FROM readings WHERE id = ?";
-	public static final String UPDATE_READING = "";
+	public static final String UPDATE_READING = "UPDATE readings SET id = ?, patient_id = ?, clinic_id = ?, type = ?, value = ?, date = ? WHERE id = ?";
 	public static final String REMOVE_READING = "DELETE FROM readings WHERE id = ?";
 	
 	// Get All

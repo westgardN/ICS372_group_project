@@ -37,12 +37,13 @@ public abstract class Reading implements Serializable {
 	protected String patientId;
 	protected String id;
 	protected LocalDateTime date;
+	protected String clinicId;
 	
 	/**
 	 * Initializes an empty reading.
 	 */
 	public Reading() {
-		this(null, null, null, null);
+		this(null, null, null, null, null);
 	}
 	
 	/**
@@ -53,10 +54,11 @@ public abstract class Reading implements Serializable {
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. 
 	 */
-	public Reading(String patientId, String id, LocalDateTime date, Object value) {
+	public Reading(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
 		this.patientId = patientId;
 		this.id = id;
 		this.date = date;
+		this.clinicId = clinicId;
 		this.setValue(value);
 		pcs = new PropertyChangeSupport(this);
 	}
@@ -209,5 +211,18 @@ public abstract class Reading implements Serializable {
 	 * on the specific type of reading this is for.
 	 */
 	public abstract void setValue(Object value);
-	
+
+	/**
+	 * @return the clinicId
+	 */
+	public String getClinicId() {
+		return clinicId;
+	}
+
+	/**
+	 * @param clinicId the clinicId to set
+	 */
+	public void setClinicId(String clinicId) {
+		this.clinicId = clinicId;
+	}
 }
