@@ -23,7 +23,7 @@ public class Weight extends Reading {
 	 * Initializes an empty weight reading with the weight set to Integer.MIN_VALUE
 	 */
 	public Weight() {
-		this(null, null, null, Integer.MIN_VALUE);
+		this(null, null, null, Integer.MIN_VALUE, null);
 	}
 	
 	/**
@@ -34,8 +34,8 @@ public class Weight extends Reading {
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. Must be a Number
 	 */
-	public Weight(String patientId, String id, LocalDateTime date, Object value) {
-		super(patientId, id, date, value);
+	public Weight(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
+		super(patientId, id, date, value, clinicId);
 	}
 	
 	/**
