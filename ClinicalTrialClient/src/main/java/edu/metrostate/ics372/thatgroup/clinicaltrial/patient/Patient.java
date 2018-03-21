@@ -6,11 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
 /**
  * The patient contains an id a trial start and end date to track when they

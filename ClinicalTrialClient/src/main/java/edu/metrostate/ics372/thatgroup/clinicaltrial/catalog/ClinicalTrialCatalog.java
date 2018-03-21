@@ -392,6 +392,44 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	}
 	
 	@Override
+	public boolean exists(Patient patient) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patient);
+		boolean answer = false;
+		
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
+				ResultSet rs = pstmt.executeQuery()){
+			if (rs.next()) {
+				answer = true;
+			}
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
+		}
+		
+		return answer;
+	}
+	
+	@Override
+	public boolean exists(Reading reading) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(reading);
+		boolean answer = false;
+		
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelect(conn, reading);
+				ResultSet rs = pstmt.executeQuery()){
+			if (rs.next()) {
+				answer = true;
+			}
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
+		}
+		
+		return answer;
+	}
+	
+	@Override
 	public boolean insert(Clinic clinic) throws TrialCatalogException {
 		validateIsInit();
 		validateParam(clinic);
@@ -466,25 +504,6 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	}
 
 	@Override
-	public boolean exists(Patient patient) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(patient);
-		boolean answer = false;
-		
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
-				ResultSet rs = pstmt.executeQuery()){
-			if (rs.next()) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-		
-		return answer;
-	}
-	
-	@Override
 	public boolean insert(Patient patient) throws TrialCatalogException {
 		validateIsInit();
 		validateParam(patient);
@@ -557,25 +576,6 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
-	@Override
-	public boolean exists(Reading reading) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(reading);
-		boolean answer = false;
-		
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, reading);
-				ResultSet rs = pstmt.executeQuery()){
-			if (rs.next()) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-		
-		return answer;
-	}
-	
 	@Override
 	public boolean insert(Reading reading) throws TrialCatalogException {
 		validateIsInit();
