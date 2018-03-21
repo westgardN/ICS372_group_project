@@ -127,16 +127,9 @@ public class ClinicalTrialCatalog implements TrialCatalog {
         return answer;
 	}
 	
-	protected PreparedStatement getPreparedSelect(final Connection conn, Clinic clinic) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_CLINIC);
-		answer.setString(1, clinic.getId());
-		answer.setString(2, getActiveId());
-        return answer;
-	}
-	
-	protected PreparedStatement getPreparedSelect(final Connection conn, Patient patient) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_PATIENT);
-		answer.setString(1, patient.getId());
+	protected PreparedStatement getPreparedSelect(final Connection conn, String id, String sql) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(sql);
+		answer.setString(1, id);
 		answer.setString(2, getActiveId());
         return answer;
 	}
@@ -147,47 +140,20 @@ public class ClinicalTrialCatalog implements TrialCatalog {
         return answer;
 	}
 	
-	protected PreparedStatement getPreparedSelectAllClinics(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_CLINICS);
-		answer.setString(1, getActiveId());
-        return answer;
-	}
-	
-	protected PreparedStatement getPreparedSelectAllPatients(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_PATIENTS);
-		answer.setString(1, getActiveId());
-        return answer;
-	}
-	
-	protected PreparedStatement getPreparedSelectAllActivePatients(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_ACTIVE_PATIENTS);
-		answer.setString(1, getActiveId());
-        return answer;
-	}
-	
-	protected PreparedStatement getPreparedSelectAllInactivePatients(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_INACTIVE_PATIENTS);
+	protected PreparedStatement getPreparedSelectAll(final Connection conn, String sql) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(sql);
 		answer.setString(1, getActiveId());
         return answer;
 	}
 	
 	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_PATIENT_READINGS);
-		answer.setString(1, getActiveId());
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_READINGS);
         return answer;
 	}
 	
-	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn, Patient patient) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_PATIENT_READINGS);
-		answer.setString(1, patient.getId());
-		answer.setString(2, getActiveId());
-        return answer;
-	}
-	
-	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn, Clinic clinic) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_CLINIC_READINGS);
-		answer.setString(1, clinic.getId());
-		answer.setString(2, getActiveId());
+	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn, String id, String sql) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(sql);
+		answer.setString(1, id);
         return answer;
 	}
 	
@@ -413,7 +379,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		boolean answer = false;
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, clinic);
+				PreparedStatement pstmt = getPreparedSelect(conn, clinic.getId(), ClinicalStatement.GET_CLINIC);
 				ResultSet rs = pstmt.executeQuery()){
 			if (rs.next()) {
 				answer = true;
@@ -450,7 +416,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		Clinic answer = null;
 
 		try(Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, clinic);
+				PreparedStatement pstmt = getPreparedSelect(conn, clinic.getId(), ClinicalStatement.GET_CLINIC);
 				ResultSet rs = pstmt.executeQuery();){
 			
 			if (rs.next()) {
@@ -506,7 +472,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		boolean answer = false;
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, patient);
+				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
 				ResultSet rs = pstmt.executeQuery()){
 			if (rs.next()) {
 				answer = true;
@@ -543,7 +509,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		Patient answer = null;
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, patient);
+				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
 				ResultSet rs = pstmt.executeQuery()) {
 			if (rs.next()) {
 				answer = loadPatient(rs);
@@ -699,7 +665,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<Clinic> answer = new LinkedList<>();
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllClinics(conn);
+				PreparedStatement pstmt = getPreparedSelectAll(conn, ClinicalStatement.GET_ALL_CLINICS);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadClinic(rs));
@@ -717,7 +683,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<Patient> answer = new LinkedList<>();
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllPatients(conn);
+				PreparedStatement pstmt = getPreparedSelectAll(conn, ClinicalStatement.GET_ALL_PATIENTS);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadPatient(rs));
@@ -735,7 +701,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<Patient> answer = new LinkedList<>();
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllActivePatients(conn);
+				PreparedStatement pstmt = getPreparedSelectAll(conn, ClinicalStatement.GET_ALL_ACTIVE_PATIENTS);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadPatient(rs));
@@ -753,7 +719,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<Patient> answer = new LinkedList<>();
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllInactivePatients(conn);
+				PreparedStatement pstmt = getPreparedSelectAll(conn, ClinicalStatement.GET_ALL_INACTIVE_PATIENTS);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadPatient(rs));
@@ -791,7 +757,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<Reading> answer = new LinkedList<>();
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllReadings(conn, patient);
+				PreparedStatement pstmt = getPreparedSelectAllReadings(conn, patient.getId(), ClinicalStatement.GET_PATIENT_READINGS);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadReading(rs));
@@ -811,7 +777,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<Reading> answer = new LinkedList<>();
 		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllReadings(conn, clinic);
+				PreparedStatement pstmt = getPreparedSelectAllReadings(conn, clinic.getId(), ClinicalStatement.GET_CLINIC_READINGS);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadReading(rs));

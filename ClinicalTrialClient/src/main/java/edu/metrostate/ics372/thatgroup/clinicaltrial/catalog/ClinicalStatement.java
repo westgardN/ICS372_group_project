@@ -51,10 +51,10 @@ public class ClinicalStatement {
 	public static final String DELETE_READING = "DELETE FROM readings WHERE id = ? AND patient_id = ? AND clinic_id = ?";
 	
 	// Get All
-	public static final String GET_ALL_CLINICS = "SELECT id, name, trial_id FROM clinics";
-	public static final String GET_ALL_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients";
-	public static final String GET_ALL_ACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE start_date IS NOT NULL AND end_date IS NULL";
-	public static final String GET_ALL_INACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients";
+	public static final String GET_ALL_CLINICS = "SELECT id, name, trial_id FROM clinics WHERE trial_id = ?";
+	public static final String GET_ALL_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ?";
+	public static final String GET_ALL_ACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ? AND start_date IS NOT NULL AND end_date IS NULL";
+	public static final String GET_ALL_INACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ? AND start_date IS NOT NULL AND end_date IS NOT NULL";
 	public static final String GET_ALL_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings";
 	public static final String GET_PATIENT_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings WHERE patient_id = ?";
 	public static final String GET_CLINIC_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings WHERE clinic_id = ?";
