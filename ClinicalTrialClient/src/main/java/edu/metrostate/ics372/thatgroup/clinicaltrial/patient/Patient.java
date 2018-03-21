@@ -6,38 +6,32 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
 /**
- * The patient contains an id and a journal that contains all of the Readings for the patient. Additionally,
- * the patient has a trial start and end date to track when they enter and leave the clinical trial.
+ * The patient contains an id a trial start and end date to track when they
+ * enter and leave the associated clinical trial.
  * 
  * @author That Group 
  *
  */
-public abstract class Patient implements Serializable {
+public class Patient implements Serializable {
 	public static final String PROP_ID = "id";
+	public static final String PROP_TRIAL_ID = "trialId";
 	public static final String PROP_TRIAL_START_DATE = "trialStartDate";
 	public static final String PROP_TRIAL_END_DATE = "trialEndDate";
-	public static final String PROP_JOURNAL = "journal";
-	public static final String PROP_JOURNAL_SIZE = "journalSize";
 	private static final long serialVersionUID = 8450664877127813850L;
 	protected transient PropertyChangeSupport pcs;
 	protected String id;
 	protected String trialId;
-	protected LocalDate trialStartDate;
-	protected LocalDate trialEndDate;
-	protected Set<Reading> journal;
+	protected LocalDate startDate;
+	protected LocalDate endDate;
 
 	/**
 	 * Initializes an empty patient.
 	 */
 	public Patient() {
-		this(null, null, null, null, null);
+		this(null, null, null, null);
 	}
 
 	/**
@@ -45,22 +39,15 @@ public abstract class Patient implements Serializable {
 	 * 
 	 * @param id the id of this patient
 	 * @param trialId the Trial this patient belongs to
-	 * @param readings the readings for this patient
 	 * @param start the date the patient started the trial
 	 * @param end the date the patient left the trial
 	 */
-	public Patient(String id, String trialId, Set<Reading> readings, LocalDate start, LocalDate end) {
+	public Patient(String id, String trialId, LocalDate start, LocalDate end) {
 		super();
 		this.id = id;
 		this.trialId = trialId;
-		if (readings != null) {
-			setJournal(readings);
-		} else {
-			journal = new HashSet<>();
-		}
-		
-		this.trialStartDate = start;
-		this.trialEndDate = end;
+		this.startDate = start;
+		this.endDate = end;
 		pcs = new PropertyChangeSupport(this);
 	}
 
@@ -87,15 +74,6 @@ public abstract class Patient implements Serializable {
     }
 	
 	/**
-	 * Adds a reading to this patient's Journal. Behavior of this method is defined
-	 * by the specific type of patient.
-	 * 
-	 * @param reading The reading to add
-	 * @return True if the reading was added to the journal; Otherwise false.
-	 */
-	public abstract boolean addReading(Reading reading);
-
-	/**
 	 * @return the id of this patient.
 	 */
 	public String getId() {
@@ -117,98 +95,36 @@ public abstract class Patient implements Serializable {
 	 * @return the date this patient entered the trial.
 	 */
 	public LocalDate getTrialStartDate() {
-		return trialStartDate;
+		return startDate;
 	}
 
 	/**
 	 * @param trialStartDate the new trial start date for this patient.
 	 */
 	public void setTrialStartDate(LocalDate trialStartDate) {
-		if (!Objects.equals(this.trialStartDate, trialStartDate)) {
-			LocalDate oldValue = this.trialStartDate;
-			this.trialStartDate = trialStartDate;
-			getPcs().firePropertyChange(PROP_TRIAL_START_DATE, oldValue, this.trialStartDate);
+		if (!Objects.equals(this.startDate, trialStartDate)) {
+			LocalDate oldValue = this.startDate;
+			this.startDate = trialStartDate;
+			getPcs().firePropertyChange(PROP_TRIAL_START_DATE, oldValue, this.startDate);
 		}
-	}
-
-	/**
-	 * @return the number of Readings in this patient's journal.
-	 */
-	public int getJournalSize() {
-		return journal.size();
 	}
 
 	/**
 	 * @return the date this patient left the trial.
 	 */
 	public LocalDate getTrialEndDate() {
-		return trialEndDate;
+		return endDate;
 	}
 
 	/**
 	 * @param trialEndDate the date this patient left the clinical trial. 
 	 */
 	public void setTrialEndDate(LocalDate trialEndDate) {
-		if (!Objects.equals(this.trialEndDate, trialEndDate)) {
-			LocalDate oldValue = this.trialEndDate;
-			this.trialEndDate = trialEndDate;
-			getPcs().firePropertyChange(PROP_TRIAL_END_DATE, oldValue, this.trialEndDate);
+		if (!Objects.equals(this.endDate, trialEndDate)) {
+			LocalDate oldValue = this.endDate;
+			this.endDate = trialEndDate;
+			getPcs().firePropertyChange(PROP_TRIAL_END_DATE, oldValue, this.endDate);
 		}
-	}
-
-	/**
-	 * @return an independent set to this patient's journal. Modifications made to 
-	 * the returned set do not affect this patient's journal.
-	 */
-	public Set<Reading> getJournal() {
-		return new HashSet<>(journal);
-	}
-
-	/**
-	 * @param journal the new journal for this patient. Cannot be null.
-	 */
-	protected void setJournal(Set<Reading> journal) {
-		if (!Objects.equals(this.journal, journal)) {
-			Set<Reading> oldValue = this.journal;
-			this.journal = journal;
-			getPcs().firePropertyChange(PROP_JOURNAL, oldValue, this.journal);
-		}
-	}
-
-	/**
-	 * Removes the specified reading from this patient's journal if it exists.
-	 * 
-	 * @param reading The reading to remove from this patient's journal.
-	 */
-	public void removeReading(Reading reading) {
-		if (reading != null && journal.contains(reading)) {
-			int oldValue = journal.size();
-			if(journal.remove(reading)) {
-				getPcs().firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
-			}
-		}
-	}
-
-	/**
-	 * Removes all of the readings from this patient's journal.
-	 */
-	public void removeAllReadings() {
-		if (!journal.isEmpty()) {
-			int oldValue = journal.size();
-			journal.clear();
-			getPcs().firePropertyChange(PROP_JOURNAL_SIZE, oldValue, journal.size());
-		}
-	}
-
-	/**
-	 * Returns true if the specified reading is in this patient's journal
-	 * 
-	 * @param reading the reading to check if it exists in this patient's journal
-	 * 
-	 * @return true if the specified reading is contained in this patient's journal; otherwise false.
-	 */
-	public boolean containsReading(Reading reading) {
-		return reading != null ? journal.contains(reading) : false;
 	}
 
 	@Override
@@ -268,16 +184,10 @@ public abstract class Patient implements Serializable {
 		builder.append(" (Trial ");
 		builder.append(trialId);
 		builder.append(") (");
-		builder.append(trialStartDate.format(formatter));
-		if (trialEndDate != null) {
+		builder.append(startDate.format(formatter));
+		if (endDate != null) {
 			builder.append(" - ");
-			builder.append(trialEndDate.format(formatter));
-		}
-		builder.append(") has ");
-		builder.append(journal.size());
-		builder.append(" reading");
-		if (journal.size() != 1) {
-			builder.append("s");
+			builder.append(endDate.format(formatter));
 		}
 		return builder.toString();
 	}
@@ -297,7 +207,7 @@ public abstract class Patient implements Serializable {
 		if (!Objects.equals(this.trialId, trialId)) {
 			String oldValue = this.trialId;
 			this.trialId = trialId;
-			getPcs().firePropertyChange("trialId", oldValue, this.trialId);
+			getPcs().firePropertyChange("TRIAL_ID", oldValue, this.trialId);
 		}
 	}
 }

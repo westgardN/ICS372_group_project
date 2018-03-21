@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
 
 /**
  * The Trial bean is used to hold information about a clinical trial. The trial
@@ -22,7 +21,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
  * @author That Group
  *
  */
-public class Trial implements Serializable {
+public class Trial implements Serializable, Cloneable {
 	private static final String DEFAULT_TRIAL_ID = "";
 
 	/**
@@ -39,7 +38,9 @@ public class Trial implements Serializable {
 	private static final long serialVersionUID = 4128763071142480689L;
 	private transient PropertyChangeSupport pcs;
 	private String id;
-	private Set<Patient> patients;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	
 
 	/**
 	 * Initializes this trial with no id.
@@ -49,14 +50,14 @@ public class Trial implements Serializable {
 	}
 
 	/**
-	 * Initializes this trial with the specified values.
+	 * Initializes this trial with the specified id.
 	 * 
 	 * @param trialId
 	 *            the id of this trial. Cannot be null.
 	 */
 	public Trial(String trialId) {
 		this.id = trialId;
-		patients = new HashSet<>();
+		this.startDate = LocalDate.now();
 		pcs = new PropertyChangeSupport(this);
 	}
 
@@ -102,32 +103,6 @@ public class Trial implements Serializable {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		getPcs().addPropertyChangeListener(listener);
-	}
-
-	/**
-	 * Returns a set of the patients in the trial list. Modifications made to the
-	 * returned set do not affect the set of patients in this trial.
-	 * 
-	 * @return a set of the patients in the trial list.
-	 */
-	public Set<Patient> getPatients() {
-		return new HashSet<>(patients);
-	}
-
-	/**
-	 * Sets the list of patients to the specified set. Changes made to the set
-	 * outside of this trial will affect it. If this is a new set, a change
-	 * notification is fired.
-	 * 
-	 * @param patients
-	 *            the new set of patients for this trial. Cannot be null.
-	 */
-	protected void setPatients(Set<Patient> patients) {
-		if (!Objects.equals(this.patients, patients)) {
-			Set<Patient> oldValue = this.patients;
-			this.patients = patients;
-			getPcs().firePropertyChange(PROP_PATIENTS, oldValue, this.patients);
-		}
 	}
 
 	/**
@@ -301,5 +276,36 @@ public class Trial implements Serializable {
 	 */
 	public boolean hasPatientInList(Patient patient) {
 		return patients.contains(patient);
+	}
+	
+    @Override
+    public Trial clone() {
+    	Trial answer;
+        
+        try {
+            answer = (Trial) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Trial.clone(): This class doe not implement Cloneable.");
+        }
+        
+        answer.id = this.id;
+        answer.patients = new HashSet<>(this.patients);        
+        
+        return answer;
+    }
+
+	public void setStartDate(LocalDate localDate) {
+		this.startDate = localDate;
+	}
+	
+	public void setEndDate(LocalDate localDate) {
+		this.endDate = localDate;
+	}
+	
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+	public LocalDate getEndDate() {
+		return this.endDate;
 	}
 }
