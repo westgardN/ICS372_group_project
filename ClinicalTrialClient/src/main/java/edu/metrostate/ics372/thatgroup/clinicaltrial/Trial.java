@@ -22,7 +22,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.PatientFactory;
  * @author That Group
  *
  */
-public class Trial implements Serializable {
+public class Trial implements Serializable, Cloneable {
 	private static final String DEFAULT_TRIAL_ID = "";
 
 	/**
@@ -39,7 +39,9 @@ public class Trial implements Serializable {
 	private static final long serialVersionUID = 4128763071142480689L;
 	private transient PropertyChangeSupport pcs;
 	private String id;
-	private Set<Patient> patients;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	
 
 	/**
 	 * Initializes this trial with no id.
@@ -56,7 +58,7 @@ public class Trial implements Serializable {
 	 */
 	public Trial(String trialId) {
 		this.id = trialId;
-		patients = new HashSet<>();
+		this.startDate = LocalDate.now();
 		pcs = new PropertyChangeSupport(this);
 	}
 
@@ -301,5 +303,36 @@ public class Trial implements Serializable {
 	 */
 	public boolean hasPatientInList(Patient patient) {
 		return patients.contains(patient);
+	}
+	
+    @Override
+    public Trial clone() {
+    	Trial answer;
+        
+        try {
+            answer = (Trial) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException("Trial.clone(): This class doe not implement Cloneable.");
+        }
+        
+        answer.id = this.id;
+        answer.patients = new HashSet<>(this.patients);        
+        
+        return answer;
+    }
+
+	public void setStartDate(LocalDate localDate) {
+		this.startDate = localDate;
+	}
+	
+	public void setEndDate(LocalDate localDate) {
+		this.endDate = localDate;
+	}
+	
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+	public LocalDate getEndDate() {
+		return this.endDate;
 	}
 }

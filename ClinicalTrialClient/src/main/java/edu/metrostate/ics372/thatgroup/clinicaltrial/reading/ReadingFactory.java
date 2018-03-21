@@ -15,15 +15,23 @@ import java.util.List;
  *
  */
 public class ReadingFactory {
+	public static final String PRETTY_WEIGHT = "Weight";
+	public static final String PRETTY_TEMPERATURE = "Temperature";
+	public static final String PRETTY_STEPS = "Steps";
+	private static final String PRETTY_BLOOD_PRESSURE = "Blood Pressure";
+	public static final String WEIGHT = "weight";
+	public static final String TEMPERATURE = "temp";
+	public static final String STEPS = "steps";
+	public static final String BLOOD_PRESSURE = "blood_press";
 	private static List<String> readingTypes;
 	
 	{
 		readingTypes = new ArrayList<>();
 		
-		readingTypes.add("blood_press");
-		readingTypes.add("steps");
-		readingTypes.add("temp");
-		readingTypes.add("weight");
+		readingTypes.add(BLOOD_PRESSURE);
+		readingTypes.add(STEPS);
+		readingTypes.add(TEMPERATURE);
+		readingTypes.add(WEIGHT);
 	}
 	
 	/**
@@ -50,16 +58,16 @@ public class ReadingFactory {
 		Reading answer = null;
 		
 		switch(type.toLowerCase()) {
-		case "blood_press":
+		case BLOOD_PRESSURE:
 			answer = new BloodPressure();
 			break;
-		case "steps":
+		case STEPS:
 			answer = new Steps();
 			break;
-		case "temp":
+		case TEMPERATURE:
 			answer = new Temp();
 			break;
-		case "weight":
+		case WEIGHT:
 			answer = new Weight();
 			break;
 		default:
@@ -82,17 +90,17 @@ public class ReadingFactory {
 		String answer = null;
 		
 		if (reading instanceof BloodPressure) {
-			answer = "blood_press";
+			answer = BLOOD_PRESSURE;
 		} else if (reading instanceof Steps) {
-			answer = "steps";
+			answer = STEPS;
 		} else if (reading instanceof Temp) {
-			answer = "temp";
+			answer = TEMPERATURE;
 		} else if (reading instanceof Weight) {
-			answer = "weight";
+			answer = WEIGHT;
 		} else if (reading != null) {
 			answer = reading.getClass().getName();
 		} else {
-			throw new IllegalArgumentException("reading cannot be null.");
+			throw new IllegalArgumentException("reading cannot be null or is an unknown type.");
 		}
 		
 		return answer;
@@ -110,17 +118,17 @@ public class ReadingFactory {
 		String answer = null;
 		
 		if (reading instanceof BloodPressure) {
-			answer = "Blood Pressure";
+			answer = PRETTY_BLOOD_PRESSURE;
 		} else if (reading instanceof Steps) {
-			answer = "Steps";
+			answer = PRETTY_STEPS;
 		} else if (reading instanceof Temp) {
-			answer = "Temperature";
+			answer = PRETTY_TEMPERATURE;
 		} else if (reading instanceof Weight) {
-			answer = "Weight";
+			answer = PRETTY_WEIGHT;
 		} else if (reading != null) {
 			answer = reading.getClass().getName();
 		} else {
-			throw new IllegalArgumentException("reading cannot be null.");
+			throw new IllegalArgumentException("reading cannot be null or is an unknown type.");
 		}
 		
 		return answer;

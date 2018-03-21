@@ -1,7 +1,5 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
@@ -9,153 +7,336 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
 
 /**
+ * The TrialCatalog interface is used to access the data of a specific trial.
+ * You can check for the existence of, create, update, delete, and retrieve
+ * data for clinics, patients, and readings.
+ * 
  * @author ThatGroup
  *
  */
 public interface TrialCatalog {
 	/**
-	 * Initializes the directory to where the <code>ClinicalTrialCatalog</code>'s
-	 * will be stored. If the Directory does not exist, it will be created
+	 * Initializes the trial catalog and sets the specified trial as the
+	 * active trial. Returns true if the catalog was successfully initialized
+	 * and is ready to be used; otherwise false is returned.
 	 * 
-	 * @return true if the directory was successfully created, else false
-	 * @throws IOException 
-	 * @throws SQLException 
+	 * @param trial 
+	 * 			  the id of the <code>Trial</code> to be retrieved and activated
+	 * must be set. If the id field identifies a valid trial, the remaining
+	 * fields of the specified trial are populated with the retrieved data, the
+	 * trial becomes the active trial and the method returns true; otherwise false
+	 * is returned.
+	 * @return true if the catalog was successfully initialized and is ready
+	 * to be used; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that trial is null or that an error
+	 * occurred during the initialization process. 
 	 */
 	public boolean init(Trial trial) throws TrialCatalogException;
 
+	/**
+	 * Returns true if the catalog has been initialized; otherwise false is returned.
+	 * 
+	 * @return true if the catalog has been initialized; otherwise false is returned.
+	 */
 	public boolean isInit();
 	
 	/**
-	 * Inserts a new <code>Clinic</code> into the "clinics" table of the currently
-	 * selected <code>ClinicalTrialCatalog</code>
+	 * Returns true if the specified clinic exists within this catalog;
+	 * otherwise false is returned.
 	 * 
 	 * @param clinic
-	 *            the <code>Clinic</code> to be inserted
-	 * @return
-	 * @throws TrialCatalogException 
+	 *            the id of the <code>Clinic</code> to be checked must be
+	 *            set. If the id field identifies a valid clinic then the
+	 *            method returns true; otherwise false is returned. 
+	 * @return true if the id field identifies a valid clinic; otherwise
+	 * false is returned.
+	 * @throws TrialCatalogException indicates that clinic is null or
+	 * another type of error occurred. 
 	 */
-	public boolean insertClinic(Clinic clinic) throws TrialCatalogException;
-
+	public boolean exists(Clinic clinic) throws TrialCatalogException;
+	
 	/**
-	 * Gets a new <code>Clinic</code> object from the "clinics" table of the
-	 * currently selected <code>ClinicalTrialCatalog</code>
-	 * 
-	 * @param clinicId
-	 *            the id of the <code>Clinic</code> to be selected
-	 * @return a new <code>Clinic</code> object derived from the
-	 *         <code>clinicId</code>
-	 */
-	public Clinic getClinic(String clinicId) throws TrialCatalogException;
-
-	/**
-	 * Updates the information of the corresponding <code>Clinic</code> record in
-	 * the currently selected <code>ClinicalTrialCatalog</code>
+	 * Inserts the specified <code>clinic</code> into the catalog. If the specified
+	 * clinic already exists, a TrialCatalogException will be thrown. Returns true
+	 * if the specified clinic was inserted in to the catalog; otherwise false is
+	 * returned.
 	 * 
 	 * @param clinic
-	 *            the <code>Clinic</code> to be updated
-	 * @return true if the update was successful, else false
+	 *            the <code>Clinic</code> to be insert in to the catalog.
+	 * @return true if the specified clinic was inserted in to the catalog;
+	 * otherwise false is returned.
+	 * @throws TrialCatalogException indicates that clinic is null, the specified
+	 * clinic id already exists, or another type of error occurred. 
 	 */
-	public boolean updateClinic(Clinic clinic) throws TrialCatalogException;
+	public boolean insert(Clinic clinic) throws TrialCatalogException;
 
 	/**
+	 * If the specified clinic id specifies a valid clinic, then a new Clinic is
+	 * created and populated with the retrieved data and returned; otherwise null
+	 * is returned.
 	 * 
 	 * @param clinic
-	 * @return
+	 *            the id of the <code>Clinic</code> to be retrieved must be
+	 *            set. If the id field identifies a valid clinic, a new Clinic
+	 *            is created and its fields are populated with the
+	 *            retrieved data and returned; otherwise null is returned. 
+	 * @return true if the specified clinic was retrieved; otherwise false.
+	 * @throws TrialCatalogException indicates that clinic is null or an error
+	 * was encountered.
 	 */
-	public boolean removeClinic(Clinic clinic) throws TrialCatalogException;
+	public Clinic get(Clinic clinic) throws TrialCatalogException;
 
 	/**
+	 * Updates the existing clinic record, specified by the clinic id of
+	 * the specified clinic, with the information contained within the
+	 * specified clinic. Returns true if the updated information was saved;
+	 * otherwise false is returned.
+	 * 
+	 * @param clinic
+	 *            the clinic must not be null and the id of the specified clinic
+	 *            must be a valid id for a clinic within this catalog. 
+	 * @return true if the updated information was saved; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that clinic is null or an error
+	 * was encountered.
+	 */
+	public boolean update(Clinic clinic) throws TrialCatalogException;
+
+	/**
+	 * Removes the specified clinic from the catalog. A clinic can only be removed
+	 * from the catalog if it does not have any associated readings.
+	 * 
+	 * @param clinic 
+	 *            the clinic must not be null and the id of the specified clinic
+	 *            must be a valid id for a clinic within this catalog. 
+	 * @return true if the clinic was removed from the catalog; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that clinic is null or an error
+	 * was encountered such as the clinic having associated readings.
+	 */
+	public boolean remove(Clinic clinic) throws TrialCatalogException;
+
+	/**
+	 * Returns true if the specified patient exists within this catalog;
+	 * otherwise false is returned.
 	 * 
 	 * @param patient
-	 * @return
+	 *            the id of the <code>Patient</code> to be checked must be
+	 *            set. If the id field identifies a valid patient then the
+	 *            method returns true; otherwise false is returned. 
+	 * @return true if the id field identifies a valid patient; otherwise
+	 * false is returned.
+	 * @throws TrialCatalogException indicates that patient is null or
+	 * another type of error occurred. 
 	 */
-	public boolean insertPatient(Patient patient) throws TrialCatalogException;
-
+	public boolean exists(Patient patient) throws TrialCatalogException;
+	
 	/**
-	 * 
-	 * @param patientId
-	 * @return
-	 */
-	public Patient getPatient(String patientId) throws TrialCatalogException;
-
-	/**
-	 * 
-	 * @param patient
-	 * @return
-	 */
-	public boolean updatePatient(Patient patient) throws TrialCatalogException;
-
-	/**
+	 * Inserts the specified <code>patient</code> into the catalog. If the specified
+	 * patient already exists, a TrialCatalogException will be thrown. Returns true
+	 * if the specified patient was inserted in to the catalog; otherwise false is
+	 * returned.
 	 * 
 	 * @param patient
-	 * @return
+	 *            the <code>Patient</code> to be insert in to the catalog.
+	 * @return true if the specified patient was inserted in to the catalog;
+	 * otherwise false is returned.
+	 * @throws TrialCatalogException indicates that patient is null, the specified
+	 * patient id already exists, or another type of error occurred. 
 	 */
-	public boolean removePatient(Patient patient) throws TrialCatalogException;
+	public boolean insert(Patient patient) throws TrialCatalogException;
 
 	/**
+	 * If the specified patient id specifies a valid patient, then a new Patient is
+	 * created populated with the retrieved data and returned; otherwise null
+	 * is returned.
 	 * 
 	 * @param patient
+	 *            the id of the <code>Patient</code> to be retrieved must be
+	 *            set. If the id field identifies a valid patient, a new Patient
+	 *            is created and its fields are populated with the
+	 *            retrieved data and the method returns a reference to it; otherwise
+	 *            null is returned. 
+	 * @return true if the specified patient was retrieved; otherwise false.
+	 * @throws TrialCatalogException indicates that patient is null or an error
+	 * was encountered.
+	 */
+	public Patient get(Patient patient) throws TrialCatalogException;
+
+	/**
+	 * Updates the existing patient record, specified by the patient id of
+	 * the specified patient, with the information contained within the
+	 * specified patient. Returns true if the updated information was saved;
+	 * otherwise false is returned.
+	 * 
+	 * @param patient
+	 *            the patient must not be null and the id of the specified patient
+	 *            must be a valid id for a patient within this catalog. 
+	 * @return true if the updated information was saved; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that patient is null or an error
+	 * was encountered.
+	 */
+	public boolean update(Patient patient) throws TrialCatalogException;
+
+	/**
+	 * Removes the specified patient from the catalog. A patient can only be removed
+	 * from the catalog if it does not have any associated readings.
+	 * 
+	 * @param patient 
+	 *            the patient must not be null and the id of the specified patient
+	 *            must be a valid id for a patient within this catalog. 
+	 * @return true if the patient was removed from the catalog; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that patient is null or an error
+	 * was encountered such as the patient having associated readings.
+	 */
+	public boolean remove(Patient patient) throws TrialCatalogException;
+
+
+	/**
+	 * Returns true if the specified reading exists within this catalog;
+	 * otherwise false is returned.
+	 * 
 	 * @param reading
-	 * @return
+	 *            the id of the <code>Reading</code> to be checked must be
+	 *            set. If the id field identifies a valid reading then the
+	 *            method returns true; otherwise false is returned. 
+	 * @return true if the id field identifies a valid reading; otherwise
+	 * false is returned.
+	 * @throws TrialCatalogException indicates that reading is null or
+	 * another type of error occurred. 
 	 */
-	public boolean insertReading(Reading reading) throws TrialCatalogException;
-
+	public boolean exists(Reading reading) throws TrialCatalogException;
+	
 	/**
-	 * 
-	 * @param readingId
-	 * @return
-	 */
-	public Reading getReading(String readingId) throws TrialCatalogException;
-
-	/**
-	 * 
-	 * @param reading
-	 * @return
-	 */
-	boolean updateReading(Reading reading) throws TrialCatalogException;
-
-	/**
+	 * Inserts the specified <code>reading</code> into the catalog. If the specified
+	 * reading already exists, a TrialCatalogException will be thrown. Returns true
+	 * if the specified reading was inserted in to the catalog; otherwise false is
+	 * returned.
 	 * 
 	 * @param reading
-	 * @return
+	 *            the <code>Reading</code> to be insert in to the catalog.
+	 * @return true if the specified reading was inserted in to the catalog;
+	 * otherwise false is returned.
+	 * @throws TrialCatalogException indicates that reading is null, the specified
+	 * reading id already exists, or another type of error occurred. 
 	 */
-	public boolean removeReading(Reading reading) throws TrialCatalogException;
+	public boolean insert(Reading reading) throws TrialCatalogException;
 
 	/**
+	 * If the specified reading id specifies a valid reading, then a new Reading is
+	 * created and populated with the retrieved data and returned; otherwise null
+	 * is returned.
 	 * 
-	 * @return
+	 * @param reading
+	 *            the id of the <code>Reading</code> to be retrieved must be
+	 *            set. If the id field identifies a valid reading, a new Reading
+	 *            is created and populated with the retrieved data and the method
+	 *            returns a reference to the new reading; otherwise null is returned. 
+	 * @return true if the specified reading was retrieved; otherwise false.
+	 * @throws TrialCatalogException indicates that reading is null or an error
+	 * was encountered.
 	 */
-	public List<String> getAllTrialCatalogNamesInDirectory();
+	public Reading get(Reading reading) throws TrialCatalogException;
 
 	/**
+	 * Updates the existing reading record, specified by the reading id of
+	 * the specified patient, with the information contained within the
+	 * specified reading. Returns true if the updated information was saved;
+	 * otherwise false is returned.
 	 * 
-	 * @return
+	 * @param reading
+	 *            the reading must not be null and the id of the specified reading
+	 *            must be a valid id for a reading within this catalog. 
+	 * @return true if the updated information was saved; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that reading is null or an error
+	 * was encountered.
 	 */
-	public List<Clinic> getAllClinics() throws TrialCatalogException;
+	public boolean update(Reading reading) throws TrialCatalogException;
 
 	/**
+	 * Removes the specified reading from the catalog. 
 	 * 
-	 * @return
+	 * @param reading 
+	 *            the reading must not be null and the id of the specified reading
+	 *            must be a valid id for a reading within this catalog. 
+	 * @return true if the reading was removed from the catalog; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that reading is null or an error
+	 * was encountered.
 	 */
-	public List<Patient> getAllPatients() throws TrialCatalogException;
+	public boolean remove(Reading patient) throws TrialCatalogException;
 
 	/**
+	 * Returns a List&lt;Clinic&gt; of all the clinics in the active trial.
 	 * 
-	 * @return
+	 * @return a List&lt;Clinic&gt; of all the clinics in the active trial.
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
 	 */
-	public List<Reading> getAllReadings() throws TrialCatalogException;
+	public List<Clinic> getClinics() throws TrialCatalogException;
 
 	/**
+	 * Returns a List&lt;Patient&gt; of all the patients in the active trial.
 	 * 
-	 * @param patient
-	 * @return
+	 * @return a List&lt;Patient&gt; of all the patients in the active trial.
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
 	 */
-	public List<Reading> getReadingsForPatient(Patient patient) throws TrialCatalogException;
+	public List<Patient> getPatients() throws TrialCatalogException;
 
 	/**
+	 * Returns a List&lt;Patient&gt; of all the patients that are currently
+	 * active in the active trial.
 	 * 
-	 * @param clinic
-	 * @return
+	 * @return a List&lt;Patient&gt; of all the patients that are currently
+	 * active in the active trial.
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
 	 */
-	public List<Reading> getReadingsForClinic(Clinic clinic) throws TrialCatalogException;
+	public List<Patient> getActivePatients() throws TrialCatalogException;
+	
+	/**
+	 * Returns a List&lt;Patient&gt; of all the patients that are currently
+	 * not active in the active trial.
+	 * 
+	 * @return a List&lt;Patient&gt; of all the patients that are currently
+	 * not active in the active trial.
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
+	 */
+	public List<Patient> getInactivePatients() throws TrialCatalogException;
+	
+	/**
+	 * Returns a List&lt;Reading&gt; of all the readings in the active trial.
+	 * 
+	 * @return a List&lt;Reading&gt; of all the readings in the active trial.
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
+	 */
+	public List<Reading> getReadings() throws TrialCatalogException;
+
+	/**
+	 * Returns a List&lt;Reading&gt; of all the readings in the active trial
+	 * for the specified patient. The specified patient must contain a valid
+	 * id and must exist in this catalog.
+	 * 
+	 * @param patient the specified patient to retrieve the readings for.
+	 * the specified patient cannot be null and must have a valid id.
+	 * @return a List&lt;Reading&gt; of all the readings in the active trial
+	 * for the specified patient.
+	 * @throws TrialCatalogException indicates that patient is null, there
+	 * is no active trial or an error was encountered.
+	 */
+	public List<Reading> getReadings(Patient patient) throws TrialCatalogException;
+
+	/**
+	 * Returns a List&lt;Reading&gt; of all the readings in the active trial
+	 * for the specified clinic. The specified clinic must contain a valid
+	 * id and must exist in this catalog.
+	 * 
+	 * @param clinic the specified clinic to retrieve the readings for.
+	 * the specified clinic cannot be null and must have a valid id.
+	 * @return a List&lt;Reading&gt; of all the readings in the active trial
+	 * for the specified clinic.
+	 * @throws TrialCatalogException indicates that clinic is null, there
+	 * is no active trial or an error was encountered.
+	 */
+	public List<Reading> getReadings(Clinic clinic) throws TrialCatalogException;
 }

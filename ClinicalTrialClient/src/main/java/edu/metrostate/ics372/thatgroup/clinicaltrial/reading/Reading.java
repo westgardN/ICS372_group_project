@@ -15,11 +15,12 @@ import java.time.format.FormatStyle;
  * provides the base for all other reading types. All Reading base types share
  * the interface provided by this class.
  * 
- * Classes that derive from Reading must implement the abstract methods setValue and getValue
+ * Classes that derive from Reading should override the methods setValue and getValue
  * that provide the differentiation among reading types.
  * 
  * Clients that use Reading should also use the ReadingFactory to instantiate new readings based on a
- * specific type.
+ * specific type. If a specific type is not needed, then an instance of the base Reading class can be
+ * used.
  * 
  * Since this class is abstract, you cannot create an instance of Reading and instead you must use either
  * one of the concrete classes or use the ReadingFactory to create one of the known types of readings.
@@ -31,13 +32,14 @@ import java.time.format.FormatStyle;
  * @author That Group
  *
  */
-public abstract class Reading implements Serializable {
+public class Reading implements Serializable {
 	private static final long serialVersionUID = 8166141304679594433L;
 	private transient PropertyChangeSupport pcs;
 	protected String patientId;
 	protected String id;
 	protected LocalDateTime date;
 	protected String clinicId;
+	private Object value;
 	
 	/**
 	 * Initializes an empty reading.
@@ -94,6 +96,7 @@ public abstract class Reading implements Serializable {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.toUpperCase().hashCode());
 		result = prime * result + ((patientId == null) ? 0 : patientId.toUpperCase().hashCode());
+		result = prime * result + ((clinicId == null) ? 0 : clinicId.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -136,6 +139,18 @@ public abstract class Reading implements Serializable {
 				return false;
 			}
 		}
+		if (clinicId == null) {
+			if (other.clinicId != null)
+				return false;
+		} else {
+			if (other.clinicId != null) {
+				if (clinicId.compareToIgnoreCase(other.clinicId) != 0 ) {
+					return false; 
+				}
+			} else {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -146,12 +161,14 @@ public abstract class Reading implements Serializable {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
-		builder.append("Reading");
+		builder.append("Reading ");
 		builder.append(id);
 		builder.append(" for patient ");
 		builder.append(patientId);
 		builder.append(" taken on ");
 		builder.append(date.format(formatter));
+		builder.append(" taken at ");
+		builder.append(clinicId);
 		builder.append(" has a value of ");
 		builder.append(getValue());
 		return builder.toString();
@@ -204,13 +221,17 @@ public abstract class Reading implements Serializable {
 	 * @return the value of this reading. Meaning of the value is dependent
 	 * on the specific type of reading this is for.
 	 */
-	public abstract Object getValue();
+	public Object getValue() {
+		return value;
+	}
 
 	/**
 	 * @param value the new value for this reading. Meaning of the value is dependent
 	 * on the specific type of reading this is for.
 	 */
-	public abstract void setValue(Object value);
+	public void setValue(Object value) {
+		this.value = value;
+	}
 
 	/**
 	 * @return the clinicId

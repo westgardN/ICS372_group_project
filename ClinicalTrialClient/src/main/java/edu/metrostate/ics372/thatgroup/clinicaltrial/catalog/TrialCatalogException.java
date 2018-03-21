@@ -17,6 +17,10 @@ public class TrialCatalogException extends Exception {
         super();
     }
 
+    public TrialCatalogException(String msg) {
+        super(msg);
+    }
+    
     public TrialCatalogException(String msg, Throwable ex) {
         super(msg, ex);
     }

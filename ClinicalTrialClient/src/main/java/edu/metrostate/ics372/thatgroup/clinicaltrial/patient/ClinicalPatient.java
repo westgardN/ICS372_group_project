@@ -26,7 +26,7 @@ public class ClinicalPatient extends Patient {
 	 * Initializes a new patient with no id an empty journal, no trial start date and no trial end date.
 	 */
 	public ClinicalPatient() {
-		super(null, null, null, null, null);
+		super(null, null, null, null);
 	}
 	
 	/**
@@ -70,8 +70,8 @@ public class ClinicalPatient extends Patient {
 		reading.setPatientId(id);
 		
 		if (!journal.contains(reading)) {
-			if (trialEndDate != null) {
-				if (trialEndDate.compareTo(reading.getDate().toLocalDate()) >= 0) {
+			if (endDate != null) {
+				if (endDate.compareTo(reading.getDate().toLocalDate()) >= 0) {
 					answer = journal.add(reading);
 				}
 			} else {
@@ -87,17 +87,17 @@ public class ClinicalPatient extends Patient {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
 		builder.append(id);
-		if (trialStartDate != null) {
-			if (trialEndDate == null) {
+		if (startDate != null) {
+			if (endDate == null) {
 				builder.append(": active ");
-				builder.append(trialStartDate.format(formatter));
+				builder.append(startDate.format(formatter));
 				builder.append(" has ");
 			} else {
 				builder.append(": inactive");
 				builder.append(" (");
-				builder.append(trialStartDate.format(formatter));
+				builder.append(startDate.format(formatter));
 				builder.append(" - ");
-				builder.append(trialEndDate.format(formatter));
+				builder.append(endDate.format(formatter));
 				builder.append(") has ");
 			}
 			builder.append(journal.size());
