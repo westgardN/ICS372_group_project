@@ -229,21 +229,20 @@ public class Trial implements Serializable, Cloneable {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
-		if (endDate == null) {
 		builder.append("Trial ");
 		builder.append(id);
-		builder.append(" (");
-		builder.append(startDate.format(formatter));
-		}
-		if (endDate != null) {
-			builder.append("Trial ");
-			builder.append(id);
+		if (startDate != null) {
 			builder.append(" (");
 			builder.append(startDate.format(formatter));
-			builder.append(" - ");
-			builder.append(endDate.format(formatter));
+			if (endDate != null) {
+				builder.append(" - ");
+				builder.append(endDate.format(formatter));
+			}
+			builder.append(")");
+		} else {
+			builder.append("This trial has not yet begun.");
 		}
-		builder.append(")");
+		
 		return builder.toString();
 	}
 
