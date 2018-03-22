@@ -18,6 +18,7 @@ import org.junit.Test;
 public class PatientTest {
 	private final String ID = "test";
 	private final String TRIAL_ID = "test";
+	private final String TRIAL_ID_B = "testB";
 	private final LocalDate START_DATE = LocalDate.of(2018, 1, 1);
 	private final LocalDate END_DATE = LocalDate.of(2018, 2, 28);
 
@@ -28,14 +29,28 @@ public class PatientTest {
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#equals(java.lang.Object)}.
 	 */
 	@Test
-	public final void twoPatientsThatAreEqualShouldHaveEqualHashCodes() {
+	public final void twoPatientsThatAreNotEqualShouldNotBeConsiderEqual() {
+		Patient patientA = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
+		Patient patientB = new Patient(ID, TRIAL_ID_B, START_DATE, END_DATE);
+
+		assertNotEquals(patientA, patientB);
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#hashCode()}
+	 * and
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#equals(java.lang.Object)}.
+	 */
+	@Test
+	public final void twoPatientsThatAreEqualNotHaveEqualHashCodes() {
 		Patient patientA = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
 		Patient patientB = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
 
 		assertEquals(patientA, patientB);
 		assertEquals(patientA.hashCode(), patientB.hashCode());
 	}
-
+	
 	/**
 	 * Test method for
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#Patient()}.
