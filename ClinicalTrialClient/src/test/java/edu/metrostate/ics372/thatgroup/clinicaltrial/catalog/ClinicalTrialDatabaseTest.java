@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.ClinicalTrialCatalog;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 
 
 public class ClinicalTrialDatabaseTest {

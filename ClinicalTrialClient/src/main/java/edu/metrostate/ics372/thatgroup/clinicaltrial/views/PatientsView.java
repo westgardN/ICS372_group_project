@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
