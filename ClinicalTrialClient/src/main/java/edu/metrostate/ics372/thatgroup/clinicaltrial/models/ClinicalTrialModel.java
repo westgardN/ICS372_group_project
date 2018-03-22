@@ -707,7 +707,7 @@ public class ClinicalTrialModel {
 			if (!catalog.exists(reading)) {
 				if (endDate != null && endDate.compareTo(reading.getDate().toLocalDate()) >= 0) {
 					answer = true;
-				} else if (isPatientInTrial(selectedPatient)){
+				} else if (hasPatientStartedTrial(selectedPatient)){
 					answer = true;
 				}
 			}
