@@ -60,6 +60,7 @@ public class JsonReadings {
 	 */
 	private class JsonReading {
 		private String patient_id;
+		private String clinic_id;
 		private String reading_type;
 		private String reading_id;
 		private Object reading_value;
@@ -77,6 +78,7 @@ public class JsonReadings {
 		 */
 		public JsonReading(Reading reading) {
 			this.patient_id = reading.getPatientId();
+			this.clinic_id = reading.getClinicId();
 			this.reading_type = ReadingFactory.getReadingType(reading);
 			this.reading_id = reading.getId();
 			this.reading_value = reading.getValue() != null ? reading.getValue() instanceof Number ? reading.getValue() : reading.getValue().toString() : "";
@@ -89,6 +91,14 @@ public class JsonReadings {
 		 */
 		public String getPatientId() {
 			return patient_id;
+		}
+		
+		/**
+		 * Returns the ID of the clinic this reading belongs to
+		 * @return the ID of the clinic this reading belongs to
+		 */
+		public String getClinicId() {
+			return clinic_id;
 		}
 		
 		/**
@@ -139,6 +149,7 @@ public class JsonReadings {
 		public Reading toReading() {
 			Reading answer = ReadingFactory.getReading(getReadingType());
 			answer.setPatientId(getPatientId());
+			answer.setClinicId(getClinicId());
 			answer.setId(getReadingId());
 			answer.setDate(getReadingDate());
 			answer.setValue(getReadingValue());

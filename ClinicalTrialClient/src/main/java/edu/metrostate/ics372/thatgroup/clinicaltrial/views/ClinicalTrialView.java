@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import javafx.application.Platform;
@@ -65,16 +66,30 @@ public class ClinicalTrialView implements Initializable {
 																					// was executed from.
 		File file = fileChooser.showOpenDialog(stage);
 
-		Patient selected = model.getSelectedPatient();
+		Patient selectedPatient = model.getSelectedPatient();
+		Clinic selectedClinic = model.getSelectedClinic();
 
 		if (file != null) {
 			try {
 				List<Reading> readings = JsonProcessor.read(file.getAbsolutePath());
 				int readingCount = 0;
 				int patientCount = 0;
+				int clinicCount = 0;
 
 				for (Reading reading : readings) {
-					reading.setClinicId(model.getDefaultClinic().getId());
+					if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
+						reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
+					}
+					
+					Clinic clinic = model.getClinic(reading.getClinicId());
+					
+					if (clinic == null) {
+						if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
+							++clinicCount;
+							clinic = model.getClinic(reading.getClinicId());
+						}
+					}
+					
 					Patient patient = model.getPatient(reading.getPatientId());					
 
 					if (patient == null) {
@@ -84,21 +99,20 @@ public class ClinicalTrialView implements Initializable {
 						}
 					}
 
-					if (patient != null) {
-						model.setSelectedPatient(patient, false);
+					if (patient != null && clinic != null) {
 						if (model.importReading(reading)) {
 							readingCount++;
 						}
 					}
 				}
-				model.setSelectedPatient(selected, true);
+				
+				model.setSelectedClinic(selectedClinic, true);
+				model.setSelectedPatient(selectedPatient, true);
+				
 				PopupNotification.showPopupMessage(
-						"Imported " + patientCount + " patients(s) and " + readingCount + " reading(s)",
+						"Imported " + clinicCount + " clinic(s), " + patientCount + " patients(s) and " + readingCount + " reading(s)",
 						stage.getScene());
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (TrialCatalogException e) {
-				// TODO Auto-generated catch block
+			} catch (TrialCatalogException | IOException e) {
 				e.printStackTrace();
 			}
 		}
