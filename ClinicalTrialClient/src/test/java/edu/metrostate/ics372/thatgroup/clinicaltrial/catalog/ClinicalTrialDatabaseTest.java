@@ -1,8 +1,10 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.ClinicalTrialCatalog;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
 

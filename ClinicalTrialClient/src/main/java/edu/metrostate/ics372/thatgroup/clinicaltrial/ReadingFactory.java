@@ -1,11 +1,17 @@
 /**
  * 
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
+package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Temp;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight;
 
 /**
  * The ReadingFactory is utility Factory class for creating Reading objects of various types.
@@ -23,15 +29,22 @@ public class ReadingFactory {
 	public static final String TEMPERATURE = "temp";
 	public static final String STEPS = "steps";
 	public static final String BLOOD_PRESSURE = "blood_press";
-	private static List<String> readingTypes;
+	protected static List<String> readingTypes;
+	protected static List<String> prettyReadingTypes;
 	
-	{
+	static {
 		readingTypes = new ArrayList<>();
+		prettyReadingTypes = new ArrayList<>();
 		
 		readingTypes.add(BLOOD_PRESSURE);
 		readingTypes.add(STEPS);
 		readingTypes.add(TEMPERATURE);
 		readingTypes.add(WEIGHT);
+		
+		prettyReadingTypes.add(PRETTY_BLOOD_PRESSURE);
+		prettyReadingTypes.add(PRETTY_STEPS);
+		prettyReadingTypes.add(PRETTY_TEMPERATURE);
+		prettyReadingTypes.add(PRETTY_WEIGHT);
 	}
 	
 	/**
@@ -42,6 +55,10 @@ public class ReadingFactory {
 	 */
 	public static List<String> getReadingTypes() {
 		return Collections.unmodifiableList(readingTypes);
+	}
+	
+	public static List<String> getPrettyReadingTypes() {
+		return Collections.unmodifiableList(prettyReadingTypes);
 	}
 	
 	/**
@@ -57,16 +74,20 @@ public class ReadingFactory {
 	public static Reading getReading(String type) {
 		Reading answer = null;
 		
-		switch(type.toLowerCase()) {
+		switch(type) {
+		case PRETTY_BLOOD_PRESSURE:
 		case BLOOD_PRESSURE:
 			answer = new BloodPressure();
 			break;
+		case PRETTY_STEPS:
 		case STEPS:
 			answer = new Steps();
 			break;
+		case PRETTY_TEMPERATURE:
 		case TEMPERATURE:
 			answer = new Temp();
 			break;
+		case PRETTY_WEIGHT:
 		case WEIGHT:
 			answer = new Weight();
 			break;

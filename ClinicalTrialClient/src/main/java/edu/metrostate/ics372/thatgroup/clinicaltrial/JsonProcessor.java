@@ -14,7 +14,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 
 /**
  * The JsonProcessor is used for importing and exporting a List of Reading objects to and from a

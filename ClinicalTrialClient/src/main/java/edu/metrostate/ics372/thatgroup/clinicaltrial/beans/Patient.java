@@ -1,4 +1,4 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial.patient;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -50,7 +50,6 @@ public class Patient implements Serializable {
 		this.endDate = end;
 		pcs = new PropertyChangeSupport(this);
 	}
-
 
 	protected PropertyChangeSupport getPcs() {
 		if (pcs == null) {
@@ -179,16 +178,23 @@ public class Patient implements Serializable {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
-		builder.append("Patient ");
 		builder.append(id);
-		builder.append(" (Trial ");
-		builder.append(trialId);
-		builder.append(") (");
-		builder.append(startDate.format(formatter));
-		if (endDate != null) {
-			builder.append(" - ");
-			builder.append(endDate.format(formatter));
+		if (startDate != null) {
+			if (endDate == null) {
+				builder.append(": active ");
+				builder.append(startDate.format(formatter));
+			} else {
+				builder.append(": inactive");
+				builder.append(" (");
+				builder.append(startDate.format(formatter));
+				builder.append(" - ");
+				builder.append(endDate.format(formatter));
+				builder.append(")");
+			}
+		} else {
+			builder.append(" has not started the trial");
 		}
+		
 		return builder.toString();
 	}
 
@@ -207,7 +213,7 @@ public class Patient implements Serializable {
 		if (!Objects.equals(this.trialId, trialId)) {
 			String oldValue = this.trialId;
 			this.trialId = trialId;
-			getPcs().firePropertyChange("TRIAL_ID", oldValue, this.trialId);
+			getPcs().firePropertyChange(PROP_TRIAL_ID, oldValue, this.trialId);
 		}
 	}
 }

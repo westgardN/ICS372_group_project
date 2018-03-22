@@ -17,6 +17,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+
 /**
  * This view is responsible for displaying the form to add a new patient to the
  * system
@@ -29,7 +32,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	private TextField textField;
 	@FXML
 	private Button addButton;
-	private ClinicalTrialViewModel model;
+	private ClinicalTrialModel model;
 	private boolean clear;
 
 	/**
@@ -53,7 +56,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	 * 
 	 * @return the model
 	 */
-	public ClinicalTrialViewModel getModel() {
+	public ClinicalTrialModel getModel() {
 		return model;
 	}
 
@@ -64,7 +67,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	 *            the model to set
 	 */
 
-	public void setModel(ClinicalTrialViewModel model) {
+	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 	}
 
@@ -77,12 +80,21 @@ public class AddPatientView extends AnchorPane implements Initializable {
 	 */
 	@FXML
 	public void addPatient(ActionEvent event) {
-		if (model.addPatient(textField.getText().trim())) {
-			PopupNotification.showPopupMessage(StringResource.PATIENT_ADDED_MSG.get(), getScene());
-			clear = true;
-			textField.setText(StringResource.EMPTY.get());
-		} else {
-			PopupNotification.showPopupMessage(StringResource.PATIENT_NOT_ADDED_MSG.get(), getScene());
+		try {
+			if (model.addPatient(textField.getText().trim())) {
+				PopupNotification.showPopupMessage(StringResource.PATIENT_ADDED_MSG, getScene());
+				clear = true;
+				textField.setText(StringResource.EMPTY);
+			} else {
+				PopupNotification.showPopupMessage(StringResource.PATIENT_NOT_ADDED_MSG, getScene());
+			}
+		} catch (TrialCatalogException e) {
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(StringResource.PATIENT_NOT_ADDED_MSG);
+			sb.append("\nReceived Error: ");
+			sb.append(e.getMessage());
+			PopupNotification.showPopupMessage(sb.toString(), getScene());
 		}
 	}
 
@@ -107,7 +119,7 @@ public class AddPatientView extends AnchorPane implements Initializable {
 			} else if (!validate(newValue) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
 				if (!clear) {
-					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG.get(), getScene());
+					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG, getScene());
 				}
 				clear = false;
 			}

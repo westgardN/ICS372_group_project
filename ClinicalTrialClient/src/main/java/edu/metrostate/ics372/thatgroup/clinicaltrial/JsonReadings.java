@@ -3,8 +3,8 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
 
 import java.time.DateTimeException;
 import java.time.Instant;

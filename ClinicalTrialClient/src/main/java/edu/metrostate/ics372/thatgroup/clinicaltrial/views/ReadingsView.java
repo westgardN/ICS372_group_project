@@ -10,8 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +29,7 @@ import javafx.scene.layout.AnchorPane;
  *
  */
 public class ReadingsView extends AnchorPane implements Initializable {
-	private ClinicalTrialViewModel model;
+	private ClinicalTrialModel model;
 
 	@FXML
 	private TableView<Reading> readingTable;
@@ -63,7 +64,7 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * 
 	 * @return the model
 	 */
-	public ClinicalTrialViewModel getModel() {
+	public ClinicalTrialModel getModel() {
 		return model;
 	}
 
@@ -73,13 +74,13 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * @param model
 	 *            the model to set
 	 */
-	public void setModel(ClinicalTrialViewModel model) {
+	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals(ClinicalTrialViewModel.PROP_JOURNAL)
-					|| prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
+			if (prop.equals(ClinicalTrialModel.PROP_JOURNAL)
+					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)) {
 				fillTable();
 			}
 		});
