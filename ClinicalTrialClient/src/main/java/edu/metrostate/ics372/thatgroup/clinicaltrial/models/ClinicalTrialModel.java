@@ -481,6 +481,16 @@ public class ClinicalTrialModel {
 		return answer;
 	}
 	
+	/**
+	 * Updates the specified patient in the catalog. If the patient is not in the catalog, it
+	 * is added. Returns true if the patient was updated and false if the patient was not.
+	 * Fires a PROP_PATIENTS change notification if the patient was added to the catalog or
+	 * a PROP_UPDATE_PATIENT if the patient was simply updated.
+	 * 
+	 * @param patient the patient to update 
+	 * @return true if the patient was update and false if the patient was not.
+	 * @throws TrialCatalogException 
+	 */
 	public boolean update(Patient patient) throws TrialCatalogException {
 		boolean answer = false;
 		
@@ -521,7 +531,7 @@ public class ClinicalTrialModel {
 		if (reading != null) {
 			if (!catalog.exists(reading)) {
 				answer = catalog.insert(reading);
-				if (answer) {
+				if (answer && journal != null) {
 					int oldValue = journal.size();
 					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
 					journal.add(reading);
@@ -570,13 +580,13 @@ public class ClinicalTrialModel {
 		
 		if (canAddReading(reading)) {
 			answer = catalog.insert(reading);
-			if (answer) {
+			if (answer && journal != null) {
 				int oldValue = journal.size();
 				pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-				journal.add(reading);
-				
+				journal.add(reading);				
 			}
 		}
+		
 		return answer;
 	}
 	
