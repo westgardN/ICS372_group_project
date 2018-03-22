@@ -229,11 +229,17 @@ public class Trial implements Serializable, Cloneable {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
+		if (endDate == null) {
 		builder.append("Trial ");
 		builder.append(id);
 		builder.append(" (");
 		builder.append(startDate.format(formatter));
+		}
 		if (endDate != null) {
+			builder.append("Trial ");
+			builder.append(id);
+			builder.append(" (");
+			builder.append(startDate.format(formatter));
 			builder.append(" - ");
 			builder.append(endDate.format(formatter));
 		}
@@ -252,8 +258,12 @@ public class Trial implements Serializable, Cloneable {
         }
         
         answer.id = this.id;
-        answer.startDate = LocalDate.from(startDate);
-        answer.endDate = LocalDate.from(endDate);
+        if (startDate != null) {
+        		answer.startDate = LocalDate.from(startDate);
+        }
+        if (endDate != null) {
+        		answer.endDate = LocalDate.from(endDate);
+        }
         
         return answer;
     }
