@@ -13,7 +13,7 @@ public class StringResource {
 	public static final String EMPTY = "";
 	public static final String BP_VALUE = "blood pressure";
 	public static final String BP_JSON = "blood_press";
-	public static final String TEMP_VALUE = "temp";
+	public static final String TEMP_VALUE = "temperature";
 	public static final String ERR_DATE_MSG = "Date can not be empty or a future date.";
 	public static final String ERR_TIME_MSG = "Invalid time detected.  Please check the time input fields for errors.";
 	public static final String ERR_ID_MSG = "Invalid reading id detected.  Please check the reading id input fields for errors.";
