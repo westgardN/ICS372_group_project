@@ -22,7 +22,7 @@ public class TrialTest {
 	public void testConstruction() {
 		Trial trial = new Trial();
 		assertNotNull(trial);
-		assertEquals("", trial.getId());
+		assertEquals(Trial.DEFAULT_ID, trial.getId());
 		Trial trial1 = new Trial(TRIAL_ID);
 		trial1.setId(OTHER_TRIAL_ID);
 		assertNotNull(trial1);

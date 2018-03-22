@@ -21,7 +21,10 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
  *
  */
 public class Trial implements Serializable, Cloneable {
-	private static final String DEFAULT_TRIAL_ID = "default";
+	/**
+	 * The default trial id. 
+	 */
+	public static final String DEFAULT_ID = "default";
 
 	/**
 	 * The id property of the trial. Used to uniquely identify a trial
@@ -49,7 +52,7 @@ public class Trial implements Serializable, Cloneable {
 	 * Initializes this trial with no id.
 	 */
 	public Trial() {
-		this(DEFAULT_TRIAL_ID);
+		this(DEFAULT_ID);
 	}
 
 	/**
