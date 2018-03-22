@@ -25,7 +25,7 @@ public class ClinicalStatement {
             + "	clinic_id varchar(32) NOT NULL,\n"
             + "	type varchar(32) NOT NULL,\n"
             + "	value varchar(32) NOT NULL,\n"
-            + "	date date NOT NULL,\n"
+            + "	date timestamp NOT NULL,\n"
             + "	FOREIGN KEY (patient_id) REFERENCES patients(id),\n"
             + "	FOREIGN KEY (clinic_id) REFERENCES clinics(id)\n"
             + ");";

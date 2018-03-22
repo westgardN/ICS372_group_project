@@ -520,7 +520,8 @@ public class ClinicalTrialModel {
 		
 		if (reading != null) {
 			if (!catalog.exists(reading)) {
-				if (catalog.insert(reading)) {
+				answer = catalog.insert(reading);
+				if (answer) {
 					int oldValue = journal.size();
 					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
 					journal.add(reading);
@@ -568,10 +569,12 @@ public class ClinicalTrialModel {
 		boolean answer = false;
 		
 		if (canAddReading(reading)) {
-			if (catalog.insert(reading)) {
+			answer = catalog.insert(reading);
+			if (answer) {
 				int oldValue = journal.size();
 				pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
 				journal.add(reading);
+				
 			}
 		}
 		return answer;

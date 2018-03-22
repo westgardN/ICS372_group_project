@@ -74,7 +74,8 @@ public class ClinicalTrialView implements Initializable {
 				int patientCount = 0;
 
 				for (Reading reading : readings) {
-					Patient patient = model.getPatient(reading.getPatientId());
+					reading.setClinicId(model.getDefaultClinic().getId());
+					Patient patient = model.getPatient(reading.getPatientId());					
 
 					if (patient == null) {
 						if (model.addPatient(reading.getPatientId(), LocalDate.now())) {

@@ -74,16 +74,20 @@ public class ReadingFactory {
 	public static Reading getReading(String type) {
 		Reading answer = null;
 		
-		switch(type.toLowerCase()) {
+		switch(type) {
+		case PRETTY_BLOOD_PRESSURE:
 		case BLOOD_PRESSURE:
 			answer = new BloodPressure();
 			break;
+		case PRETTY_STEPS:
 		case STEPS:
 			answer = new Steps();
 			break;
+		case PRETTY_TEMPERATURE:
 		case TEMPERATURE:
 			answer = new Temp();
 			break;
+		case PRETTY_WEIGHT:
 		case WEIGHT:
 			answer = new Weight();
 			break;

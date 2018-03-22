@@ -9,9 +9,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -214,10 +213,9 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setString(5, reading.getValue() != null ? reading.getValue().toString() : null);
 		
 		if (reading.getDate() != null) {
-			java.util.Date date = Date.from(reading.getDate().atZone(ZoneId.systemDefault()).toInstant());
-			answer.setDate(6, new Date(date.getTime()));
+			answer.setTimestamp(6, Timestamp.valueOf(reading.getDate()));
         } else {
-        	answer.setDate(6, null);
+        	answer.setTimestamp(6, null);
         }
 		
         return answer;
@@ -257,9 +255,9 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setString(4, reading.getValue() != null ? reading.getValue().toString() : null);
 		
 		if (reading.getDate() != null) {
-			answer.setDate(5, Date.valueOf(reading.getDate().toString()));
+			answer.setTimestamp(5, Timestamp.valueOf(reading.getDate()));
         } else {
-        	answer.setDate(5, null);
+        	answer.setTimestamp(5, null);
         }
 		
 		answer.setString(6, reading.getId());
@@ -339,10 +337,13 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setClinicId(rs.getString(CLINIC_ID));
 		
 		if (rs.getDate(DATE) != null) {
-			Date date = rs.getDate(DATE);
-			LocalDate ld = date != null ? date.toLocalDate() : null;
+			Timestamp date = rs.getTimestamp(DATE);
+			LocalDateTime ld = null;
+			if (date != null) {
+				ld = date.toLocalDateTime();
+			}
 			if (ld != null) {
-				answer.setDate(ld.atStartOfDay());
+				answer.setDate(ld);
 			}
         }
 		answer.setValue(rs.getString(VALUE));

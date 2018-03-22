@@ -161,7 +161,7 @@ public class Trial implements Serializable, Cloneable {
 	public boolean hasPatientStartedTrial(Patient patient) {
 		boolean answer = false;
 
-		if (patient.getTrialId() == id && patient.getTrialStartDate() != null && patient.getTrialEndDate() == null) {
+		if (Objects.equals(patient.getTrialId(), id) && patient.getTrialStartDate() != null && patient.getTrialEndDate() == null) {
 			answer = true;
 		}
 
@@ -182,7 +182,7 @@ public class Trial implements Serializable, Cloneable {
 	public boolean isPatientInTrial(Patient patient) {
 		boolean answer = false;
 
-		if (patient.getTrialId() == id && hasPatientStartedTrial(patient)) {
+		if (Objects.equals(patient.getTrialId(), id) && patient.getTrialStartDate() != null) {
 			answer = true;
 		}
 
