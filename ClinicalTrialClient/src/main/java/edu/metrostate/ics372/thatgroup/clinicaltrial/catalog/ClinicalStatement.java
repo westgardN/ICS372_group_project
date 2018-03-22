@@ -30,7 +30,9 @@ public class ClinicalStatement {
             + "	FOREIGN KEY (clinic_id) REFERENCES clinics(id)\n"
             + ");";
 
-	public static final String GET_TRIAL = "SELECT id, name, start_date, end_date FROM trials WHERE id = ?";
+	// Trials
+	public static final String INSERT_TRIAL = "INSERT INTO trials (id, start_date, end_date) VALUES(?,?,?)";
+	public static final String GET_TRIAL = "SELECT id, start_date, end_date FROM trials WHERE id = ?";
 	
 	// Clinics
 	public static final String INSERT_CLINIC = "INSERT INTO clinics (id, name, trial_id) VALUES(?,?,?)";

@@ -1,7 +1,7 @@
 /**
  * File: Weight.java
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

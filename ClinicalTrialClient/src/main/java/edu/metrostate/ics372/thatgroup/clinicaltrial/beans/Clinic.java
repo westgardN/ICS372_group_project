@@ -1,0 +1,130 @@
+/**
+ * File Clinic.java
+ */
+
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
+
+import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * The Clinic class represents a clinic in a trial. A clinic has an
+ * id, name, and associated trial id.
+ * 
+ * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading
+ * 
+ * @author That Group
+ *
+ */
+public class Clinic implements Serializable {
+	public static final String DEFAULT_ID = "default";
+	public static final String PROP_ID = "id";
+	public static final String PROP_TRIAL_ID = "trialId";
+	public static final String PROP_NAME = "name";
+	private static final long serialVersionUID = 6613024190196045827L;
+	protected transient PropertyChangeSupport pcs;
+	protected String id;
+	protected String trialId;
+	protected String name;
+	
+	/**
+	 * Initializes an empty clinic.
+	 */
+	public Clinic() {
+		this(null, null, null);
+	}
+
+	/**
+	 * Initializes a clinic with the specified id, trial id, and name.
+	 * @param id
+	 * @param trialId
+	 * @param name
+	 */
+	public Clinic(String id, String trialId, String name) {
+		this.id = id;
+		this.trialId = trialId;
+		this.name = name;
+		pcs = new PropertyChangeSupport(this);
+	}
+
+	protected PropertyChangeSupport getPcs() {
+		if (pcs == null) {
+			pcs = new PropertyChangeSupport(this);
+		}
+		
+		return pcs;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		if (!Objects.equals(this.id, id)) {
+			String oldValue = this.id;
+			this.id = id;
+			getPcs().firePropertyChange(PROP_ID, oldValue, this.id);
+		}
+	}
+
+	/**
+	 * @return the id of the trial that this patient belongs to.
+	 */
+	public String getTrialId() {
+		return trialId;
+	}
+
+	/**
+	 * @param trialId the new id of the trial that this patient belongs to.
+	 * May be null is this patient doesn't belong to any trial.
+	 */
+	public void setTrialId(String trialId) {
+		if (!Objects.equals(this.trialId, trialId)) {
+			String oldValue = this.trialId;
+			this.trialId = trialId;
+			getPcs().firePropertyChange("PROP_TRIAL_ID", oldValue, this.trialId);
+		}
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		if (!Objects.equals(this.name, name)) {
+			String oldValue = this.name;
+			this.name = name;
+			getPcs().firePropertyChange("PROP_NAME", oldValue, this.name);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Clinic ");
+		builder.append(id);
+		builder.append(" (Name: ");
+		builder.append(name);
+		builder.append(") (Trial ");
+		builder.append(trialId);
+		builder.append(")");
+		return builder.toString();
+	}
+	
+}

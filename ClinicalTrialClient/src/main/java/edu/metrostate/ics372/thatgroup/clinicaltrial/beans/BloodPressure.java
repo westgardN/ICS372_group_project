@@ -1,7 +1,7 @@
 /**
  * File BloodPressure.java
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

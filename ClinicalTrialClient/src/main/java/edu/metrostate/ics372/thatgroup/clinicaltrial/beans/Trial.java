@@ -1,15 +1,14 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 
 /**
  * The Trial bean is used to hold information about a clinical trial. The trial
@@ -22,18 +21,22 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
  *
  */
 public class Trial implements Serializable, Cloneable {
-	private static final String DEFAULT_TRIAL_ID = "";
-
-	/**
-	 * The patients property is used to receive notifications about changes to the
-	 * patient list within a trial.
-	 */
-	public static final String PROP_PATIENTS = "patients";
+	private static final String DEFAULT_TRIAL_ID = "default";
 
 	/**
 	 * The id property of the trial. Used to uniquely identify a trial
 	 */
 	public static final String PROP_ID = "id";
+
+	/**
+	 * The start date property of the trial. Used to denote when the trial began
+	 */
+	public static final String PROP_START_DATE = "startDate";
+
+	/**
+	 * The end date property of the trial. Used to denote when the trial ended
+	 */
+	public static final String PROP_END_DATE = "endDate";
 
 	private static final long serialVersionUID = 4128763071142480689L;
 	private transient PropertyChangeSupport pcs;
@@ -77,8 +80,9 @@ public class Trial implements Serializable, Cloneable {
 		
 		return pcs;
 	}
+	
 	/**
-	 * Sets the trailId Id of a trial. If the id is different from what was
+	 * Sets the Id of a trial. If the id is different from what was
 	 * currently set, a change notification is fired.
 	 * 
 	 * @param trialId
@@ -93,6 +97,48 @@ public class Trial implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Returns the start date of this trial, which may be null.
+	 * @return the start date of this trial, which may be null.
+	 */
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+	
+	/**
+	 * Sets the start date of this trial. If the start date is different from
+	 * what was currently set, a change notification is fired.
+	 * @param localDate the start date for this trial.
+	 */
+	public void setStartDate(LocalDate localDate) {
+		if (!Objects.equals(this.startDate, localDate)) {
+			LocalDate old = this.startDate;
+			this.startDate = localDate;
+			getPcs().firePropertyChange(PROP_START_DATE, old, this.startDate);
+		}		
+	}
+	
+	/**
+	 * Returns the end date of this trial, which may be null.
+	 * @return the end date of this trial, which may be null.
+	 */
+	public LocalDate getEndDate() {
+		return this.endDate;
+	}
+	
+	/**
+	 * Sets the end date of this trial. If the end date is different from
+	 * what was currently set, a change notification is fired.
+	 * @param localDate the end date for this trial.
+	 */
+	public void setEndDate(LocalDate localDate) {
+		if (!Objects.equals(this.endDate, localDate)) {
+			LocalDate old = this.endDate;
+			this.endDate = localDate;
+			getPcs().firePropertyChange(PROP_END_DATE, old, this.endDate);
+		}		
+	}
+	
+	/**
 	 * Add a PropertyChangeListener to the listener list. The listener is registered
 	 * for all properties. The same listener object may be added more than once, and
 	 * will be called as many times as it is added. If listener is null, no
@@ -103,39 +149,6 @@ public class Trial implements Serializable, Cloneable {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		getPcs().addPropertyChangeListener(listener);
-	}
-
-	/**
-	 * Adds the specified patient to this trial if it doesn't already exist. The
-	 * trial id of the patient is updated with this trial's id. Returns true if the
-	 * patient was successfully added to this trial; otherwise false.
-	 * 
-	 * @param patient
-	 *            the patient to add to this trial. Cannot be null.
-	 * @return true if the patient was added to this trial; otherwise false.
-	 */
-	public boolean addPatient(Patient patient) {
-		boolean answer = false;
-		if (patient != null) {
-			patient.setTrialId(id);
-			int oldValue = patients.size();
-			answer = patients.add(patient);
-			if (answer) {
-				getPcs().firePropertyChange(PROP_PATIENTS, oldValue, patients.size());
-			}
-		}
-		return answer;
-	}
-
-	/**
-	 * Returns true is Patient was successfully added to a trial.
-	 * 
-	 * @param patientId
-	 *            the id of the patient to add to this trial. Cannot be null.
-	 * @return true if the patient was added to this trial; otherwise false.
-	 */
-	public boolean addPatient(String patientId) {
-		return addPatient(patientId, null);
 	}
 
 	/**
@@ -169,32 +182,10 @@ public class Trial implements Serializable, Cloneable {
 	public boolean isPatientInTrial(Patient patient) {
 		boolean answer = false;
 
-		if (patients.contains(patient) && patient.getTrialId() == id && hasPatientStartedTrial(patient)) {
+		if (patient.getTrialId() == id && hasPatientStartedTrial(patient)) {
 			answer = true;
 		}
 
-		return answer;
-	}
-
-	/**
-	 * Returns true if the specified patient was added to this trial.
-	 * 
-	 * @param patientId The id of the patient to add. Cannot be null
-	 * @param startDate The date the patient started the trial. May be null
-	 * if the patient hasn't started the trial yet.
-	 * 
-	 * @return answer true if the specified patient was added to this trial; otherwise false.
-	 */
-	public boolean addPatient(String patientId, LocalDate startDate) {
-		boolean answer = false;
-		Patient patient = PatientFactory.getPatient("clinical");
-		patient.setId(patientId);
-
-		if (startDate != null) {
-			patient.setTrialStartDate(startDate);
-		}
-
-		answer = addPatient(patient);
 		return answer;
 	}
 
@@ -233,51 +224,20 @@ public class Trial implements Serializable, Cloneable {
 	
 	@Override
 	public String toString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
 		builder.append("Trial ");
 		builder.append(id);
-		builder.append(" has ");
-		builder.append(patients.size());
-		builder.append(" patient");
-		if (patients.size() != 1) {
-			builder.append("s");
+		builder.append(" (");
+		builder.append(startDate.format(formatter));
+		if (endDate != null) {
+			builder.append(" - ");
+			builder.append(endDate.format(formatter));
 		}
+		builder.append(")");
 		return builder.toString();
 	}
 
-	/**
-	 * Returns a reference to the specified patient id if it is in this trial;
-	 * otherwise a null reference is returned.
-	 * 
-	 * @param patientId The patient to retrieve
-	 * @return The patient with the specified Id or the null reference if the id is not
-	 * found in this trial.
-	 * 
-	 */
-	public Patient getPatient(String patientId) {
-		Optional<Patient> answer = patients.stream().filter(patient -> patientId.equals(patient.getId())).findAny();
-		return answer != null && answer.isPresent() ? answer.get() : null;
-	}
-
-	/**
-	 * The number of patients in the list that are considered to be or have been a part of this trial.
-	 * @return the number of patients in the list that are considered to be or have been a part of this trial. 
-	 */
-	public int getNumPatients() {
-		return patients.size();
-	}
-
-	/**
-	 * Returns true if the specified patient exists in this trial's list of patients.
-	 * 
-	 * @param patient The patient to search for.
-	 * 
-	 * @return true if the specified patient exists in this trial's list of patients; otherwise false.
-	 */
-	public boolean hasPatientInList(Patient patient) {
-		return patients.contains(patient);
-	}
-	
     @Override
     public Trial clone() {
     	Trial answer;
@@ -289,23 +249,10 @@ public class Trial implements Serializable, Cloneable {
         }
         
         answer.id = this.id;
-        answer.patients = new HashSet<>(this.patients);        
+        answer.startDate = LocalDate.from(startDate);
+        answer.endDate = LocalDate.from(endDate);
         
         return answer;
     }
 
-	public void setStartDate(LocalDate localDate) {
-		this.startDate = localDate;
-	}
-	
-	public void setEndDate(LocalDate localDate) {
-		this.endDate = localDate;
-	}
-	
-	public LocalDate getStartDate() {
-		return this.startDate;
-	}
-	public LocalDate getEndDate() {
-		return this.endDate;
-	}
 }

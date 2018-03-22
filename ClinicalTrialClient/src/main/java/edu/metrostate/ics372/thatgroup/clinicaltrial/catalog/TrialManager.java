@@ -3,7 +3,7 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 
 /**
 *
@@ -26,10 +26,12 @@ public class TrialManager {
    }
    
    public TrialCatalog getTrialCatalog(Trial trial) throws TrialCatalogException {
-	   if (!catalog.isInit()) {
-		   catalog.init(trial);
+	   if (!catalog.isInit()) {		   
+		   if (!catalog.init(trial)) {
+			   throw new TrialCatalogException("Unable to initialize the catalog");
+		   }
 	   } else {
-		   throw new IllegalStateException("Catalog already initialized.");
+		   throw new TrialCatalogException("Catalog already initialized.");
 	   }
 	   
 	   return catalog;

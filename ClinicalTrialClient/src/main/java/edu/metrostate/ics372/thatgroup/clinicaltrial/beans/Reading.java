@@ -1,7 +1,7 @@
 /**
  * File: Reading.java
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.reading;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

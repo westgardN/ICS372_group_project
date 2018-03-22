@@ -1,10 +1,10 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import java.util.List;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.Clinic;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 
 /**
  * The TrialCatalog interface is used to access the data of a specific trial.
@@ -80,12 +80,21 @@ public interface TrialCatalog {
 	 *            set. If the id field identifies a valid clinic, a new Clinic
 	 *            is created and its fields are populated with the
 	 *            retrieved data and returned; otherwise null is returned. 
-	 * @return true if the specified clinic was retrieved; otherwise false.
+	 * @return the specified clinic; otherwise null.
 	 * @throws TrialCatalogException indicates that clinic is null or an error
 	 * was encountered.
 	 */
 	public Clinic get(Clinic clinic) throws TrialCatalogException;
 
+	/**
+	 * Returns the default clinic for this trial.
+	 * 
+	 * @return the default clinic for this trial. 
+	 * @throws TrialCatalogException indicates that clinic is null or an error
+	 * was encountered.
+	 */
+	public Clinic getDefaultClinic() throws TrialCatalogException;
+	
 	/**
 	 * Updates the existing clinic record, specified by the clinic id of
 	 * the specified clinic, with the information contained within the

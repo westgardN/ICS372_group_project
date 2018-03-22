@@ -9,16 +9,17 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.Clinic;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.Trial;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
 
 public class ClinicalTrialCatalog implements TrialCatalog {
 	protected static final String END_DATE = "end_date";
@@ -106,6 +107,8 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 					if (ClinicalTrialCatalogUtilIty.writeAndInitializeCatalogFile(Paths.get(catalogFilePath).toFile(), trialName)) {
 						answer = true;
 					}
+			} else {
+				answer = true;
 			}
 		} catch (SQLException | IOException ex) {
 			throw new TrialCatalogException(ex.getMessage(), ex);
@@ -157,6 +160,22 @@ public class ClinicalTrialCatalog implements TrialCatalog {
         return answer;
 	}
 	
+	protected PreparedStatement getPreparedInsert(final Connection conn, Trial trial) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_TRIAL);
+		answer.setString(1, trial.getId());
+		if (trial.getStartDate() != null) {
+			answer.setDate(2, Date.valueOf(trial.getStartDate()));
+        } else {
+        	answer.setDate(2, null);
+        }
+		if (trial.getEndDate() != null) {
+			answer.setDate(3, Date.valueOf(trial.getEndDate()));
+        } else {
+        	answer.setDate(3, null);
+        }
+        return answer;
+	}
+	
 	protected PreparedStatement getPreparedInsert(final Connection conn, Clinic clinic) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_CLINIC);
 		answer.setString(1, clinic.getId());
@@ -195,7 +214,8 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setString(5, reading.getValue() != null ? reading.getValue().toString() : null);
 		
 		if (reading.getDate() != null) {
-			answer.setDate(6, Date.valueOf(reading.getDate().toString()));
+			java.util.Date date = Date.from(reading.getDate().atZone(ZoneId.systemDefault()).toInstant());
+			answer.setDate(6, new Date(date.getTime()));
         } else {
         	answer.setDate(6, null);
         }
@@ -319,7 +339,11 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setClinicId(rs.getString(CLINIC_ID));
 		
 		if (rs.getDate(DATE) != null) {
-			answer.setDate(LocalDateTime.ofInstant(rs.getDate(DATE).toInstant(), ZoneId.systemDefault()));
+			Date date = rs.getDate(DATE);
+			LocalDate ld = date != null ? date.toLocalDate() : null;
+			if (ld != null) {
+				answer.setDate(ld.atStartOfDay());
+			}
         }
 		answer.setValue(rs.getString(VALUE));
 		
@@ -344,6 +368,23 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 	
+	protected boolean insert(Trial trial) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(trial);
+		boolean answer = false;
+		
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedInsert(conn, trial);){
+			if (pstmt.executeUpdate() == 1) {
+				answer = true;
+			}
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
+		}
+		
+		return answer;
+	}
+
 	///////////////////////// Begin Interface //////////////////////////////////////
 	@Override
 	public boolean init(Trial trial) throws TrialCatalogException {
@@ -360,7 +401,16 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		if (answer) {
 				answer = createTrialCatalog(trial, catalogStoragePath);
 			if (answer) {
-				this.trial =  get(trial);
+				this.trial = trial;
+				
+				Trial temp = get(trial);
+				
+				if (temp == null) {
+					if (insert(trial)) {
+						this.trial =  get(trial);
+					}
+				}
+				
 				answer = this.trial != null;
 			}
 		}
@@ -465,6 +515,17 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		}
 		
 		return answer;
+	}
+
+	@Override
+	public Clinic getDefaultClinic() throws TrialCatalogException {
+		Clinic clinic = new Clinic(Clinic.DEFAULT_ID, getActiveId(), Clinic.DEFAULT_ID);
+		
+		if (!exists(clinic)) {
+			insert(clinic);
+		}
+		
+		return get(clinic);
 	}
 
 	@Override

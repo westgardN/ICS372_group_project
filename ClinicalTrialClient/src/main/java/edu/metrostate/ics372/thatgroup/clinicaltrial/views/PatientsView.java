@@ -10,7 +10,9 @@ import java.util.ResourceBundle;
 import java.io.InputStream;
 import java.net.URL;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
@@ -31,7 +33,7 @@ import javafx.scene.layout.AnchorPane;
 public class PatientsView extends AnchorPane implements Initializable {
 	@FXML
 	private ListView<Patient> listView;
-	private ClinicalTrialViewModel model;
+	private ClinicalTrialModel model;
 	private ListProperty<Patient> patientsProperty;
 	@FXML
 	private Button startPtTrial;
@@ -61,7 +63,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 	 * 
 	 * @return the model
 	 */
-	public ClinicalTrialViewModel getModel() {
+	public ClinicalTrialModel getModel() {
 		return model;
 	}
 
@@ -72,14 +74,14 @@ public class PatientsView extends AnchorPane implements Initializable {
 	 * @param model
 	 *            the model to set
 	 */
-	public void setModel(ClinicalTrialViewModel model) {
+	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
 		patientsProperty.set(model.getPatients());
 
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals(ClinicalTrialViewModel.PROP_SELECTED_PATIENT)) {
+			if (prop.equals(ClinicalTrialModel.PROP_SELECTED_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
 					Patient patient = (Patient) event.getNewValue();
 
@@ -89,7 +91,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 						updateButtons(patient, true);
 					}
 				}
-			} else if (prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
+			} else if (prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
 					updatePatient((Patient) event.getNewValue());
 				}
@@ -102,14 +104,19 @@ public class PatientsView extends AnchorPane implements Initializable {
 		listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 			int index = newValue.intValue();
 
-			if (index >= 0 && index < patientsProperty.size() && patientsProperty.get(index) instanceof Patient) {
-				Patient patient = patientsProperty.get(index);
-				if (!Objects.equals(patient, model.getSelectedPatient())) {
-					model.setSelectedPatient(patient);
+			try {
+				if (index >= 0 && index < patientsProperty.size() && patientsProperty.get(index) instanceof Patient) {
+					Patient patient = patientsProperty.get(index);
+					if (!Objects.equals(patient, model.getSelectedPatient())) {
+							model.setSelectedPatient(patient);
+					}
+	
+				} else {
+					model.setSelectedPatient(null);
 				}
-
-			} else {
-				model.setSelectedPatient(null);
+			} catch (TrialCatalogException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		});
 	}
@@ -151,6 +158,12 @@ public class PatientsView extends AnchorPane implements Initializable {
 			LocalDate startDate = LocalDate.now();
 			patient.setTrialStartDate(startDate);
 			patient.setTrialEndDate(null);
+			try {
+				model.update(patient);
+			} catch (TrialCatalogException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			updateButtons(patient, true);
 		}
 	}
@@ -166,6 +179,12 @@ public class PatientsView extends AnchorPane implements Initializable {
 		if (patient != null) {
 			LocalDate endDate = LocalDate.now();
 			patient.setTrialEndDate(endDate);
+			try {
+				model.update(patient);
+			} catch (TrialCatalogException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			updateButtons(patient, true);
 		}
 	}

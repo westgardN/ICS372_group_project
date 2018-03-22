@@ -1,10 +1,10 @@
-package edu.metrostate.ics372.thatgroup.clinicaltrial;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.time.LocalDateTime;
 import java.util.Random;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.patient.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
 
 class RandomReadingGenerator {
 	
