@@ -7,10 +7,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 
 /**
- * @author vpalo
+ * @author That Group
  *
  */
 public class ClinicalTrialModelTest {

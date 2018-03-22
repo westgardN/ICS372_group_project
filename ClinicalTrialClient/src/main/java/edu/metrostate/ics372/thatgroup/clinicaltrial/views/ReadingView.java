@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
