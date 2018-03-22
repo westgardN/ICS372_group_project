@@ -1,7 +1,7 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import static org.junit.Assert.*;
-
+import static org.mockito.Mockito.*;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class TrialTest {
 	private final String PATIENT_ID = "foo";
@@ -32,13 +31,9 @@ public class TrialTest {
 	@Test
 	public void testAddPropertyChangeListener() throws NoSuchMethodException, IllegalAccessException, NoSuchFieldException {
 		Trial trial = new Trial();
-		Field pcs = trial.getClass().getDeclaredField("pcs");
-		pcs.setAccessible(true);
-		pcs.set(trial, null);
-		Method getPcs = trial.getClass().getDeclaredMethod("getPcs");
-		getPcs.setAccessible(true);
-		assertNotNull(getPcs);
-		trial.addPropertyChangeListener(Mockito.mock(PropertyChangeListener.class));
+		PropertyChangeListener pcl = mock(PropertyChangeListener.class);
+		
+		trial.addPropertyChangeListener(mock(PropertyChangeListener.class));
 	}
 
 	@Test
