@@ -52,7 +52,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		private boolean validateInput() {
 			String readingType = type.getSelectionModel().getSelectedItem().toLowerCase();
 
-			if (date.getValue() == null) {
+			if (date.getValue() == null || isFutureDate(date.getValue())) {
 				generateErrorMessage(ErrCause.DATE);
 				return false;
 			}
@@ -83,6 +83,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return true;
 		}
 
+		private boolean isFutureDate(LocalDate date) {
+			return date.isAfter(LocalDate.now());
+		}
+
 		private boolean isFilled(TextField textField) {
 			return textField.getText() != null && !textField.getText().isEmpty();
 		}
@@ -104,7 +108,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		private boolean hasValidTime() {
 			boolean answer;
 			String hh = hour.getText(), mm = minutes.getText(), ss = seconds.getText();
-			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC)) {
+			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC) && getTime().isBefore(LocalTime.now())) {
 				answer = true;
 			} else if (hh.equals(StringResource.EMPTY) && mm.equals(StringResource.EMPTY)
 					&& ss.equals(StringResource.EMPTY)) {
