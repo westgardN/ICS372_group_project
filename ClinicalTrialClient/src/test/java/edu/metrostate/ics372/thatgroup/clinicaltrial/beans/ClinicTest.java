@@ -6,14 +6,13 @@ import java.beans.PropertyChangeSupport;
 import org.junit.Test;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 
 /**
  * 
  */
 
 /**
- * @author nicolewestgard
+ * @author That Group
  *
  */
 public class ClinicTest {
@@ -21,7 +20,6 @@ public class ClinicTest {
 	public static final String PROP_ID = "id";
 	public static final String PROP_TRIAL_ID = "trialId";
 	public static final String PROP_NAME = "name";
-	private static final long serialVersionUID = 6613024190196045827L;
 	protected transient PropertyChangeSupport pcs;
 	protected String id;
 	protected String trialId;

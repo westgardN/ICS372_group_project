@@ -15,6 +15,7 @@ public class ClinicalTrialDatabaseTest {
 	public void test() throws TrialCatalogException {
 		ClinicalTrialCatalog catalog = new ClinicalTrialCatalog();
 		Trial trial = new Trial("test");
+		assertNotNull(trial);
 		if (catalog.init(trial)) {
 		}
 		
