@@ -42,7 +42,7 @@
 							<content>
 								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<children>
-										<SplitPane dividerPositions="0.225, 0.5, 0.9" layoutX="9.6" layoutY="33.6" orientation="VERTICAL">
+										<SplitPane dividerPositions="0.15, 0.5, 0.9" layoutX="9.6" layoutY="33.6" orientation="VERTICAL">
 											<items>
 												<StackPane>
 													<AddPatientView fx:id="addPatientView" minHeight="0.0" minWidth="0.0" prefHeight="180.0"/>
