@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,19 +70,19 @@ public class ReadingView extends AnchorPane implements Initializable {
 				generateErrorMessage(ErrCause.ID);
 				return false;
 			}
-			if (readingType.equals(StringResource.BP_VALUE) && !validateBloodPressure()) {
+			if (readingType.equals(Strings.BP_VALUE) && !validateBloodPressure()) {
 				generateErrorMessage(ErrCause.BP);
 				return false;
 			}
-			if (readingType.equals(StringResource.TEMP_VALUE) && !validateTemp()) {
+			if (readingType.equals(Strings.TEMP_VALUE) && !validateTemp()) {
 				generateErrorMessage(ErrCause.TEMP);
 				return false;
 			}
-			if (!isFilled(value) && !readingType.equals(StringResource.TEMP_VALUE)
-					&& !readingType.equals(StringResource.BP_VALUE)
+			if (!isFilled(value) && !readingType.equals(Strings.TEMP_VALUE)
+					&& !readingType.equals(Strings.BP_VALUE)
 					|| isFilled(value) && !value.getText().matches(INT_INPUT)
-							&& !readingType.equals(StringResource.TEMP_VALUE)
-							&& !readingType.equals(StringResource.BP_VALUE)) {
+							&& !readingType.equals(Strings.TEMP_VALUE)
+							&& !readingType.equals(Strings.BP_VALUE)) {
 				generateErrorMessage(ErrCause.VALUE);
 				return false;
 			}
@@ -123,8 +124,8 @@ public class ReadingView extends AnchorPane implements Initializable {
 			String hh = hour.getText(), mm = minutes.getText(), ss = seconds.getText();
 			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC)) {
 				answer = true;
-			} else if (hh.equals(StringResource.EMPTY) && mm.equals(StringResource.EMPTY)
-					&& ss.equals(StringResource.EMPTY)) {
+			} else if (hh.equals(Strings.EMPTY) && mm.equals(Strings.EMPTY)
+					&& ss.equals(Strings.EMPTY)) {
 				answer = true;
 			} else {
 				answer = false;
@@ -157,25 +158,25 @@ public class ReadingView extends AnchorPane implements Initializable {
 		private void generateErrorMessage(ErrCause cause) {
 			switch (cause) {
 			case DATE:
-				PopupNotification.showPopupMessage(StringResource.ERR_DATE_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_DATE_MSG, getScene());
 				break;
 			case TIME:
-				PopupNotification.showPopupMessage(StringResource.ERR_TIME_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_TIME_MSG, getScene());
 				break;
 			case DATE_TIME:
-				PopupNotification.showPopupMessage(StringResource.ERR_DATE_TIME_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_DATE_TIME_MSG, getScene());
 				break;
 			case ID:
-				PopupNotification.showPopupMessage(StringResource.ERR_ID_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_ID_MSG, getScene());
 				break;
 			case BP:
-				PopupNotification.showPopupMessage(StringResource.ERR_BLOOD_PRESSURE_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_BLOOD_PRESSURE_MSG, getScene());
 				break;
 			case TEMP:
-				PopupNotification.showPopupMessage(StringResource.ERR_TEMP_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_TEMP_MSG, getScene());
 				break;
 			case VALUE:
-				PopupNotification.showPopupMessage(StringResource.ERR_VALUE_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.ERR_VALUE_MSG, getScene());
 			default:
 				break;
 			}
@@ -289,7 +290,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		addBtn.setDisable(true);
 
 		type.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSel, newSel) -> {
-			if (newSel.toLowerCase().equals(StringResource.BP_VALUE)) {
+			if (newSel.toLowerCase().equals(Strings.BP_VALUE)) {
 				bloodPressStack.setVisible(true);
 				value.setVisible(false);
 			} else {
@@ -305,7 +306,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 				form.setVisible(true);
 				addBtn.setDisable(true);
 			} else {
-				PopupNotification.showPopupMessage(StringResource.INACTIVE_PATIENT_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.INACTIVE_PATIENT_MSG, getScene());
 			}
 		});
 
@@ -318,10 +319,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 					} catch (TrialCatalogException e) {
 						PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 					}
-					id.setText(StringResource.EMPTY);
-					PopupNotification.showPopupMessage(StringResource.READING_ADDED_MSG, getScene());
+					id.setText(Strings.EMPTY);
+					PopupNotification.showPopupMessage(Strings.READING_ADDED_MSG, getScene());
 				} else {
-					PopupNotification.showPopupMessage(StringResource.READING_NOT_ADDED_MSG, getScene());
+					PopupNotification.showPopupMessage(Strings.READING_NOT_ADDED_MSG, getScene());
 				}
 			}
 		});
@@ -344,8 +345,8 @@ public class ReadingView extends AnchorPane implements Initializable {
 		boolean answer = false;
 		
 		try {
-			if (rType.toLowerCase().equals(StringResource.BP_VALUE)) {
-				rType = StringResource.BP_JSON;
+			if (rType.toLowerCase().equals(Strings.BP_VALUE)) {
+				rType = Strings.BP_JSON;
 				rVal = String.format("%s/%s", systolic.getText(), diastolic.getText());
 			}
 			answer = model.addReading(rType, rId, rVal, LocalDateTime.of(rDateTime, getTime()));

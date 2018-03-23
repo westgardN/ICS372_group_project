@@ -12,10 +12,10 @@ import java.util.ResourceBundle;
 import java.io.InputStream;
 import java.net.URL;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
@@ -187,7 +187,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		
 		dialog.setTitle("Select Trial Start Date for Patient " + patient.getId());
 		dialog.setHeaderText("Please select the date the patient started the trial");
-		URL url = ClinicalTrialClient.class.getResource("resources" + File.separator + "logov2_256x256.png");
+		URL url = getClass().getResource(".." + File.separator + Strings.LOGO_PATH);
 		String img = url.toString();
 		dialog.setGraphic(new ImageView(img));
 		

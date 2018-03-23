@@ -1,15 +1,17 @@
 /**
- * File: StringResource.java
+ * File: Strings.java
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.resources;
 
+import java.io.File;
 
 /**
  * Holds string literals used in the implementation of the user interface
  *
  * @author That Group
  */
-public class StringResource {
+public class Strings {
+	public static final String LOGO_PATH = "resources" + File.separator + "logov2_256x256.png";
 	public static final String EMPTY = "";
 	public static final String BP_VALUE = "blood pressure";
 	public static final String BP_JSON = "blood_press";
