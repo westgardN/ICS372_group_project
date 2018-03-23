@@ -82,7 +82,7 @@ public class BloodPressure extends Reading {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Blood Pressure taken ");
+		builder.append("Blood Pressure taken");
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		if (date != null) {
 			String formattedDateTime = date.format(formatter);

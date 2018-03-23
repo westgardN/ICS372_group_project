@@ -17,31 +17,38 @@ import org.junit.Test;
  */
 
 public class StepsTest {
-
-	private static final Object MIN_VALUE = Integer.MIN_VALUE;
-	private static final String STRING_PATIENT_ID = "test";
-	private static final String PATIENT_ID = null;
-	private static final String  STRING_ID = "test";
-	private static final String ID = null;
-	private  LocalDateTime DATE;
-	private Object VALUE;
-	private static final String CLINIC_ID = null;
-	private static final String STRING_CLINIC_ID = "test";
+	private static final String PATIENT_ID = "test";
+	private static final String ID = "test";
+	private static final LocalDateTime DATE = LocalDateTime.now();
+	private static final Integer INTEGER_VALUE = 99;
+	private static final String STRING_VALUE = "99";
+	private static final String CLINIC_ID = "test";
 	
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#toString()}.
 	 */
 	@Test
-	public final void testToString() {
-		Steps steps = new Steps(STRING_PATIENT_ID, STRING_ID, DATE, VALUE, STRING_CLINIC_ID);
+	public final void testToStringWithValidDate() {
+		Steps steps = new Steps(PATIENT_ID, ID, DATE, INTEGER_VALUE, CLINIC_ID);
 		String result = steps.toString();
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		String expected = "Steps taken " + steps.getDate().format(formatter) + " is" + steps.getValue(); 
+		String expected = "Steps taken on " + steps.getDate().format(formatter) + " is: " + steps.getValue(); 
 
 		assertEquals(expected, result);
 	}
 	
+	/**
+	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#toString()}.
+	 */
+	@Test
+	public final void testToStringWithNullDate() {
+		Steps steps = new Steps(PATIENT_ID, ID, null, INTEGER_VALUE, CLINIC_ID);
+		String result = steps.toString();
+		String expected = "Steps taken is: " + steps.getValue(); 
 
+		assertEquals(expected, result);
+	}
+	
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#getValue()} and
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#setValue(java.lang.Object)}..
@@ -50,45 +57,50 @@ public class StepsTest {
 	public final void testStepValueInteger() {
 		Steps steps = new Steps();
 		
-		steps.setValue(MIN_VALUE);
-		assertEquals(MIN_VALUE, steps.getValue());
+		steps.setValue(INTEGER_VALUE);
+		assertEquals(INTEGER_VALUE, steps.getValue());
 	}
 	
+	/**
+	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#getValue()} and
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#setValue(java.lang.Object)}..
+	 */
+	@Test
+	public final void testStepValueString() {
+		Steps steps = new Steps();
+		
+		steps.setValue(STRING_VALUE);
+		assertEquals(INTEGER_VALUE, steps.getValue());
+	}
 	
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#Steps()}.
 	 */
 	@Test
-	public final void testArgsConstrcutedSteps() {
-		Steps steps = new Steps(PATIENT_ID, ID, DATE, VALUE, CLINIC_ID);
+	public final void testArgsConstructorMemberValuesShouldBeNotNull() {
+		Steps steps = new Steps(PATIENT_ID, ID, DATE, INTEGER_VALUE, CLINIC_ID);
 		
 		assertNotNull(steps);
-		assertNull(steps.getPatientId());
-		assertNull(steps.getId());
-		assertNull(steps.getDate());
+		assertNotNull(steps.getPatientId());
+		assertNotNull(steps.getId());
+		assertNotNull(steps.getDate());
 		assertNotNull(steps.getValue());
-		assertNull(steps.getClinicId());
-		
-		
-	//String patientId, String id, LocalDateTime date, Object value, String clinicId)
+		assertNotNull(steps.getClinicId());
 	}
 
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps#Steps(java.lang.String, java.lang.String, java.time.LocalDateTime, java.lang.Object, java.lang.String)}.
 	 */
 	@Test
-	public final void testConstrcutedNoArgsStepsStringStringLocalDateTimeObjectString() {
-		Steps steps = new Steps(null, null, null, Integer.MIN_VALUE, null);
-		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		
-		steps.setDate(DATE);
+	public final void testNoArgConStructorEveryThingButValueShouldBeNull() {
+		Steps steps = new Steps();
 		
 		assertNotNull(steps);
-		assertEquals(PATIENT_ID, steps.getPatientId());
-		assertEquals(ID, steps.getId());
-		assertNotNull(steps.getDate().format(formatter));
-		assertEquals(VALUE, steps.getValue());
-		assertEquals(CLINIC_ID, steps.getClinicId());
+		assertNull(steps.getPatientId());
+		assertNull(steps.getId());
+		assertNull(steps.getDate());
+		assertEquals(Integer.MIN_VALUE, steps.getValue());
+		assertNull(steps.getClinicId());
 	}
 
 }

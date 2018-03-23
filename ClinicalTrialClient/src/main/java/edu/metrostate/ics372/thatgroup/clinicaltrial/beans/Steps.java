@@ -79,7 +79,7 @@ public class Steps extends Reading {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Steps taken ");
+		builder.append("Steps taken");
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		if (date != null) {
 			String formattedDateTime = date.format(formatter);
