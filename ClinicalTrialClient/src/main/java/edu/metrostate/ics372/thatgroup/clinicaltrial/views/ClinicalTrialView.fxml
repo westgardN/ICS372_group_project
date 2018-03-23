@@ -34,48 +34,36 @@
 		</VBox>
 	</top>
 	<center>
-		<StackPane prefHeight="500" prefWidth="700" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-			<children>
-				<BorderPane prefHeight="200.0" prefWidth="200.0">
-					<center>
-						<SplitPane dividerPositions="0.3028953229398664" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-							<items>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+		<SplitPane dividerPositions="0.315, 0.9" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<items>
+				<Accordion prefHeight="469.0" prefWidth="223.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<panes>
+						<TitledPane animated="true" text="Patients">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<children>
-										<Accordion prefHeight="469.0" prefWidth="223.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-											<panes>
-												<TitledPane animated="true" text="Patients">
-													<content>
-														<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-															<children>
-																<SplitPane dividerPositions="0.225, 0.5, 0.9" layoutX="9.6" layoutY="33.6" orientation="VERTICAL">
-																	<items>
-																		<StackPane>
-																			<AddPatientView fx:id="addPatientView" minHeight="0.0" minWidth="0.0" prefHeight="180.0"/>
-																		</StackPane>
-																		<StackPane>
-																			<PatientsView fx:id="patientsView" minHeight="0.0" minWidth="0.0" prefHeight="337.0"/>
-																		</StackPane>
-																		<StackPane>
-																			<ReadingView fx:id="readingView" minHeight="0.0" minWidth="0.0" prefHeight="100.0"/>
-																		</StackPane>
-																	</items>
-																</SplitPane>
-															</children>
-														</AnchorPane>
-													</content>
-												</TitledPane>
-											</panes>
-										</Accordion>
+										<SplitPane dividerPositions="0.225, 0.5, 0.9" layoutX="9.6" layoutY="33.6" orientation="VERTICAL">
+											<items>
+												<StackPane>
+													<AddPatientView fx:id="addPatientView" minHeight="0.0" minWidth="0.0" prefHeight="180.0"/>
+												</StackPane>
+												<StackPane>
+													<PatientsView fx:id="patientsView" minHeight="0.0" minWidth="0.0" prefHeight="337.0"/>
+												</StackPane>
+												<StackPane>
+													<ReadingView fx:id="readingView" minHeight="0.0" minWidth="0.0" prefHeight="100.0"/>
+												</StackPane>
+											</items>
+										</SplitPane>
 									</children>
 								</AnchorPane>
-								<ReadingsView fx:id="readingsView" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-							</items>
-						</SplitPane>
-					</center>
-				</BorderPane>
-			</children>
-		</StackPane>
+							</content>
+						</TitledPane>
+					</panes>
+				</Accordion>
+				<ReadingsView fx:id="readingsView" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+			</items>
+		</SplitPane>
 	</center>
 	<bottom>
 		<HBox id="footer-section">
