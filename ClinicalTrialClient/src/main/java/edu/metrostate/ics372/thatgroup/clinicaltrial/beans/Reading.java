@@ -166,7 +166,7 @@ public class Reading implements Serializable {
 		builder.append(" for patient ");
 		builder.append(patientId);
 		builder.append(" taken on ");
-		builder.append(date.format(formatter));
+		builder.append(date != null ? date.format(formatter) : null);
 		builder.append(" taken at ");
 		builder.append(clinicId);
 		builder.append(" has a value of ");
