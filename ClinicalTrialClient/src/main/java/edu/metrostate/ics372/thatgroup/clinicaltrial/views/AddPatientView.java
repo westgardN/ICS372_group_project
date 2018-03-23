@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
  * This view is responsible for displaying the form to add a new patient to the
@@ -82,16 +83,16 @@ public class AddPatientView extends VBox implements Initializable {
 	public void addPatient(ActionEvent event) {
 		try {
 			if (model.addPatient(textField.getText().trim())) {
-				PopupNotification.showPopupMessage(StringResource.PATIENT_ADDED_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.PATIENT_ADDED_MSG, getScene());
 				clear = true;
-				textField.setText(StringResource.EMPTY);
+				textField.setText(Strings.EMPTY);
 			} else {
-				PopupNotification.showPopupMessage(StringResource.PATIENT_NOT_ADDED_MSG, getScene());
+				PopupNotification.showPopupMessage(Strings.PATIENT_NOT_ADDED_MSG, getScene());
 			}
 		} catch (TrialCatalogException e) {
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append(StringResource.PATIENT_NOT_ADDED_MSG);
+			sb.append(Strings.PATIENT_NOT_ADDED_MSG);
 			sb.append("\nReceived Error: ");
 			sb.append(e.getMessage());
 			PopupNotification.showPopupMessage(sb.toString(), getScene());
@@ -119,7 +120,7 @@ public class AddPatientView extends VBox implements Initializable {
 			} else if (!validate(newValue) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
 				if (!clear) {
-					PopupNotification.showPopupMessage(StringResource.SPECIAL_CHAR_MSG, getScene());
+					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
 				}
 				clear = false;
 			}

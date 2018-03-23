@@ -75,10 +75,13 @@ public class Temp extends Reading {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Temp taken ");
+		builder.append("Temp taken");
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		String formattedDateTime = date.format(formatter);
-		builder.append(formattedDateTime);
+		if (date != null) {
+			String formattedDateTime = date.format(formatter);
+			builder.append(" on ");
+			builder.append(formattedDateTime);
+		}
 		builder.append(" is: ");
 		builder.append(getValue());
 		return builder.toString();

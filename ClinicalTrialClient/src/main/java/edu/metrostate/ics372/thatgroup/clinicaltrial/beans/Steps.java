@@ -81,8 +81,11 @@ public class Steps extends Reading {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Steps taken ");
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		String formattedDateTime = date.format(formatter);
-		builder.append(formattedDateTime);
+		if (date != null) {
+			String formattedDateTime = date.format(formatter);
+			builder.append(" on ");
+			builder.append(formattedDateTime);
+		}
 		builder.append(" is: ");
 		builder.append(getValue());
 		return builder.toString();

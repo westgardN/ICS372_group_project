@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +43,7 @@ public class ClinicalTrialClient extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Patient Trial Client");
-		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + "resources" + File.separator + "logov2_256x256.png"));
+		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + Strings.LOGO_PATH));
 		stage.getIcons().add(applicationIcon);
 		Pane pane = loadMainPane();
 		stage.setScene(createScene(pane));
