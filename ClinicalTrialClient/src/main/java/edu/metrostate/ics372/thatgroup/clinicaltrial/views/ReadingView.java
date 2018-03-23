@@ -316,8 +316,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 					try {
 						model.fireUpdatePatient(patientId.getText());
 					} catch (TrialCatalogException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 					}
 					id.setText(StringResource.EMPTY);
 					PopupNotification.showPopupMessage(StringResource.READING_ADDED_MSG, getScene());
@@ -351,8 +350,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 			}
 			answer = model.addReading(rType, rId, rVal, LocalDateTime.of(rDateTime, getTime()));
 		} catch (TrialCatalogException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 		}
 		
 		return answer;

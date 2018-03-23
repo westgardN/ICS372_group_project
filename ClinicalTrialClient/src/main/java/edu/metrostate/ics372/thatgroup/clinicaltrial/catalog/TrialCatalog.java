@@ -12,7 +12,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
  * You can check for the existence of, create, update, delete, and retrieve
  * data for clinics, patients, and readings.
  * 
- * @author ThatGroup
+ * @author That Group
  *
  */
 public interface TrialCatalog {
@@ -91,7 +91,7 @@ public interface TrialCatalog {
 	 * Returns the default clinic for this trial.
 	 * 
 	 * @return the default clinic for this trial. 
-	 * @throws TrialCatalogException indicates that clinic is null or an error
+	 * @throws TrialCatalogException indicates that an error
 	 * was encountered.
 	 */
 	public Clinic getDefaultClinic() throws TrialCatalogException;
@@ -171,6 +171,16 @@ public interface TrialCatalog {
 	 */
 	public Patient get(Patient patient) throws TrialCatalogException;
 
+
+	/**
+	 * Returns the default patient for this trial.
+	 * 
+	 * @return the default patient for this trial. 
+	 * @throws TrialCatalogException indicates that an error
+	 * was encountered.
+	 */
+	public Patient getDefaultPatient() throws TrialCatalogException;
+	
 	/**
 	 * Updates the existing patient record, specified by the patient id of
 	 * the specified patient, with the information contained within the

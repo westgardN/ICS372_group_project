@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 
 public class JsonProcessorTest {
 
@@ -33,7 +34,7 @@ public class JsonProcessorTest {
 			assertNotNull(readings);
 			assertEquals(4, readings.size());
 			
-		} catch (IOException e) {
+		} catch (IOException | TrialException e) {
 			e.printStackTrace();
 		}
 	}

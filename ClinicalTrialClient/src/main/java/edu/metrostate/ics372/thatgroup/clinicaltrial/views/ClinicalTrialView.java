@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
@@ -112,8 +113,8 @@ public class ClinicalTrialView implements Initializable {
 				PopupNotification.showPopupMessage(
 						"Imported " + clinicCount + " clinic(s), " + patientCount + " patients(s) and " + readingCount + " reading(s)",
 						stage.getScene());
-			} catch (TrialCatalogException | IOException e) {
-				e.printStackTrace();
+			} catch (IOException | TrialException e) {
+				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 			}
 		}
 	}
@@ -147,7 +148,7 @@ public class ClinicalTrialView implements Initializable {
 				JsonProcessor.write(readings, file.getAbsolutePath());
 				PopupNotification.showPopupMessage("Exported " + readings.size() + " reading(s)", stage.getScene());
 			} catch (TrialCatalogException | IOException e) {
-				e.printStackTrace();
+				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 			}
 		}
 	}
@@ -201,8 +202,7 @@ public class ClinicalTrialView implements Initializable {
 			readingView.setModel(model);
 			readingsView.setModel(model);
 		} catch (TrialCatalogException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 		}
 	}
 }

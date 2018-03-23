@@ -1,3 +1,6 @@
+/**
+ * File: ClinicalTrialCatalogUtility.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import java.io.File;
@@ -9,6 +12,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * 
+ * @author That Group
+ *
+ */
 public class ClinicalTrialCatalogUtilIty {
 	private static String catalogStoragePath = getEnvironmentSpecificStoragePath();
 	public final static String CATALOG_EXTENSION = ".db";

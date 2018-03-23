@@ -10,7 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
  * @author That Group
  *
  */
-public class AddPatientView extends AnchorPane implements Initializable {
+public class AddPatientView extends VBox implements Initializable {
 	@FXML
 	private TextField textField;
 	@FXML

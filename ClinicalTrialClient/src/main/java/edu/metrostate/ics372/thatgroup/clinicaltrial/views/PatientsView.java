@@ -3,13 +3,16 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.io.InputStream;
 import java.net.URL;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
@@ -20,8 +23,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 
 /**
  * This view is responsible for displaying the patients in a ListView for the
@@ -115,8 +125,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 					model.setSelectedPatient(null);
 				}
 			} catch (TrialCatalogException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 			}
 		});
 	}
@@ -155,19 +164,61 @@ public class PatientsView extends AnchorPane implements Initializable {
 	public void startPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
 		if (patient != null) {
-			LocalDate startDate = LocalDate.now();
-			patient.setTrialStartDate(startDate);
-			patient.setTrialEndDate(null);
-			try {
-				model.update(patient);
-			} catch (TrialCatalogException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			LocalDate startDate = getStartDate(patient);
+			if (startDate != null) {
+				patient.setTrialStartDate(startDate);
+				patient.setTrialEndDate(null);
+				try {
+					model.update(patient);
+				} catch (TrialCatalogException ex) {
+					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
+				}
 			}
 			updateButtons(patient, true);
 		}
 	}
 
+	private LocalDate getStartDate(Patient patient) {
+		LocalDate answer = null;
+		
+		Dialog<LocalDate> dialog = new Dialog<>();
+		dialog.initOwner(this.getScene().getWindow());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		
+		dialog.setTitle("Select Trial Start Date for Patient " + patient.getId());
+		dialog.setHeaderText("Please select the date the patient started the trial");
+		URL url = ClinicalTrialClient.class.getResource("resources" + File.separator + "logov2_256x256.png");
+		String img = url.toString();
+		dialog.setGraphic(new ImageView(img));
+		
+		ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+		
+		DatePicker datePicker = new DatePicker(patient.getTrialStartDate() != null ? patient.getTrialStartDate() : LocalDate.now());
+		datePicker.setMaxWidth(Double.MAX_VALUE);
+		datePicker.setMaxHeight(Double.MAX_VALUE);
+		
+		VBox expContent = new VBox(datePicker);
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		
+		dialog.getDialogPane().setContent(expContent);
+		
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == okButtonType) {
+				return datePicker.getValue();
+			} else {
+				return null;
+			}
+		});
+		
+		Optional<LocalDate> result = dialog.showAndWait();
+		
+		if (result.isPresent()) {
+			answer = result.get();
+		}
+		
+		return answer;
+	}
 	/**
 	 * Ends the trial for the currently selected patient
 	 * 
@@ -181,9 +232,8 @@ public class PatientsView extends AnchorPane implements Initializable {
 			patient.setTrialEndDate(endDate);
 			try {
 				model.update(patient);
-			} catch (TrialCatalogException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (TrialCatalogException ex) {
+				PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 			}
 			updateButtons(patient, true);
 		}
