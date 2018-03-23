@@ -58,12 +58,6 @@ public class ReadingTest {
 	public final void testConstructedReadingShouldNotBeNullStringStringLocalDateTimeObjectStringReading() {
 		Reading reading = new Reading(patientId, id, date, value, clinicId);
 		
-		reading.setPatientId(patientId);
-		reading.setId(id);
-		reading.setDate(date);
-		reading.setValue(reading);
-		reading.setClinicId(clinicId);
-		
 		assertNotNull(reading);
 		assertEquals(patientId, reading.getPatientId());
 		assertEquals(clinicId, reading.getClinicId());

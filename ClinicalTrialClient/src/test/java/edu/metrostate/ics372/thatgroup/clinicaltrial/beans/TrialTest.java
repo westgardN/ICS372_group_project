@@ -18,6 +18,7 @@ import org.junit.Test;
 public class TrialTest {
 	private final String DEFAULT_ID = Trial.DEFAULT_ID;
 	private final String TRIAL_ID = "test";
+	private final String TRIAL_ID_B = "testB";
 	private final LocalDate START_DATE = LocalDate.of(2018, 1, 1);
 	private final LocalDate END_DATE = LocalDate.of(2018, 2, 28);
 
@@ -26,12 +27,12 @@ public class TrialTest {
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#Trial()}.
 	 */
 	@Test
-	public final void testDefaultConstructorShouldBeNotNullAndHaveDefaultIdAndOtherMemberShouldBeNull() {
+	public final void testDefaultConstructorShouldBeNotNullAndHaveDefaultIdAndNowDateAndOtherMembersShouldBeNull() {
 		Trial trial = new Trial();
 
 		assertNotNull(trial);
 		assertEquals(DEFAULT_ID, trial.getId());
-		assertNull(trial.getStartDate());
+		assertEquals(LocalDate.now(), trial.getStartDate());
 		assertNull(trial.getEndDate());
 	}
 
@@ -136,14 +137,10 @@ public class TrialTest {
 	@Test
 	public final void testTwoTrialsThatAreNotEqualShouldNotBeConsideredEqual() {
 		Trial trialA = new Trial(TRIAL_ID);
-		Trial trialB = new Trial(TRIAL_ID);
+		Trial trialB = new Trial(TRIAL_ID_B);
 		Trial trialC = new Trial(DEFAULT_ID);
 		
-		trialA.setId(this.TRIAL_ID);
-		trialB.setId(this.TRIAL_ID);
-		trialC.setId(this.DEFAULT_ID);
-		
-		assertNotEquals(trialA, trialB); //Issues with this test not sure how to set "this."
+		assertNotEquals(trialA, trialB);
 		assertNotEquals(trialA, trialC);
 		assertNotEquals(trialB, trialC);
 	}
