@@ -14,8 +14,9 @@ public class StringResource {
 	public static final String BP_VALUE = "blood pressure";
 	public static final String BP_JSON = "blood_press";
 	public static final String TEMP_VALUE = "temperature";
-	public static final String ERR_DATE_MSG = "Date can not be empty or a future date.";
-	public static final String ERR_TIME_MSG = "Invalid time detected.  Please check the time input fields for errors.  Future times will not be accepted.";
+	public static final String ERR_DATE_MSG = "Date can not be empty and must be on or after this patient's start date up to today's date.";
+	public static final String ERR_TIME_MSG = "Invalid time detected.  Please check the time input fields for errors.";
+	public static final String ERR_DATE_TIME_MSG = "Please check the date and time fields to ensure that it falls between this patient's start date and now.";
 	public static final String ERR_ID_MSG = "Invalid reading id detected.  Please check the reading id input fields for errors.";
 	public static final String ERR_BLOOD_PRESSURE_MSG = "Invalid blood pressure detected.  Please check the blood pressure input fields for errors.";
 	public static final String ERR_TEMP_MSG = "Invalid temperature detected.  Please check the reading value input field for errors.";

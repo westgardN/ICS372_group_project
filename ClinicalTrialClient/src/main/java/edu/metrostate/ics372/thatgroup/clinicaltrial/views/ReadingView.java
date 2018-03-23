@@ -9,6 +9,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
@@ -35,7 +36,7 @@ import javafx.scene.layout.VBox;
  */
 public class ReadingView extends AnchorPane implements Initializable {
 	private enum ErrCause {
-		DATE, TIME, ID, BP, TEMP, VALUE;
+		DATE, TIME, DATE_TIME, ID, BP, TEMP, VALUE;
 	}
 
 	/*
@@ -52,12 +53,16 @@ public class ReadingView extends AnchorPane implements Initializable {
 		private boolean validateInput() {
 			String readingType = type.getSelectionModel().getSelectedItem().toLowerCase();
 
-			if (date.getValue() == null || isFutureDate(date.getValue())) {
+			if (!hasValidDate()) {
 				generateErrorMessage(ErrCause.DATE);
 				return false;
 			}
 			if (!hasValidTime()) {
 				generateErrorMessage(ErrCause.TIME);
+				return false;
+			}
+			if (!hasValidDateTime()) {
+				generateErrorMessage(ErrCause.DATE_TIME);
 				return false;
 			}
 			if (!isFilled(id) || !id.getText().matches(ALPHANUMERIC)) {
@@ -83,10 +88,6 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return true;
 		}
 
-		private boolean isFutureDate(LocalDate date) {
-			return date.isAfter(LocalDate.now());
-		}
-
 		private boolean isFilled(TextField textField) {
 			return textField.getText() != null && !textField.getText().isEmpty();
 		}
@@ -105,10 +106,22 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return isFilled(hour) && isFilled(minutes) && isFilled(seconds);
 		}
 
+		private boolean hasValidDate() {
+			boolean answer = false;
+			
+			LocalDate ld = date.getValue() != null ? date.getValue() : null;
+			
+			if (ld != null && !ld.isAfter(LocalDate.now()) && !ld.isBefore(model.getSelectedPatient().getTrialStartDate())) {
+				answer = true;
+			}
+			
+			return answer;
+		}
+		
 		private boolean hasValidTime() {
 			boolean answer;
 			String hh = hour.getText(), mm = minutes.getText(), ss = seconds.getText();
-			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC) && getTime().isBefore(LocalTime.now())) {
+			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC)) {
 				answer = true;
 			} else if (hh.equals(StringResource.EMPTY) && mm.equals(StringResource.EMPTY)
 					&& ss.equals(StringResource.EMPTY)) {
@@ -119,6 +132,28 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return answer;
 		}
 
+		private boolean hasValidDateTime() {
+			boolean answer = false;
+			
+			if (hasValidDate()) {
+				LocalTime lt = getTime();
+				LocalDate ld = date.getValue() != null ? date.getValue() : null;
+				
+				if (ld != null) {
+					LocalDateTime ldt = LocalDateTime.of(ld, lt);
+					LocalDateTime now = LocalDateTime.now();
+					
+					long seconds = ChronoUnit.SECONDS.between(ldt, now);
+					
+					if (seconds >= 0) {
+						answer = true;
+					}
+				}
+			}
+			
+			return answer;
+		}
+		
 		private void generateErrorMessage(ErrCause cause) {
 			switch (cause) {
 			case DATE:
@@ -126,6 +161,9 @@ public class ReadingView extends AnchorPane implements Initializable {
 				break;
 			case TIME:
 				PopupNotification.showPopupMessage(StringResource.ERR_TIME_MSG, getScene());
+				break;
+			case DATE_TIME:
+				PopupNotification.showPopupMessage(StringResource.ERR_DATE_TIME_MSG, getScene());
 				break;
 			case ID:
 				PopupNotification.showPopupMessage(StringResource.ERR_ID_MSG, getScene());
