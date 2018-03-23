@@ -16,6 +16,7 @@ import java.util.Objects;
  *
  */
 public class Patient implements Serializable {
+	public static final String DEFAULT_ID = "default";
 	public static final String PROP_ID = "id";
 	public static final String PROP_TRIAL_ID = "trialId";
 	public static final String PROP_TRIAL_START_DATE = "trialStartDate";

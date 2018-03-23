@@ -115,8 +115,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 					model.setSelectedPatient(null);
 				}
 			} catch (TrialCatalogException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 			}
 		});
 	}
@@ -160,9 +159,8 @@ public class PatientsView extends AnchorPane implements Initializable {
 			patient.setTrialEndDate(null);
 			try {
 				model.update(patient);
-			} catch (TrialCatalogException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (TrialCatalogException ex) {
+				PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 			}
 			updateButtons(patient, true);
 		}
@@ -181,9 +179,8 @@ public class PatientsView extends AnchorPane implements Initializable {
 			patient.setTrialEndDate(endDate);
 			try {
 				model.update(patient);
-			} catch (TrialCatalogException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (TrialCatalogException ex) {
+				PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 			}
 			updateButtons(patient, true);
 		}

@@ -13,8 +13,10 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 
 /**
  * The JsonProcessor is used for importing and exporting a List of Reading objects to and from a
@@ -33,16 +35,17 @@ public class JsonProcessor {
 	 * @return A list of the readings that were read from the file.
 	 * 
 	 * @throws IOException indicates an error occurred while operating on the file.
+	 * @throws TrialException 
 	 */
-	public static List<Reading> read(String filePath) throws IOException {
+	public static List<Reading> read(String filePath) throws IOException, TrialException {
 		JsonReadings answer = null;
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))){
 			Gson gson = new GsonBuilder().create();
 			
 			answer = gson.fromJson(br, JsonReadings.class);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			throw new TrialException("Unable to read the JSON file.\n" + e.getMessage(), e);
 		}
 		
 		return answer != null ? answer.getPatientReadings() : null;
@@ -67,7 +70,7 @@ public class JsonProcessor {
 			bw.write(gson.toJson(jReadings));
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 }

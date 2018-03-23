@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -81,6 +82,10 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		if (!isValidTrial(trial)) {
 			throw new TrialCatalogException("There is no active trial. Please call init with a valid Trial.");
 		}
+		
+		if (!databaseExists(trial)) {
+			throw new TrialCatalogException("The database for the active trial has been deleted.");
+		}
 	}
 	
 	private boolean isValidTrial(Trial trial) {
@@ -100,8 +105,10 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	 */
 	protected boolean createTrialCatalog(Trial trial, String catalogStoragePath) throws TrialCatalogException {
 		boolean answer = false;
+		
 		String trialName = trial.getId();
 		String catalogFilePath = catalogStoragePath + trialName.concat(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION);
+		
 		try {
 			if (!Files.exists(Paths.get(catalogFilePath))) {
 					if (ClinicalTrialCatalogUtilIty.writeAndInitializeCatalogFile(Paths.get(catalogFilePath).toFile(), trialName)) {
@@ -113,11 +120,34 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		} catch (SQLException | IOException ex) {
 			throw new TrialCatalogException(ex.getMessage(), ex);
 		}
+		
 		return answer;
 	}
 
+	protected boolean databaseExists(Trial trial) {
+		boolean answer = false;
+		
+		String trialName = trial.getId();
+		String catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
+		String catalogFilePath = catalogStoragePath + trialName.concat(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION);
+		
+		if (Files.exists(Paths.get(catalogFilePath))) {
+			answer = true;
+		}
+		
+		return answer;
+	}
+	
 	protected String getActiveId() {
 		return trial != null ? trial.getId() : null;
+	}
+	
+	protected LocalDate getStartDate() {
+		return trial != null ? trial.getStartDate() : null;
+	}
+	
+	protected LocalDate getEndDate() {
+		return trial != null ? trial.getEndDate() : null;
 	}
 	
 	protected Connection getConnection() throws SQLException {
@@ -421,7 +451,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	@Override
 	public boolean isInit() {
-		return isValidTrial(trial);
+		return isValidTrial(trial) && databaseExists(trial);
 	}
 
 	@Override
@@ -603,6 +633,34 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	@Override
+	public Patient getDefaultPatient() throws TrialCatalogException {
+		Patient patient = new Patient(Patient.DEFAULT_ID, getActiveId(), getStartDate(), getEndDate());
+		
+		if (!exists(patient)) {
+			insert(patient);
+		}
+		
+		Patient pt = get(patient);
+		boolean update = false;
+		
+		if (pt.getTrialEndDate() != null) {
+			pt.setTrialEndDate(null);
+			update = true;
+		}
+		
+		if (pt.getTrialStartDate().isAfter(getStartDate())) {
+			pt.setTrialStartDate(getStartDate());
+			update = true;
+		}
+		
+		if (update) {
+			update(pt);
+		}
+		
+		return get(patient);
+	}
+	
 	@Override
 	public boolean update(Patient patient) throws TrialCatalogException {
 		validateIsInit();
