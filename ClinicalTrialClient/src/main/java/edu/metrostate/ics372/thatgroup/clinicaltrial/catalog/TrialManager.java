@@ -8,7 +8,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogExce
 
 /**
 *
-* @author Gabriel
+* @author That Group
 */
 public class TrialManager {
    private TrialCatalog catalog;
