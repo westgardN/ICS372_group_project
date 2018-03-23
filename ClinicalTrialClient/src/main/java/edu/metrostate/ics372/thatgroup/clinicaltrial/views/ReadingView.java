@@ -108,7 +108,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		private boolean hasValidTime() {
 			boolean answer;
 			String hh = hour.getText(), mm = minutes.getText(), ss = seconds.getText();
-			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC)) {
+			if (hh.matches(HOURS) && mm.matches(MIN_SEC) && ss.matches(MIN_SEC) && getTime().isBefore(LocalTime.now())) {
 				answer = true;
 			} else if (hh.equals(StringResource.EMPTY) && mm.equals(StringResource.EMPTY)
 					&& ss.equals(StringResource.EMPTY)) {
