@@ -80,7 +80,7 @@ public class Weight extends Reading {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Weight taken ");
+		builder.append("Weight taken");
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		if (date != null) {
 			String formattedDateTime = date.format(formatter);
