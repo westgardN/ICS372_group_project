@@ -5,6 +5,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.junit.Test;
@@ -14,11 +15,12 @@ import org.junit.Test;
  *
  */
 public class ReadingTest {
-	protected String patientId;
-	protected String id;
-	protected LocalDateTime date;
-	protected String clinicId;
-	private Object value;
+	private static final String PATIENT_ID = "test";
+	private static final String ID = "test";
+	private static final LocalDateTime DATE = LocalDateTime.now();
+	private static final String VALUE = "test";
+	private static final String CLINIC_ID = "test";
+	
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading#hashCode()}.
 	 */
@@ -26,7 +28,6 @@ public class ReadingTest {
 	public final void testHashCode() {
 		fail("Not yet implemented"); // TODO
 	}
-	
 
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading#equals(java.lang.Object)}.
@@ -56,14 +57,14 @@ public class ReadingTest {
 	 */
 	@Test
 	public final void testConstructedReadingShouldNotBeNullStringStringLocalDateTimeObjectStringReading() {
-		Reading reading = new Reading(patientId, id, date, value, clinicId);
+		Reading reading = new Reading(PATIENT_ID, ID, DATE, VALUE, CLINIC_ID);
 		
 		assertNotNull(reading);
-		assertEquals(patientId, reading.getPatientId());
-		assertEquals(clinicId, reading.getClinicId());
-		assertEquals(date, reading.getDate());
-		assertEquals(value, reading.getValue());
-		assertEquals(clinicId, reading.getClinicId());
+		assertEquals(PATIENT_ID, reading.getPatientId());
+		assertEquals(ID, reading.getId());
+		assertEquals(DATE, reading.getDate());
+		assertEquals(VALUE, reading.getValue());
+		assertEquals(CLINIC_ID, reading.getClinicId());
 	}
 
 
