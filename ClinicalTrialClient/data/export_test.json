@@ -2,7 +2,7 @@
   "patient_readings": [
     {
       "patient_id": "15566",
-      "clinic_id": "default",
+      "clinic_id": "mercy",
       "reading_type": "temp",
       "reading_id": "1a545",
       "reading_value": 98.6,
@@ -26,7 +26,7 @@
     },
     {
       "patient_id": "336558",
-      "clinic_id": "default",
+      "clinic_id": "medical",
       "reading_type": "blood_press",
       "reading_id": "85545",
       "reading_value": "120/60",
