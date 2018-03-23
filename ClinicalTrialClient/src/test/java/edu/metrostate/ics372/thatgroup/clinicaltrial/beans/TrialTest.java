@@ -1,105 +1,200 @@
+/**
+ * 
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import java.beans.PropertyChangeListener;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 import org.junit.Test;
 
+/**
+ * @author That Group This will test the Trial class methods and constructors
+ *
+ */
 public class TrialTest {
-	private final String PATIENT_ID = "foo";
-	private final String OTHER_PATIENT_ID = "baz";
-	private final String TRIAL_ID = "bar";
-	private final String OTHER_TRIAL_ID = "abc";
-	private final String CLINICAL  = "clinical";
+	private final String DEFAULT_ID = Trial.DEFAULT_ID;
+	private final String TRIAL_ID = "test";
+	private final LocalDate START_DATE = LocalDate.of(2018, 1, 1);
+	private final LocalDate END_DATE = LocalDate.of(2018, 2, 28);
 
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#Trial()}.
+	 */
 	@Test
-	public void testConstruction() {
+	public final void testDefaultConstructorShouldBeNotNullAndHaveDefaultIdAndOtherMemberShouldBeNull() {
 		Trial trial = new Trial();
+
 		assertNotNull(trial);
-		assertEquals(Trial.DEFAULT_ID, trial.getId());
-		Trial trial1 = new Trial(TRIAL_ID);
-		trial1.setId(OTHER_TRIAL_ID);
-		assertNotNull(trial1);
-		assertEquals(OTHER_TRIAL_ID, trial1.getId());
+		assertEquals(DEFAULT_ID, trial.getId());
+		assertNull(trial.getStartDate());
+		assertNull(trial.getEndDate());
 	}
 
+
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#getId()} and
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#setId(java.lang.String)}.
+	 */
 	@Test
-	public void testAddPropertyChangeListener() throws NoSuchMethodException, IllegalAccessException, NoSuchFieldException {
+	public final void testId() {
 		Trial trial = new Trial();
-		PropertyChangeListener pcl = mock(PropertyChangeListener.class);
-		
-		trial.addPropertyChangeListener(mock(PropertyChangeListener.class));
+
+		trial.setId(DEFAULT_ID);
+		assertEquals(DEFAULT_ID, trial.getId());
 	}
 
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#getStartDate()}
+	 * and
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#setStartDate(java.time.LocalDate)}.
+	 */
 	@Test
-	public void testHasPatientStartedTrial() {
+	public final void testStartDate() {
 		Trial trial = new Trial();
+
+		trial.setStartDate(START_DATE);
+		assertEquals(START_DATE, trial.getStartDate());
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#getEndDate()}
+	 * and
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#setEndDate(java.time.LocalDate)}.
+	 */
+	@Test
+	public final void testEndDate() {
+		Trial trial = new Trial();
+
+		trial.setEndDate(END_DATE);
+		assertEquals(END_DATE, trial.getEndDate());
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#hasPatientStartedTrial(edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient)}.
+	 */
+	@Test
+	public final void testHasThePatientStartedATrial() {
+		Trial trial = new Trial();
+
 		trial.setId(TRIAL_ID);
+
 		Patient patient = new Patient();
 		assertFalse(trial.hasPatientStartedTrial(patient));
 		patient.setTrialId(TRIAL_ID);
-		patient.setTrialStartDate(LocalDate.now());
+		patient.setTrialStartDate(START_DATE);
 		patient.setTrialEndDate(null);
 		assertTrue(trial.hasPatientStartedTrial(patient));
 	}
 
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#isPatientInTrial(edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient)}.
+	 */
 	@Test
-	public void testIsPatientInTrial() {
+	public final void testIsPatientInAnActiveTrial() {
 		Trial trial = new Trial();
 		trial.setId(TRIAL_ID);
+
 		Patient patient = new Patient();
 		assertFalse(trial.isPatientInTrial(patient));
+
 		patient.setTrialId(TRIAL_ID);
-		patient.setTrialStartDate(LocalDate.now());
+		patient.setTrialStartDate(START_DATE);
 		patient.setTrialEndDate(null);
 		assertTrue(trial.isPatientInTrial(patient));
+		assertNull(trial.getEndDate());
+	}
+	
+
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#hashCode()} 
+	 * and {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#equals(java.lang.Object)}.
+	 */
+	@Test
+	public final void testTwoTrialsThatAreEqualButBotEqualHashCodes() {
+		Trial trialA = new Trial(TRIAL_ID);
+		Trial trialB = new Trial(TRIAL_ID);
+
+		assertEquals(trialA, trialB);
+		assertEquals(trialA.hashCode(), trialB.hashCode());
+	}
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#equals(java.lang.Object)} and 
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#hashCode()} 
+	 */
+	@Test
+	public final void testTwoTrialsThatAreNotEqualShouldNotBeConsideredEqual() {
+		Trial trialA = new Trial(TRIAL_ID);
+		Trial trialB = new Trial(TRIAL_ID);
+		Trial trialC = new Trial(DEFAULT_ID);
+		
+		trialA.setId(this.TRIAL_ID);
+		trialB.setId(this.TRIAL_ID);
+		trialC.setId(this.DEFAULT_ID);
+		
+		assertNotEquals(trialA, trialB); //Issues with this test not sure how to set "this."
+		assertNotEquals(trialA, trialC);
+		assertNotEquals(trialB, trialC);
 	}
 
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#toString()}.
+	 */
 	@Test
-	public void testHashCode() {
-		Trial trial0 = new Trial();
-		assertEquals(31, trial0.hashCode());
-		trial0.setId(TRIAL_ID);
-		assertEquals(31 + trial0.getId().toUpperCase().hashCode(), trial0.hashCode());
-		trial0.setId(null);
-		assertEquals(31, trial0.hashCode());
+	public final void testToStringStartingTrial() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+		Trial trial = new Trial();
+		String result = trial.toString();
+		String expected = "Trial " + trial.getId()+ " (" + trial.getStartDate().format(formatter) + ")";
+		assertEquals(expected, result);
 	}
-
+	
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#toString()}.
+	 */
 	@Test
-	public void testEquals() {
-		Trial trial0 = new Trial();
-		Trial trial1 = trial0;
-		assertTrue(trial0.equals(trial1));
+	public final void testToStringStartingTrialWithEndDateThatIsNotNull() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+		Trial trial = new Trial();
+		trial.setId(TRIAL_ID);
+		trial.setStartDate(START_DATE);
+		trial.setEndDate(END_DATE);
 		
-		trial0.setId(TRIAL_ID);
-		assertTrue(trial0.equals(trial1));
-		
-		trial1 = new Trial();
-		assertFalse(trial0.equals(trial1));
-		
-		trial1 = null;
-		assertFalse(trial0.equals(trial1));
-		assertFalse(trial0.equals(new Object()));
-		
-		trial0.setId(null);
-		trial1 = new Trial();
-		trial1.setId(OTHER_TRIAL_ID);
-		assertFalse(trial0.equals(trial1));
-		
-		trial0.setId(OTHER_TRIAL_ID);
-		trial1.setId(null);
-		assertFalse(trial0.equals(trial1));
-		
-		trial0 = new Trial();
-		trial1 = new Trial();
-		trial0.setId(TRIAL_ID);
-		trial1.setId(TRIAL_ID);
-		assertTrue(trial0.equals(trial1));
+		String result = trial.toString();
+		String expected = ("Trial " + trial.getId() + " (" + trial.getStartDate().format(formatter) +" - "+ trial.getEndDate().format(formatter) + ")");
+		assertEquals(expected, result);
+	}
+	
+	
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial#clone()}.
+	 */
+	@Test
+	public final void testClone() {
+		Trial trialA = new Trial();
+		Trial trialB = trialA;
+
+		assertEquals(trialA, trialB);
+		assertTrue(trialA == trialB);
+
+		trialB = trialA.clone();
+
+		assertEquals(trialA, trialB);
+		assertFalse(trialA == trialB);
 	}
 
 }

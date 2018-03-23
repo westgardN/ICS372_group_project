@@ -133,7 +133,6 @@ public class PatientTest {
 	 */
 	@Test
 	public final void testToStringEmptyPatient() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		Patient patient = new Patient();
 		String result = patient.toString();
 		String expected = "null has not started the trial";
@@ -146,7 +145,6 @@ public class PatientTest {
 	 */
 	@Test
 	public final void testToStringNonEmptyPatientNotStartedTrial() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		Patient patient = new Patient(ID, TRIAL_ID, null, null);
 		String result = patient.toString();
 		String expected = ID + " has not started the trial";
