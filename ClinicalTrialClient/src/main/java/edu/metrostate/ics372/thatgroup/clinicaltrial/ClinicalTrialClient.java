@@ -3,9 +3,14 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView;
@@ -41,14 +46,23 @@ public class ClinicalTrialClient extends Application {
 	ClinicalTrialView view;
 
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) {
 		stage.setTitle("Patient Trial Client");
-		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + Strings.LOGO_PATH));
-		stage.getIcons().add(applicationIcon);
-		Pane pane = loadMainPane();
-		stage.setScene(createScene(pane));
-		stage.show();
 		
+		try (InputStream is = getClass().getResourceAsStream(Strings.LOGO_PATH);) {
+			URL urlIcon = getClass().getResource(Strings.LOGO_PATH);
+			URI uriIcon = urlIcon.toURI();
+			Path pathIcon = Paths.get(uriIcon);
+			if (Files.exists(pathIcon)) {
+				Image applicationIcon = new Image(is);
+				stage.getIcons().add(applicationIcon);
+				Pane pane = loadMainPane();
+				stage.setScene(createScene(pane));
+				stage.show();
+			}
+		} catch (IOException | URISyntaxException e) {
+			e.printStackTrace();
+		}
 		if (view != null) {
 			view.setStage(stage);
 		}
@@ -64,12 +78,12 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Pane loadMainPane() throws IOException {
 		Pane mainPane = null;
-		try (InputStream stream = getClass().getResourceAsStream("." + File.separator + "views" + File.separator + "ClinicalTrialView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.CLINICAL_TRIAL_VIEW_FXML)) {
 			FXMLLoader loader = new FXMLLoader();
 			mainPane = (Pane) loader.load(stream);
 			view = loader.<ClinicalTrialView>getController();
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
+		} catch (IOException | IllegalStateException ex) {
+			ex.printStackTrace();
 		}
 		return mainPane;
 	}
@@ -87,7 +101,7 @@ public class ClinicalTrialClient extends Application {
 		scene.getStylesheets()
 				.setAll(getClass()
 						.getResource(
-								"." + File.separator + "views" + File.separator + "styling.css")
+								Strings.CSS_PATH)
 						.toExternalForm());
 		return scene;
 	}

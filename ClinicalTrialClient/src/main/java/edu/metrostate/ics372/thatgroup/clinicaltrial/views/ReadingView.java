@@ -222,7 +222,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 	public ReadingView() {
 		model = null;
 
-		try (InputStream stream = getClass().getResourceAsStream("ReadingView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.READING_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);

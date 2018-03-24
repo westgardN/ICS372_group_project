@@ -3,15 +3,19 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.resources;
 
-import java.io.File;
-
 /**
  * Holds string literals used in the implementation of the user interface
  *
  * @author That Group
  */
 public class Strings {
-	public static final String LOGO_PATH = "resources" + File.separator + "logov2_256x256.png";
+	public static final String LOGO_PATH = "/img/logov2_256x256.png";
+	public static final String CLINICAL_TRIAL_VIEW_FXML = "/fxml/ClinicalTrialView.fxml";
+	public static final String ADD_PATIENT_VIEW_FXML = "/fxml/AddPatientView.fxml";
+	public static final String PATIENTS_VIEW_FXML = "/fxml/PatientsView.fxml";
+	public static final String READING_VIEW_FXML = "/fxml/ReadingView.fxml";
+	public static final String READINGS_VIEW_FXML = "/fxml/ReadingsView.fxml";
+	public static final String CSS_PATH = "/css/styling.css";
 	public static final String EMPTY = "";
 	public static final String BP_VALUE = "blood pressure";
 	public static final String BP_JSON = "blood_press";
