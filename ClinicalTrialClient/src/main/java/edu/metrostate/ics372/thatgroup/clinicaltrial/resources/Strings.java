@@ -33,4 +33,6 @@ public class Strings {
 	public static final String PATIENT_ADDED_MSG = "New Patient Added";
 	public static final String READING_ADDED_MSG = "Reading has been added.";
 	public static final String SPECIAL_CHAR_MSG = "No special characters allowed.";
+	public static final String SELECT_PATIENT_TRIAL_DATE_TITLE_FMT = "Select Trial %s Date for Patient %s";
+	public static final String SELECT_PATIENT_TRIAL_DATE_LABEL_FMT = "Please select the date patient %s %s the trial";
 }

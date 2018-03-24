@@ -265,7 +265,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 					patient = (Patient) evt.getNewValue();
 				}
 
-				if (patient != null && model.isPatientInTrial(patient)) {
+				if (patient != null && model.hasPatientStartedTrial(patient)) {
 					patientId.setText(model.getSelectedPatient().getId());
 					addBtn.setDisable(false);
 				} else if (patient != null) {
