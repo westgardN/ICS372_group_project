@@ -26,7 +26,9 @@ public class Strings {
 	public static final String INACTIVE_PATIENT_MSG = "This patient is not active in the clinical trial.";
 	public static final String PATIENT_NOT_ADDED_MSG = "Unable to add patient to the trial.";
 	public static final String READING_NOT_ADDED_MSG  = "Unable to add the reading. Please verify the Reading ID is unique for this patient.";
+	public static final String CLINIC_NOT_ADDED_MSG = "Unable to add the clinic. Please verify that Clinic ID is unique";
 	public static final String PATIENT_ADDED_MSG = "New Patient Added";
 	public static final String READING_ADDED_MSG = "Reading has been added.";
+	public static final String CLINIC_ADDED_MSG = "Clinic has been added.";
 	public static final String SPECIAL_CHAR_MSG = "No special characters allowed.";
 }

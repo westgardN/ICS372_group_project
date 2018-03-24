@@ -51,6 +51,9 @@ public class ClinicalTrialView implements Initializable {
 
 	@FXML
 	ReadingsView readingsView;
+	
+	@FXML
+	AddClinicView addClinicView;
 
 	/**
 	 * Imports readings from a JSON formatted file
@@ -201,6 +204,7 @@ public class ClinicalTrialView implements Initializable {
 			patientsView.setModel(model);
 			readingView.setModel(model);
 			readingsView.setModel(model);
+			addClinicView.setModel(model);
 		} catch (TrialCatalogException e) {
 			PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 		}

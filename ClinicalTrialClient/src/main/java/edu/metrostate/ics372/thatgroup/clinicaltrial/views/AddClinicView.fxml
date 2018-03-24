@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="94.0" prefWidth="254.0">
+         <children>
+            <Label layoutX="93.0" layoutY="4.0" text="Add Clinic" />
+            <TextField fx:id="textField" layoutX="34.0" layoutY="25.0" promptText="Clinic Name" />
+            <Button fx:id="addButton" layoutX="103.0" layoutY="59.0" mnemonicParsing="false" onAction="#addClinic" text="Add" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
