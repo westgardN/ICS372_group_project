@@ -11,6 +11,7 @@ import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
@@ -81,8 +82,14 @@ public class ReadingsView extends AnchorPane implements Initializable {
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
 			if (prop.equals(ClinicalTrialModel.PROP_JOURNAL)
-					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)) {
+					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)
+					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_READING)) {
 				fillTable();
+				try {
+					this.model.setSelectedReading(null);
+				} catch (TrialCatalogException e) {
+					PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
+				}
 			}
 		});
 	}
@@ -102,7 +109,11 @@ public class ReadingsView extends AnchorPane implements Initializable {
 				cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().format(formatter)));
 
 		readingTable.getSelectionModel().selectedIndexProperty().addListener((event) -> {
-			this.model.setSelectedReading(readingTable.getSelectionModel().getSelectedItem());
+			try {
+				this.model.setSelectedReading(readingTable.getSelectionModel().getSelectedItem());
+			} catch (TrialCatalogException e) {
+				PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
+			}
 		});
 	}
 
