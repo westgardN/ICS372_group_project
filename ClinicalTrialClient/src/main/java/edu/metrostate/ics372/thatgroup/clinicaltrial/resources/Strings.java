@@ -16,6 +16,7 @@ public class Strings {
 	public static final String READING_VIEW_FXML = "/fxml/ReadingView.fxml";
 	public static final String READINGS_VIEW_FXML = "/fxml/ReadingsView.fxml";
 	public static final String ADD_CLINIC_VIEW_FXML = "/fxml/AddClinicView.fxml";
+	public static final String CLINICS_VIEW_FXML = "/fxml/ClinicsView.fxml";	
 	public static final String CSS_PATH = "/css/styling.css";
 	public static final String EMPTY = "";
 	public static final String BP_VALUE = "blood pressure";
