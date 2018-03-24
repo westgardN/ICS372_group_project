@@ -18,6 +18,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddClinicView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -206,7 +207,11 @@ public class ClinicalTrialView implements Initializable {
 			readingsView.setModel(model);
 			addClinicView.setModel(model);
 		} catch (TrialCatalogException e) {
-			PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
+			if (stage != null) {
+				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
+			} else {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 }

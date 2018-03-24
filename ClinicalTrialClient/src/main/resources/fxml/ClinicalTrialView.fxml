@@ -15,6 +15,7 @@
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ReadingsView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddClinicView?>
 
+
 <BorderPane prefHeight="680" prefWidth="900" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView">
 	<top>
 		<VBox>
@@ -39,7 +40,7 @@
 			<items>
 				<Accordion prefHeight="469.0" prefWidth="223.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 					<panes>
-						<TitledPane animated="true" text="Clinic">
+						<TitledPane animated="true" text="Clinics">
 							<content>
 								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<AddClinicView fx:id="addClinicView" minHeight="0.0" minWidth="0.0" prefHeight="180.0"/>

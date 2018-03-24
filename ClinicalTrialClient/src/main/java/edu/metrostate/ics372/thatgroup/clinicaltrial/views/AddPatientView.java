@@ -42,13 +42,13 @@ public class AddPatientView extends VBox implements Initializable {
 	public AddPatientView() {
 		model = null;
 		clear = false;
-		try (InputStream stream = getClass().getResourceAsStream("AddPatientView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.ADD_PATIENT_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
+		} catch (IOException | IllegalStateException ex) {
+			ex.printStackTrace();
 		}
 	}
 

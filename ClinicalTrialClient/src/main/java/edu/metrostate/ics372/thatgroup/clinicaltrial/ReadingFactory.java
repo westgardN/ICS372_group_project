@@ -24,7 +24,7 @@ public class ReadingFactory {
 	public static final String PRETTY_WEIGHT = "Weight";
 	public static final String PRETTY_TEMPERATURE = "Temperature";
 	public static final String PRETTY_STEPS = "Steps";
-	private static final String PRETTY_BLOOD_PRESSURE = "Blood Pressure";
+	public static final String PRETTY_BLOOD_PRESSURE = "Blood Pressure";
 	public static final String WEIGHT = "weight";
 	public static final String TEMPERATURE = "temp";
 	public static final String STEPS = "steps";

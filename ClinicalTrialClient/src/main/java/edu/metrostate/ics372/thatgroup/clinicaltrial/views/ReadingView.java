@@ -10,9 +10,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.ResourceBundle;
+
+import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure.BloodPressureValue;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
@@ -222,13 +226,13 @@ public class ReadingView extends AnchorPane implements Initializable {
 	public ReadingView() {
 		model = null;
 
-		try (InputStream stream = getClass().getResourceAsStream("ReadingView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.READING_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
+		} catch (IOException | IllegalStateException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -258,26 +262,74 @@ public class ReadingView extends AnchorPane implements Initializable {
 		 * the patient
 		 */
 		model.addPropertyChangeListener((evt) -> {
-			if (Objects.equals(evt.getPropertyName(), ClinicalTrialModel.PROP_SELECTED_PATIENT)) {
-				Patient patient = null;
-
-				if (evt.getNewValue() instanceof Patient) {
-					patient = (Patient) evt.getNewValue();
-				}
-
-				if (patient != null && model.isPatientInTrial(patient)) {
-					patientId.setText(model.getSelectedPatient().getId());
-					addBtn.setDisable(false);
-				} else if (patient != null) {
-					addBtn.setDisable(true);
-					form.setVisible(false);
+			switch(evt.getPropertyName()) {
+				case ClinicalTrialModel.PROP_SELECTED_PATIENT:
+					Patient patient = null;
 					clear();
-				}
+					form.setVisible(false);
+					if (evt.getNewValue() instanceof Patient) {
+						patient = (Patient) evt.getNewValue();
+					}
+
+					if (patient != null && model.hasPatientStartedTrial(patient)) {
+						patientId.setText(model.getSelectedPatient().getId());
+						addBtn.setDisable(false);
+					} else if (patient != null) {
+						addBtn.setDisable(true);
+					}
+					break;
+				case ClinicalTrialModel.PROP_SELECTED_READING:
+					Reading reading = null;
+					
+					if (evt.getNewValue() instanceof Reading) {
+						reading = (Reading) evt.getNewValue();
+						
+						if (reading != null) {
+							load(reading);
+							form.setVisible(true);
+						} else {
+							clear();
+						}
+					}
+					break;
+				default:
 			}
 		});
 
 	}
 
+	private void load(Reading reading) {
+		LocalDateTime ldt = reading.getDate();
+		if (ldt != null) {
+			date.setValue(ldt.toLocalDate());
+			setTime(ldt.toLocalTime());
+		}
+		id.setText(reading.getId());
+		patientId.setText(reading.getPatientId());
+		
+		setValue(reading);
+		
+	}
+
+	private void setValue(Reading reading) {
+		String strType = ReadingFactory.getPrettyReadingType(reading);
+		type.getSelectionModel().clearSelection();
+		type.getSelectionModel().select(strType);
+		if (strType.equals(ReadingFactory.PRETTY_BLOOD_PRESSURE)) {
+			BloodPressure bp = (BloodPressure)reading;
+			BloodPressureValue bpv = bp.getValue() != null ? (BloodPressureValue)bp.getValue() : null;
+
+			if (bpv != null) {
+				systolic.setText(String.valueOf(bpv.getSystolic()));
+				diastolic.setText(String.valueOf(bpv.getDiastolic()));
+			}
+		}
+		
+		if (reading.getValue() != null) {
+			value.setText(reading.getValue().toString());
+		}
+	}
+	
 	/**
 	 * Initializes the view/input form and assigns the Action and Event listeners to
 	 * the proper GUI components
@@ -290,7 +342,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 		addBtn.setDisable(true);
 
 		type.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSel, newSel) -> {
-			if (newSel.toLowerCase().equals(Strings.BP_VALUE)) {
+			if (newSel != null && newSel.toLowerCase().equals(Strings.BP_VALUE)) {
 				bloodPressStack.setVisible(true);
 				value.setVisible(false);
 			} else {
@@ -303,6 +355,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 			Patient patient = model.getSelectedPatient();
 
 			if (model.isPatientInTrial(patient)) {
+				clear();
 				form.setVisible(true);
 				addBtn.setDisable(true);
 			} else {
@@ -368,6 +421,12 @@ public class ReadingView extends AnchorPane implements Initializable {
 		}
 	}
 
+	private void setTime(LocalTime lt) {
+		hour.setText(String.valueOf(lt.getHour()));
+		minutes.setText(String.valueOf(lt.getMinute()));
+		seconds.setText(String.valueOf(lt.getSecond()));
+	}
+	
 	private void clear() {
 		id.clear();
 		value.clear();

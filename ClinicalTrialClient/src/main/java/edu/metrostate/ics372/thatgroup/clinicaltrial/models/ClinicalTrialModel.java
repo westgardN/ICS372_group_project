@@ -87,6 +87,11 @@ public class ClinicalTrialModel {
 	/**
 	 * The updatePatient property.
 	 */
+	public static final String PROP_UPDATE_READING = "updateReading";
+	
+	/**
+	 * The updatePatient property.
+	 */
 	public static final String PROP_UPDATE_CLINIC = "updateClinic";
 	
 	private static final String DEFAULT_TRIAL_NAME = "default";
@@ -294,11 +299,26 @@ public class ClinicalTrialModel {
 	 * @param selectedReading the reading that is now considered to be the "selected"
 	 * selectedReading. 
 	 */
-	public void setSelectedReading(Reading selectedReading) {
+	public void setSelectedReading(Reading selectedReading) throws TrialCatalogException {
+		setSelectedReading(selectedReading, true);
+	}
+	
+	/**
+	 * Sets the "selected" reading to the specified reading and notifies any listeners
+	 * of this change. Typically the selected reading is set in response to a UI event
+	 * where the user selects a reading from a list and that list then notifies this model of the change.
+	 * 
+	 * @param selectedReading the reading that is now considered to be the "selected"
+	 * selectedReading. 
+	 * @param notify if set to true then a PROP_SELECTED_READING notification is fired.
+	 */
+	public void setSelectedReading(Reading selectedReading, boolean notify) throws TrialCatalogException {
 		if (!Objects.equals(this.selectedReading, selectedReading)) {
 			Reading oldValue = this.selectedReading;
 			this.selectedReading = selectedReading;
-			pcs.firePropertyChange(PROP_SELECTED_READING, oldValue, this.selectedReading);
+			if (notify) {
+				pcs.firePropertyChange(PROP_SELECTED_READING, oldValue, this.selectedReading);
+			}
 		}
 	}
 	
@@ -514,6 +534,38 @@ public class ClinicalTrialModel {
 	}
 	
 	/**
+	 * Updates the specified patient in the catalog. If the patient is not in the catalog, it
+	 * is added. Returns true if the patient was updated and false if the patient was not.
+	 * Fires a PROP_PATIENTS change notification if the patient was added to the catalog or
+	 * a PROP_UPDATE_PATIENT if the patient was simply updated.
+	 * 
+	 * @param reading the patient to update 
+	 * @return true if the patient was update and false if the patient was not.
+	 * @throws TrialCatalogException 
+	 */
+	public boolean update(Reading reading) throws TrialCatalogException {
+		boolean answer = false;
+		
+		if (reading != null) {
+			if (catalog.exists(reading)) {
+				answer = catalog.update(reading);
+				if (answer) {
+					pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
+				}
+			} else {
+				answer = catalog.insert(reading);
+				if (answer) {
+					int oldValue = patients.size();
+					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
+					journal.add(reading);
+				}
+			}
+		}
+		
+		return answer;
+	}
+	
+	/**
 	 * Imports the specified reading. The currently selected patient and currently selected clinic
 	 * must be a valid patient and clinic reference. Importing differs from adding in that a patient
 	 * simply has to be in the trial's list in order to import a reading for it whereas to add a reading, the
@@ -578,7 +630,7 @@ public class ClinicalTrialModel {
 	public boolean addReading(Reading reading) throws TrialCatalogException {
 		boolean answer = false;
 		
-		if (canAddReading(reading)) {
+		if (canAddReading(reading, true)) {
 			answer = catalog.insert(reading);
 			if (answer && journal != null) {
 				int oldValue = journal.size();
@@ -610,7 +662,7 @@ public class ClinicalTrialModel {
 		reading.setValue(value);
 		reading.setDate(date);
 		
-		return addReading(reading);
+		return update(reading);
 	}
 
 	/**
@@ -706,15 +758,18 @@ public class ClinicalTrialModel {
 	 * Returns true if the specified reading can be added to the selected patient.
 	 * 
 	 * @param reading the reading to add.
+	 * @param failIfExists if true and the reading already exists in the catalog,
+	 * then false is returned.
 	 * @return true if the specified reading can be added to the selected patient.
 	 * @throws TrialCatalogException
 	 */
-	public boolean canAddReading(Reading reading) throws TrialCatalogException {
+	public boolean canAddReading(Reading reading, boolean failIfExists) throws TrialCatalogException {
 		boolean answer = false;
 		
 		if (reading != null && reading.getDate() != null && selectedPatient != null) {
 			LocalDate endDate = selectedPatient.getTrialEndDate();
-			if (!catalog.exists(reading)) {
+			boolean exists = catalog.exists(reading);
+			if ((exists && !failIfExists) || !exists) {
 				if (endDate != null && endDate.compareTo(reading.getDate().toLocalDate()) >= 0) {
 					answer = true;
 				} else if (hasPatientStartedTrial(selectedPatient)){

@@ -31,9 +31,9 @@ public class AddClinicView extends VBox implements Initializable {
 	public AddClinicView() {
 		model = null;
 		clear = false;
-		try (InputStream stream = getClass().getResourceAsStream("AddClinicView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.ADD_CLINIC_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
-			fxmlLoader.setRoot(this);
+			//fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
 		} catch (IOException | IllegalStateException exception) {
