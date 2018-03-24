@@ -5,12 +5,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView;
@@ -50,17 +45,12 @@ public class ClinicalTrialClient extends Application {
 		stage.setTitle("Patient Trial Client");
 		
 		try (InputStream is = getClass().getResourceAsStream(Strings.LOGO_PATH);) {
-			URL urlIcon = getClass().getResource(Strings.LOGO_PATH);
-			URI uriIcon = urlIcon.toURI();
-			Path pathIcon = Paths.get(uriIcon);
-			if (Files.exists(pathIcon)) {
-				Image applicationIcon = new Image(is);
-				stage.getIcons().add(applicationIcon);
-				Pane pane = loadMainPane();
-				stage.setScene(createScene(pane));
-				stage.show();
-			}
-		} catch (IOException | URISyntaxException e) {
+			Image applicationIcon = new Image(is);
+			stage.getIcons().add(applicationIcon);
+			Pane pane = loadMainPane();
+			stage.setScene(createScene(pane));
+			stage.show();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		if (view != null) {
@@ -78,9 +68,10 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Pane loadMainPane() throws IOException {
 		Pane mainPane = null;
-		try (InputStream stream = getClass().getResourceAsStream(Strings.CLINICAL_TRIAL_VIEW_FXML)) {
+		try {
+			URL url = getClass().getResource(Strings.CLINICAL_TRIAL_VIEW_FXML);
 			FXMLLoader loader = new FXMLLoader();
-			mainPane = (Pane) loader.load(stream);
+			mainPane = (Pane) loader.load(url.openStream());
 			view = loader.<ClinicalTrialView>getController();
 		} catch (IOException | IllegalStateException ex) {
 			ex.printStackTrace();
@@ -98,11 +89,7 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Scene createScene(Pane mainPane) {
 		Scene scene = new Scene(mainPane);
-		scene.getStylesheets()
-				.setAll(getClass()
-						.getResource(
-								Strings.CSS_PATH)
-						.toExternalForm());
+		scene.getStylesheets().setAll(getClass().getResource(Strings.CSS_PATH).toExternalForm());
 		return scene;
 	}
 

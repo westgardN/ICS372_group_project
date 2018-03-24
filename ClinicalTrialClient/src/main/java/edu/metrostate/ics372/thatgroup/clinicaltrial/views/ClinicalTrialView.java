@@ -202,7 +202,11 @@ public class ClinicalTrialView implements Initializable {
 			readingView.setModel(model);
 			readingsView.setModel(model);
 		} catch (TrialCatalogException e) {
-			PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
+			if (stage != null) {
+				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
+			} else {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 }
