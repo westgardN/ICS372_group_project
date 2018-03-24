@@ -57,7 +57,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		model = null;
 		patientsProperty = new SimpleListProperty<>();
 
-		try (InputStream stream = getClass().getResourceAsStream("PatientsView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.PATIENTS_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
@@ -187,7 +187,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 		
 		dialog.setTitle("Select Trial Start Date for Patient " + patient.getId());
 		dialog.setHeaderText("Please select the date the patient started the trial");
-		URL url = getClass().getResource(".." + File.separator + Strings.LOGO_PATH);
+		URL url = getClass().getResource(Strings.LOGO_PATH);
 		String img = url.toString();
 		dialog.setGraphic(new ImageView(img));
 		

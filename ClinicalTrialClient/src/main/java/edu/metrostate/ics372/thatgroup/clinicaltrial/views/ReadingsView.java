@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
@@ -49,7 +50,7 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	public ReadingsView() {
 		model = null;
 
-		try (InputStream stream = getClass().getResourceAsStream("ReadingsView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.READINGS_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
