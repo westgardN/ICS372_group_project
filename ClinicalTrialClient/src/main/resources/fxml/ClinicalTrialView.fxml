@@ -41,17 +41,17 @@
 			<items>
 				<Accordion prefHeight="469.0" prefWidth="223.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 					<panes>
-+						<TitledPane animated="true" text="Clinic">
+						<TitledPane animated="true" text="Clinic">
 							<content>
 								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<children>
 										<SplitPane dividerPositions="0.15, 0.5" layoutX="9.6" layoutY="33.6" orientation="VERTICAL">
 											<items>
 												<StackPane>
-<!--													<AddClinicView fx:id="addClinicView" minHeight="0.0" minWidth="0.0" prefHeight="180.0"/>  -->
+													<AddClinicView fx:id="addClinicView" minHeight="0.0" minWidth="0.0" prefHeight="180.0"/>
 												</StackPane>
 												<StackPane>
-<!--													<ClinicsView fx:id="clinicsView" minHeight="0.0" minWidth="0.0" prefHeight="337.0"/>  -->
+													<ClinicsView fx:id="clinicsView" minHeight="0.0" minWidth="0.0" prefHeight="337.0"/>
 												</StackPane>
 											</items>
 										</SplitPane>

@@ -46,9 +46,9 @@ public class ClinicsView extends AnchorPane implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
-//		clinicProperty.set(model.getClinics());
-//
-//		listView.itemsProperty().bind(clinicProperty);
+		clinicProperty.set(model.getClinics());
+
+		listView.itemsProperty().bind(clinicProperty);
 
 	}
 	

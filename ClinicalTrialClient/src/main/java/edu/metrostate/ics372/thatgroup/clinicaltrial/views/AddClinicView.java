@@ -52,46 +52,46 @@ public class AddClinicView extends VBox implements Initializable {
 	@FXML
 	public void addClinic(ActionEvent event){
 		System.out.println("addClinic clicked");
-//		try {
-//			if (model.addClinic(textField.getText().trim(),textField.getText().trim())) {
-//				PopupNotification.showPopupMessage(Strings.CLINIC_ADDED_MSG, getScene());
-//				clear = true;
-//				textField.setText(Strings.EMPTY);
-//			} else {
-//				PopupNotification.showPopupMessage(Strings.CLINIC_NOT_ADDED_MSG, getScene());
-//			}
-//		} catch (TrialCatalogException e) {
-//			StringBuilder sb = new StringBuilder();
-//			
-//			sb.append(Strings.CLINIC_NOT_ADDED_MSG);
-//			sb.append("\nReceived Error: ");
-//			sb.append(e.getMessage());
-//			PopupNotification.showPopupMessage(sb.toString(), getScene());
-//		}
+		try {
+			if (model.addClinic(textField.getText().trim(),textField.getText().trim())) {
+				PopupNotification.showPopupMessage(Strings.CLINIC_ADDED_MSG, getScene());
+				clear = true;
+				textField.setText(Strings.EMPTY);
+			} else {
+				PopupNotification.showPopupMessage(Strings.CLINIC_NOT_ADDED_MSG, getScene());
+			}
+		} catch (TrialCatalogException e) {
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(Strings.CLINIC_NOT_ADDED_MSG);
+			sb.append("\nReceived Error: ");
+			sb.append(e.getMessage());
+			PopupNotification.showPopupMessage(sb.toString(), getScene());
+		}
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-//		addButton.setDisable(true);
-//
-//		textField.setOnKeyPressed((event) -> {
-//			if (event.getCode() == KeyCode.ENTER) {
-//				if (validate(textField.getText())) {
-//					addClinic(null);
-//				}
-//			}
-//		});
-//		textField.textProperty().addListener((observable, oldValue, newValue) -> {
-//			if (validate(newValue) && addButton.isDisabled()) {
-//				addButton.setDisable(false);
-//			} else if (!validate(newValue) && !addButton.isDisabled()) {
-//				addButton.setDisable(true);
-//				if (!clear) {
-//					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
-//				}
-//				clear = false;
-//			}
-//		});
+		addButton.setDisable(true);
+
+		textField.setOnKeyPressed((event) -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				if (validate(textField.getText())) {
+					addClinic(null);
+				}
+			}
+		});
+		textField.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (validate(newValue) && addButton.isDisabled()) {
+				addButton.setDisable(false);
+			} else if (!validate(newValue) && !addButton.isDisabled()) {
+				addButton.setDisable(true);
+				if (!clear) {
+					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
+				}
+				clear = false;
+			}
+		});
 	}
 	private boolean validate(String text) {
 		boolean answer = false;
