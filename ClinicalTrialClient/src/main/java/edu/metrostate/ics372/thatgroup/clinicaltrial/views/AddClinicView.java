@@ -33,7 +33,7 @@ public class AddClinicView extends VBox implements Initializable {
 		clear = false;
 		try (InputStream stream = getClass().getResourceAsStream(Strings.ADD_CLINIC_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
-			//fxmlLoader.setRoot(this);
+			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
 		} catch (IOException | IllegalStateException exception) {
@@ -73,24 +73,24 @@ public class AddClinicView extends VBox implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		addButton.setDisable(true);
 
-		textField.setOnKeyPressed((event) -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				if (validate(textField.getText())) {
-					addClinic(null);
-				}
-			}
-		});
-		textField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (validate(newValue) && addButton.isDisabled()) {
-				addButton.setDisable(false);
-			} else if (!validate(newValue) && !addButton.isDisabled()) {
-				addButton.setDisable(true);
-				if (!clear) {
-					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
-				}
-				clear = false;
-			}
-		});
+//		textField.setOnKeyPressed((event) -> {
+//			if (event.getCode() == KeyCode.ENTER) {
+//				if (validate(textField.getText())) {
+//					//addClinic(void);
+//				}
+//			}
+//		});
+//		textField.textProperty().addListener((observable, oldValue, newValue) -> {
+//			if (validate(newValue) && addButton.isDisabled()) {
+//				addButton.setDisable(false);
+//			} else if (!validate(newValue) && !addButton.isDisabled()) {
+//				addButton.setDisable(true);
+//				if (!clear) {
+//					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
+//				}
+//				clear = false;
+//			}
+//		});
 	}
 	private boolean validate(String text) {
 		boolean answer = false;
