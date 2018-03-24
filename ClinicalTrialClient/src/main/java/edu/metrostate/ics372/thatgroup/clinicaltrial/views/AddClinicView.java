@@ -51,7 +51,6 @@ public class AddClinicView extends VBox implements Initializable {
 	
 	@FXML
 	public void addClinic(ActionEvent event){
-		System.out.println("addClinic clicked");
 		try {
 			if (model.addClinic(textField.getText().trim(),textField.getText().trim())) {
 				PopupNotification.showPopupMessage(Strings.CLINIC_ADDED_MSG, getScene());
