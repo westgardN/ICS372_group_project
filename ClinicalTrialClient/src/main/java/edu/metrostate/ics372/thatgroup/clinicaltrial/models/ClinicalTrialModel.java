@@ -127,6 +127,9 @@ public class ClinicalTrialModel {
 		patients = FXCollections.observableArrayList(catalog.getPatients());
 		clinics = FXCollections.observableArrayList(catalog.getClinics());
 		defaultClinic = catalog.getDefaultClinic();
+		if (!clinics.contains(defaultClinic)) {
+			clinics.add(defaultClinic);
+		}
 		selectedPatient = null;
 		selectedClinic = null;
 		selectedReading = null;

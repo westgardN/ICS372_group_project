@@ -23,8 +23,6 @@ import javafx.scene.layout.AnchorPane;
 public class ClinicsView extends AnchorPane implements Initializable {
 	@FXML
 	private ListView<Clinic> listView;
-	@FXML
-	private Label label1;
 	private ClinicalTrialModel model;
 	private ListProperty<Clinic> clinicProperty;
 
@@ -66,7 +64,26 @@ public class ClinicsView extends AnchorPane implements Initializable {
 			}
 
 		});	
-	}
+		listView.itemsProperty().bind(clinicProperty);
+
+		listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+			int index = newValue.intValue();
+
+			try {
+				if (index >= 0 && index < clinicProperty.size() && clinicProperty.get(index) instanceof Clinic) {
+					Clinic clinic = clinicProperty.get(index);
+					if (!Objects.equals(clinic, model.getSelectedClinic())) {
+							model.setSelectedClinic(clinic);
+					}
+	
+				} else {
+					model.setSelectedClinic(null);
+				}
+			} catch (TrialCatalogException e) {
+				PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
+			}
+		});
+		}
 	
 	
 	private void updateClinic(Clinic clinic) {
@@ -77,6 +94,5 @@ public class ClinicsView extends AnchorPane implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		label1.setText(ClinicalTrialModel.PROP_SELECTED_CLINIC);
 	}
 }

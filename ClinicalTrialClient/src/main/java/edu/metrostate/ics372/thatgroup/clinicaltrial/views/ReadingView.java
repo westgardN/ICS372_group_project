@@ -115,8 +115,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 			boolean answer = false;
 			
 			LocalDate ld = date.getValue() != null ? date.getValue() : null;
+			Patient selectedPatient = model.getSelectedPatient();
+			LocalDate sd = selectedPatient != null ? selectedPatient.getTrialStartDate() : null;
 			
-			if (ld != null && !ld.isAfter(LocalDate.now()) && !ld.isBefore(model.getSelectedPatient().getTrialStartDate())) {
+			if (sd != null && ld != null && !ld.isAfter(LocalDate.now()) && !ld.isBefore(sd)) {
 				answer = true;
 			}
 			
@@ -368,7 +370,8 @@ public class ReadingView extends AnchorPane implements Initializable {
 				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(),
 						date.getValue())) {
 					try {
-						model.fireUpdatePatient(patientId.getText());
+						model.fireUpdatePatient(model.getSelectedPatient());
+						model.fireUpdateClinic(model.getSelectedClinic());
 					} catch (TrialCatalogException e) {
 						PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 					}
