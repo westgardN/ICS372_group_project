@@ -163,7 +163,7 @@ public class PatientsView extends AnchorPane implements Initializable {
 	public void startPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
 		if (patient != null) {
-			LocalDate startDate = getStartDate(patient);
+			LocalDate startDate = getTrialDate(patient, true);
 			if (startDate != null) {
 				patient.setTrialStartDate(startDate);
 				patient.setTrialEndDate(null);
@@ -177,23 +177,34 @@ public class PatientsView extends AnchorPane implements Initializable {
 		}
 	}
 
-	private LocalDate getStartDate(Patient patient) {
+	private LocalDate getTrialDate(Patient patient, boolean start) {
 		LocalDate answer = null;
 		
 		Dialog<LocalDate> dialog = new Dialog<>();
 		dialog.initOwner(this.getScene().getWindow());
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		
-		dialog.setTitle("Select Trial Start Date for Patient " + patient.getId());
-		dialog.setHeaderText("Please select the date the patient started the trial");
+		String action = start ? "Start" : "End";
+		String title = String.format(Strings.SELECT_PATIENT_TRIAL_DATE_TITLE_FMT, action, patient.getId());
+		
+		dialog.setTitle(title);
+		
+		action = start ? "started" : "ended";
+		String header = String.format(Strings.SELECT_PATIENT_TRIAL_DATE_LABEL_FMT, patient.getId(), action);
+		
+		dialog.setHeaderText(header);
+		
 		URL url = getClass().getResource(Strings.LOGO_PATH);
 		String img = url.toString();
+		
 		dialog.setGraphic(new ImageView(img));
 		
 		ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 		
-		DatePicker datePicker = new DatePicker(patient.getTrialStartDate() != null ? patient.getTrialStartDate() : LocalDate.now());
+		LocalDate ld = start ? patient.getTrialStartDate() : patient.getTrialEndDate();
+		DatePicker datePicker = new DatePicker(ld != null ? ld : LocalDate.now());
+		
 		datePicker.setMaxWidth(Double.MAX_VALUE);
 		datePicker.setMaxHeight(Double.MAX_VALUE);
 		
@@ -227,17 +238,51 @@ public class PatientsView extends AnchorPane implements Initializable {
 	public void endPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
 		if (patient != null) {
-			LocalDate endDate = LocalDate.now();
-			patient.setTrialEndDate(endDate);
-			try {
-				model.update(patient);
-			} catch (TrialCatalogException ex) {
-				PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
+			LocalDate endDate = getTrialDate(patient, false);
+			if (isDateOnOrAfter(endDate, patient.getTrialStartDate()) && isDateOnOrBefore(endDate, LocalDate.now())) {
+				patient.setTrialEndDate(endDate);
+				try {
+					model.update(patient);
+				} catch (TrialCatalogException ex) {
+					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
+				}
+			} else {
+				if (endDate != null) {
+					PopupNotification.showPopupMessage(Strings.ERR_DATE_MSG, this.getScene());
+				}
 			}
 			updateButtons(patient, true);
 		}
 	}
 
+	private boolean isDateOnOrAfter(LocalDate ldA, LocalDate ldB) {
+		boolean answer = false;
+		
+		if (ldA != null && ldB != null) {
+			if (ldA.isEqual(ldB) || ldA.isAfter(ldB)) {
+				answer = true;
+			}
+		} else if (ldA != null && ldB == null) {
+			answer = true;
+		}
+		
+		return answer;		
+	}
+	
+	private boolean isDateOnOrBefore(LocalDate ldA, LocalDate ldB) {
+		boolean answer = false;
+		
+		if (ldA != null && ldB != null) {
+			if (ldA.isEqual(ldB) || ldA.isBefore(ldB)) {
+				answer = true;
+			}
+		} else if (ldA != null && ldB == null) {
+			answer = true;
+		}
+		
+		return answer;		
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		startPtTrial.setDisable(true);
