@@ -15,6 +15,8 @@ public class Strings {
 	public static final String PATIENTS_VIEW_FXML = "/fxml/PatientsView.fxml";
 	public static final String READING_VIEW_FXML = "/fxml/ReadingView.fxml";
 	public static final String READINGS_VIEW_FXML = "/fxml/ReadingsView.fxml";
+	public static final String ADD_CLINIC_VIEW_FXML = "/fxml/AddClinicView.fxml";
+	public static final String CLINICS_VIEW_FXML = "/fxml/ClinicsView.fxml";	
 	public static final String CSS_PATH = "/css/styling.css";
 	public static final String EMPTY = "";
 	public static final String BP_VALUE = "blood pressure";
@@ -30,8 +32,10 @@ public class Strings {
 	public static final String INACTIVE_PATIENT_MSG = "This patient is not active in the clinical trial.";
 	public static final String PATIENT_NOT_ADDED_MSG = "Unable to add patient to the trial.";
 	public static final String READING_NOT_ADDED_MSG  = "Unable to add the reading. Please verify the Reading ID is unique for this patient.";
+	public static final String CLINIC_NOT_ADDED_MSG = "Unable to add the clinic. Please verify that Clinic ID is unique";
 	public static final String PATIENT_ADDED_MSG = "New Patient Added";
 	public static final String READING_ADDED_MSG = "Reading has been added.";
+	public static final String CLINIC_ADDED_MSG = "Clinic has been added.";
 	public static final String SPECIAL_CHAR_MSG = "No special characters allowed.";
 	public static final String SELECT_PATIENT_TRIAL_DATE_TITLE_FMT = "Select Trial %s Date for Patient %s";
 	public static final String SELECT_PATIENT_TRIAL_DATE_LABEL_FMT = "Please select the date patient %s %s the trial";

@@ -18,6 +18,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddClinicView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,6 +52,12 @@ public class ClinicalTrialView implements Initializable {
 
 	@FXML
 	ReadingsView readingsView;
+	
+	@FXML
+	AddClinicView addClinicView;
+	
+	@FXML
+	ClinicsView clinicsView;
 
 	/**
 	 * Imports readings from a JSON formatted file
@@ -201,6 +208,8 @@ public class ClinicalTrialView implements Initializable {
 			patientsView.setModel(model);
 			readingView.setModel(model);
 			readingsView.setModel(model);
+			addClinicView.setModel(model);
+			clinicsView.setModel(model);
 		} catch (TrialCatalogException e) {
 			if (stage != null) {
 				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
