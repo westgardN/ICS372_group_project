@@ -29,12 +29,6 @@ eclipse {
     }
 }
 
-jar {
-	manifest {
-		attributes 'Main-Class': 'edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient'
-	}
-}
-
 dependencies {
 
 	// GSON
@@ -56,3 +50,22 @@ dependencies {
     testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
 }
 
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Clinical Trial Client',  
+        	'Implementation-Version': '1.2.0.0',
+        	'Main-Class': 'edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+jar {
+	manifest {
+        attributes 'Implementation-Title': 'Clinical Trial Client',  
+        	'Implementation-Version': '1.2.0.0',
+        	'Main-Class': 'edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient'
+	}
+}

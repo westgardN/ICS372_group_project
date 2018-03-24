@@ -3,7 +3,6 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -62,8 +61,8 @@ public class PatientsView extends AnchorPane implements Initializable {
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
+		} catch (IOException | IllegalStateException ex) {
+			ex.printStackTrace();
 		}
 
 	}
