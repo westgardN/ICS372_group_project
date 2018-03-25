@@ -69,6 +69,7 @@ public class ClinicalTrialView implements Initializable {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Import File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
+				new ExtensionFilter("XML Files", "*.xml"),
 				new ExtensionFilter("All Files", "*.*"));
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
 																					// was executed from.
