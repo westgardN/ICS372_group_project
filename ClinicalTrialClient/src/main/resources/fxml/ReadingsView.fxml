@@ -10,10 +10,12 @@
 		<Label layoutX="287.0" layoutY="6.0" text="Readings" />
 		<TableView fx:id="readingTable" layoutX="164.0" layoutY="28.0" prefHeight="548.0" prefWidth="528.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
 			<columns>
-				<TableColumn fx:id="readingIDCol" editable="false" prefWidth="132.0" text="Reading ID" />
-				<TableColumn fx:id="dateTimeCol" editable="false" prefWidth="132.0" text="Date/Time" />
-				<TableColumn fx:id="readingTypeCol" editable="false" prefWidth="132.0" text="Reading Type" />
-				<TableColumn fx:id="valueCol" editable="false" prefWidth="132.0" text="Value" />
+				<TableColumn fx:id="readingIDCol" editable="false" prefWidth="100.0" text="Reading ID" />
+				<TableColumn fx:id="clinicIDCol" editable="false" prefWidth="100.0" text="Clinic ID" />
+				<TableColumn fx:id="patientIDCol" editable="false" prefWidth="100.0" text="Patient ID" />
+				<TableColumn fx:id="dateTimeCol" editable="false" prefWidth="100.0" text="Date/Time" />
+				<TableColumn fx:id="readingTypeCol" editable="false" prefWidth="100.0" text="Reading Type" />
+				<TableColumn fx:id="valueCol" editable="false" prefWidth="100.0" text="Value" />
 			</columns>
 		</TableView>
 	</children>
