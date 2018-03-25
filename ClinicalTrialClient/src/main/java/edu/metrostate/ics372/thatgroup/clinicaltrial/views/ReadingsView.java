@@ -44,6 +44,10 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	private TableColumn<Reading, String> valueCol;
 	@FXML
 	private TableColumn<Reading, String> readingIDCol;
+	@FXML
+	private TableColumn<Reading, String> clinicIDCol;
+	@FXML
+	private TableColumn<Reading, String> patientIDCol;
 
 	/**
 	 * Constructs a new ReadingsView instance
@@ -101,6 +105,8 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
+		clinicIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getClinicId().toString()));
+		patientIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPatientId().toString()));
 		readingTypeCol.setCellValueFactory(
 				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getPrettyReadingType(cellData.getValue())));
 		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
