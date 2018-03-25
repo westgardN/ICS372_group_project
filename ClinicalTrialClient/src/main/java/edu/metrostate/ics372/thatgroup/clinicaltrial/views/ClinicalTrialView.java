@@ -145,13 +145,7 @@ public class ClinicalTrialView implements Initializable {
 
 		if (file != null) {
 			try {
-				List<Reading> readings = new ArrayList<>();
-
-				for (Patient patient : model.getPatients()) {
-					for (Reading reading : model.getJournal(patient)) {
-						readings.add(reading);
-					}
-				}
+				List<Reading> readings = model.getReadings();
 
 				JsonProcessor.write(readings, file.getAbsolutePath());
 				PopupNotification.showPopupMessage("Exported " + readings.size() + " reading(s)", stage.getScene());
