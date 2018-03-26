@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root type="javafx.scene.layout.VBox"
-	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<VBox xmlns="http://javafx.com/javafx/8"
-			xmlns:fx="http://javafx.com/fxml/1">
-			<children>
-				<AnchorPane prefHeight="94.0" prefWidth="254.0">
-					<children>
-						<Label layoutX="93.0" layoutY="4.0" text="Add Clinic" />
-						<TextField fx:id="textField" layoutX="34.0"
-							layoutY="25.0" promptText="Clinic Name" />
-						<Button fx:id="addButton" defaultButton="true"
-							layoutX="103.0" layoutY="59.0" mnemonicParsing="false"
-							onAction="#addClinic" text="Add" />
-					</children>
-				</AnchorPane>
-			</children>
-		</VBox>
-	</children>
+<fx:root type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <javafx.scene.layout.VBox alignment="TOP_CENTER" prefHeight="97.0" prefWidth="148.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      	<children>
+            <AnchorPane VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox alignment="CENTER" fillWidth="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                  		<Label text="Add Clinic">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                  		<TextField fx:id="clinicId" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="148.0" promptText="Clinic ID">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="clinicName" promptText="Clinic Name">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                  		<Button fx:id="addButton" defaultButton="true" mnemonicParsing="false" onAction="#addClinic" text="Add">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+      	</children>
+      </javafx.scene.layout.VBox>
+   </children>
 </fx:root>
