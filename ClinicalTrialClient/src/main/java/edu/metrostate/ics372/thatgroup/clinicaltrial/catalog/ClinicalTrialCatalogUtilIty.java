@@ -21,8 +21,7 @@ import java.sql.Statement;
  * <ul>
  * <li>Windows: Users\*user*\AppData\Roaming\That Group\Trial Catalogs
  * <li>Linux: $HOME\.local\share\That Group\Clinical Trial Catalogs
- * <li>MAC: Users\*user*\Library\Application Support\That Group\Clinical Trial
- * Catalogs
+ * <li>MAC: Users\*user*\Library\That Group\Clinical Trial Catalogs
  * </ul>
  * 
  * 
@@ -80,13 +79,13 @@ public class ClinicalTrialCatalogUtilIty {
 		final String MAC = "MAC";
 		final String LINUX = "NUX";
 		final String HOME = System.getProperty("user.home");
-		final String STORAGE_DIR = Paths.get("That Group", "Clinical Trial Client", "Trial Catalogs").toString();
+		final String STORAGE_DIR = Paths.get("That Group", "Clinical Trial Client", "catalogs").toString();
 		String environment = System.getProperty("os.name").toUpperCase();
 
 		if (environment.contains(WINDOWS)) {
 			path = Paths.get(System.getenv("APPDATA"), STORAGE_DIR);
 		} else if (environment.contains(MAC)) {
-			path = Paths.get(HOME, "Library", "Application Support", STORAGE_DIR);
+			path = Paths.get(HOME, "Library", STORAGE_DIR);
 		} else if (environment.contains(LINUX)) {
 			if (System.getenv("XDG_DATA_HOME") != null) {
 				path = Paths.get(System.getenv("XDG_DATA_HOME"), STORAGE_DIR);
