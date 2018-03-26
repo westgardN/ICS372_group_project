@@ -6,6 +6,8 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.importexport;
 import java.io.OutputStream;
 import java.util.List;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 
@@ -14,5 +16,11 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
  *
  */
 public interface TrialDataExporter {
-	public void write(List<Reading> readings, OutputStream os) throws TrialException;
+	public boolean write(OutputStream os) throws TrialException;
+	
+	public void setReadings(List<Reading> readings);
+	
+	public void setClinics(List<Clinic> clinics);
+	
+	public void setPatients(List<Patient> patients);	
 }

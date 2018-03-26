@@ -90,8 +90,8 @@ public class ClinicTest {
 		
 		Clinic clinic = new Clinic();
 		String result = clinic.toString();
-		String expected = "Clinic " + clinic.getId()  + " (Name: " + clinic.getName() 
-		+ ") (Trial " + clinic.getTrialId() + ")";
+		String expected = clinic.getId()  + " [Name: " + clinic.getName() 
+		+ "] [Trial " + clinic.getTrialId() + "]";
 		assertEquals(expected, result);
 	}
 

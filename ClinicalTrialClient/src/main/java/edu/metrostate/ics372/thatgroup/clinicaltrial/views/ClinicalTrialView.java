@@ -4,15 +4,21 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.JsonProcessor;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataExporter;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataImportExporterFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataImporter;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
@@ -82,7 +88,8 @@ public class ClinicalTrialView implements Initializable {
 	public void importReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Import File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Import Files", "*.json;*.xml"),
+				new ExtensionFilter("JSON Files", "*.json"),
 				new ExtensionFilter("XML Files", "*.xml"),
 				new ExtensionFilter("All Files", "*.*"));
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
@@ -93,48 +100,70 @@ public class ClinicalTrialView implements Initializable {
 		Clinic selectedClinic = model.getSelectedClinic();
 
 		if (file != null) {
-			try {
-				List<Reading> readings = JsonProcessor.read(file.getAbsolutePath());
-				int readingCount = 0;
-				int patientCount = 0;
-				int clinicCount = 0;
-
-				for (Reading reading : readings) {
-					if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
-						reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
-					}
-					
-					Clinic clinic = model.getClinic(reading.getClinicId());
-					
-					if (clinic == null) {
-						if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
-							++clinicCount;
-							clinic = model.getClinic(reading.getClinicId());
-						}
-					}
-					
-					Patient patient = model.getPatient(reading.getPatientId());					
-
-					if (patient == null) {
-						if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
-							++patientCount;
-							patient = model.getPatient(reading.getPatientId());
-						}
-					}
-
-					if (patient != null && clinic != null) {
-						if (model.importReading(reading)) {
-							readingCount++;
-						}
-					}
-				}
+			try (InputStream is = new FileInputStream(file)) {
+				TrialDataImporter importer = TrialDataImportExporterFactory.getTrialImporter(file.getName());
 				
+				boolean success = importer.read(model.getTrial(), is);
+				if (success) {
+					int readingCount = 0;
+					int patientCount = 0;
+					int clinicCount = 0;
+					List<Reading> readings = importer.getReadings();
+					List<Clinic> clinics = importer.getClinics();
+					List<Patient> patients = importer.getPatients();
+					
+					for (Clinic clinic : clinics) {
+						if (model.getClinic(clinic.getId()) == null) {
+							model.addClinic(clinic.getId(), clinic.getName() == null ? clinic.getId() : clinic.getName());
+							clinicCount++;
+						}
+					}
+					
+					for (Patient patient : patients) {
+						if (model.getPatient(patient.getId()) == null) {
+							model.addPatient(patient.getId(), patient.getTrialStartDate());
+							patientCount++;
+						}
+					}
+	
+					for (Reading reading : readings) {
+						if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
+							reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
+						}
+						
+						Clinic clinic = model.getClinic(reading.getClinicId());
+						
+						if (clinic == null) {
+							if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
+								++clinicCount;
+								clinic = model.getClinic(reading.getClinicId());
+							}
+						}
+						
+						Patient patient = model.getPatient(reading.getPatientId());					
+	
+						if (patient == null) {
+							if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
+								++patientCount;
+								patient = model.getPatient(reading.getPatientId());
+							}
+						}
+	
+						if (patient != null && clinic != null) {
+							if (model.importReading(reading)) {
+								readingCount++;
+							}
+						}
+					}
+					PopupNotification.showPopupMessage(
+							"Imported " + clinicCount + " clinic(s), " + patientCount + " patients(s) and " + readingCount + " reading(s)",
+							stage.getScene());
+				} else {
+					PopupNotification.showPopupMessage("The file was not imported.", stage.getScene());
+				}
 				model.setSelectedClinic(selectedClinic, true);
 				model.setSelectedPatient(selectedPatient, true);
 				
-				PopupNotification.showPopupMessage(
-						"Imported " + clinicCount + " clinic(s), " + patientCount + " patients(s) and " + readingCount + " reading(s)",
-						stage.getScene());
 			} catch (IOException | TrialException e) {
 				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 			}
@@ -150,7 +179,7 @@ public class ClinicalTrialView implements Initializable {
 	public void exportReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Export File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Export Files", "*.json"),
 				new ExtensionFilter("All Files", "*.*"));
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
 																					// was executed from. We may want to
@@ -158,12 +187,14 @@ public class ClinicalTrialView implements Initializable {
 		File file = fileChooser.showSaveDialog(stage);
 
 		if (file != null) {
-			try {
+			try (OutputStream os = new FileOutputStream(file)){
 				List<Reading> readings = model.getReadings();
-
-				JsonProcessor.write(readings, file.getAbsolutePath());
+				TrialDataExporter exporter = TrialDataImportExporterFactory.getTrialExporter(file.getName());
+				exporter.setReadings(readings);
+				
+				exporter.write(os);
 				PopupNotification.showPopupMessage("Exported " + readings.size() + " reading(s)", stage.getScene());
-			} catch (TrialCatalogException | IOException e) {
+			} catch (TrialException | IOException e) {
 				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 			}
 		}

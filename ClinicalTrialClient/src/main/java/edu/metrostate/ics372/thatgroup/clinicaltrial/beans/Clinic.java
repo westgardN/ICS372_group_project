@@ -117,14 +117,57 @@ public class Clinic implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Clinic ");
 		builder.append(id);
-		builder.append(" (Name: ");
+		builder.append(" [Name: ");
 		builder.append(name);
-		builder.append(") (Trial ");
+		builder.append("] [Trial ");
 		builder.append(trialId);
-		builder.append(")");
+		builder.append("]");
 		return builder.toString();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((trialId == null) ? 0 : trialId.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Clinic)) {
+			return false;
+		}
+		Clinic other = (Clinic) obj;
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		if (trialId == null) {
+			if (other.trialId != null) {
+				return false;
+			}
+		} else if (!trialId.equals(other.trialId)) {
+			return false;
+		}
+		return true;
+	}
+
 }

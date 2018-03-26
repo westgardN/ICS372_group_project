@@ -1,7 +1,7 @@
 /**
- * 
+ * File: ReadingFactory.java
  */
-package edu.metrostate.ics372.thatgroup.clinicaltrial;
+package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +25,7 @@ public class ReadingFactory {
 	public static final String PRETTY_TEMPERATURE = "Temperature";
 	public static final String PRETTY_STEPS = "Steps";
 	public static final String PRETTY_BLOOD_PRESSURE = "Blood Pressure";
+	public static final String XML_BLOOD_PRESSURE = "BloodPressure";
 	public static final String WEIGHT = "weight";
 	public static final String TEMPERATURE = "temp";
 	public static final String STEPS = "steps";
@@ -75,6 +76,7 @@ public class ReadingFactory {
 		Reading answer = null;
 		
 		switch(type) {
+		case XML_BLOOD_PRESSURE:
 		case PRETTY_BLOOD_PRESSURE:
 		case BLOOD_PRESSURE:
 			answer = new BloodPressure();
