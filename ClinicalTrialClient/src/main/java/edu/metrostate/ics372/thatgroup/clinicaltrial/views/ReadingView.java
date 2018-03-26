@@ -12,7 +12,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure.BloodPressureValue;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
@@ -28,7 +28,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;

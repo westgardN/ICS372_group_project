@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.io.InputStream;

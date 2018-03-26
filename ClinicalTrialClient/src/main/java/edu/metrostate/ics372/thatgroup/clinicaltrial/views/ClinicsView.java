@@ -5,13 +5,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataXmlImporter;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import javafx.beans.property.ListProperty;
@@ -51,22 +47,9 @@ public class ClinicsView extends AnchorPane implements Initializable {
 		this.model = model;
 
 		clinicProperty.set(model.getClinics());
+		
 		listView.itemsProperty().bind(clinicProperty);
 
-		this.model.addPropertyChangeListener((event) -> {
-			String prop = event.getPropertyName();
-			if (prop.equals(ClinicalTrialModel.PROP_SELECTED_CLINIC)) {
-				if (event.getNewValue() instanceof Clinic) {
-					Clinic clinic = (Clinic) event.getNewValue();
-					Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.SEVERE, null, "Selected clinic changed to " + clinic.toString());
-				}
-			} else if (prop.equals(ClinicalTrialModel.PROP_SELECTED_CLINIC)) {
-				if (event.getNewValue() instanceof Patient) {
-					updateClinic((Clinic) event.getNewValue());
-				}
-			}
-
-		});	
 		listView.itemsProperty().bind(clinicProperty);
 
 		listView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
@@ -88,12 +71,6 @@ public class ClinicsView extends AnchorPane implements Initializable {
 		});
 		}
 	
-	
-	private void updateClinic(Clinic clinic) {
-		System.out.println("updateClinic");
-		//ClinicalTrialModel.PROP_SELECTED_CLINIC;
-		
-	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

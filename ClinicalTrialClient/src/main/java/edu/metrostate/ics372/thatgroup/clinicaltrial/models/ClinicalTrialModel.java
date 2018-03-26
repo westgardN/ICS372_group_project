@@ -18,7 +18,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialManager;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

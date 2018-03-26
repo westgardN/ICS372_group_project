@@ -20,7 +20,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
 
 /**
  * The ClinicalTrialCatalog serves as the central database used to store all of
