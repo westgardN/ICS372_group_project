@@ -5,7 +5,7 @@
             "clinic_id": "15566",
             "reading_type": "temp",
             "reading_id": "1a545",
-            "value": 98.6,
+            "reading_value": 98.6,
             "reading_date": 1515354694441
         },
         {
@@ -13,7 +13,7 @@
             "clinic_id": "15566",
             "reading_type": "steps",
             "reading_id": "1adf4",
-            "value": 6958,
+            "reading_value": 6958,
             "reading_date": 1515354694431
         },
         {
@@ -21,7 +21,7 @@
             "clinic_id": "12513",
             "reading_type": "weight",
             "reading_id": "48934j",
-            "value": 189,
+            "reading_value": 189,
             "reading_date": 1515354694421
         },
         {
@@ -29,7 +29,7 @@
             "clinic_id": "336558",
             "reading_type": "blood_press",
             "reading_id": "85545",
-            "value": "120/60",
+            "reading_value": "120/60",
             "reading_date": 1515354694411
         }
     ]
