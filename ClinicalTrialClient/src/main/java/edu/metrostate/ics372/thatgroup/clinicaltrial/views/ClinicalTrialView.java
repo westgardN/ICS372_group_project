@@ -188,12 +188,14 @@ public class ClinicalTrialView implements Initializable {
 
 		if (file != null) {
 			try (OutputStream os = new FileOutputStream(file)){
+				List<Clinic> clinics = model.getClinics();
 				List<Reading> readings = model.getReadings();
 				TrialDataExporter exporter = TrialDataImportExporterFactory.getTrialExporter(file.getName());
+				exporter.setClinics(clinics);
 				exporter.setReadings(readings);
 				
 				exporter.write(os);
-				PopupNotification.showPopupMessage("Exported " + readings.size() + " reading(s)", stage.getScene());
+				PopupNotification.showPopupMessage("Exported " + clinics.size() + " clinics(s)" + " and " + readings.size() + " reading(s)", stage.getScene());
 			} catch (TrialException | IOException e) {
 				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 			}
