@@ -176,7 +176,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			{
 				boolean hasValue = reading.getValue() instanceof Double;
 				Double value = hasValue ? (Double) reading.getValue() : 0.0;
-				jsonWriter.name("value").value(value);
+				jsonWriter.name("reading_value").value(value);
 				break;
 			}
 			case ReadingFactory.WEIGHT:
@@ -184,13 +184,13 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			{
 				boolean hasValue = reading.getValue() instanceof Integer;
 				Integer value = hasValue ? (Integer) reading.getValue() : 0;
-				jsonWriter.name("value").value(value);
+				jsonWriter.name("reading_value").value(value);
 				break;
 			}
 			default:
 				boolean hasValue = reading.getValue() != null;
 				String value = hasValue ? reading.getValue().toString() : Strings.EMPTY;
-				jsonWriter.name("value").value(value);
+				jsonWriter.name("reading_value").value(value);
 				break;
 		}
 		
