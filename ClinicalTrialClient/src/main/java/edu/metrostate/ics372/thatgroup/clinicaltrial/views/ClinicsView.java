@@ -5,10 +5,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataXmlImporter;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import javafx.beans.property.ListProperty;
@@ -16,7 +19,6 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
@@ -56,6 +58,7 @@ public class ClinicsView extends AnchorPane implements Initializable {
 			if (prop.equals(ClinicalTrialModel.PROP_SELECTED_CLINIC)) {
 				if (event.getNewValue() instanceof Clinic) {
 					Clinic clinic = (Clinic) event.getNewValue();
+					Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.SEVERE, null, "Selected clinic changed to " + clinic.toString());
 				}
 			} else if (prop.equals(ClinicalTrialModel.PROP_SELECTED_CLINIC)) {
 				if (event.getNewValue() instanceof Patient) {

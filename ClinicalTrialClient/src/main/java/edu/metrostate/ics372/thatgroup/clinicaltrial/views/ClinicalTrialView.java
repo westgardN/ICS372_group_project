@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -69,6 +68,7 @@ public class ClinicalTrialView implements Initializable {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Import File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"),
+				new ExtensionFilter("XML Files", "*.xml"),
 				new ExtensionFilter("All Files", "*.*"));
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
 																					// was executed from.
@@ -144,13 +144,7 @@ public class ClinicalTrialView implements Initializable {
 
 		if (file != null) {
 			try {
-				List<Reading> readings = new ArrayList<>();
-
-				for (Patient patient : model.getPatients()) {
-					for (Reading reading : model.getJournal(patient)) {
-						readings.add(reading);
-					}
-				}
+				List<Reading> readings = model.getReadings();
 
 				JsonProcessor.write(readings, file.getAbsolutePath());
 				PopupNotification.showPopupMessage("Exported " + readings.size() + " reading(s)", stage.getScene());

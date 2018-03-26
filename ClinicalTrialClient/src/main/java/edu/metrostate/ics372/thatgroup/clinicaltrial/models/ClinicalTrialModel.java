@@ -358,6 +358,14 @@ public class ClinicalTrialModel {
 	}
 
 	/**
+	 * 
+	 * @return A new list of all the readings in the catalog
+	 */
+	public ObservableList<Reading> getReadings() throws TrialCatalogException {
+		return FXCollections.observableArrayList(catalog.getReadings());
+	}
+	
+	/**
 	 * @return the reference to the observable list of clinics that can directly be listened to for changes.
 	 */
 	public ObservableList<Clinic> getClinics() {
