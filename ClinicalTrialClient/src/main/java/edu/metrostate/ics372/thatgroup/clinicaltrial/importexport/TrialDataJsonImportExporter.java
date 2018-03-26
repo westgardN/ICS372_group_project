@@ -250,7 +250,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					} else if (name.equalsIgnoreCase("clinic_name")) {
 						clinic_name = jsonReader.nextString();
 					} else {
-						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, "Unknown Clinic property: " + name + " with value: " + jsonReader.nextString());
+						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, "Clinic ID: " + clinic_id + " unknown Clinic property: " + name + " with value: " + jsonReader.nextString());
 					}
 				}
 				
@@ -308,7 +308,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					} else if (name.equalsIgnoreCase("reading_date")) {
 						reading_date = jsonReader.nextLong();
 					} else {
-						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, "Unknown Reading property: " + name + " with value: " + jsonReader.nextString());
+						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, "Reading ID: " + reading_id + " unknown Reading property: " + name + " with value: " + jsonReader.nextString());
 					}
 				}
 				

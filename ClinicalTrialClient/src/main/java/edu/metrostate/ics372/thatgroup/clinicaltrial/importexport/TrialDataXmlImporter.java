@@ -86,7 +86,9 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 			int attsSize = atts != null ? atts.getLength() : 0;
 			if (attsSize > 0) {
 				String unit = atts.getValue(Strings.EMPTY, "unit");
-				Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, "Ignoring the value's unit: " + unit);
+				String reading_id = reading != null ? reading.getId() : "";
+				
+				Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, "Reading ID: " + reading_id + " ignoring the value's unit: " + unit);
 			}
 		} else if (qName.equalsIgnoreCase("Patient") || qName.equalsIgnoreCase("Date")) {
 			sb = new StringBuilder();
@@ -129,7 +131,7 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 					}
 				} catch (NumberFormatException ex) {
 					reading.setDate(LocalDateTime.now());
-					Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, "Invalid reading date.");
+					Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, "Reading ID: " + reading.getId() + " invalid reading date.");
 				}
 			}
 		} else if (qName.equalsIgnoreCase("Value")) {
