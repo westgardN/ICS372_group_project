@@ -23,7 +23,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TitledPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -41,6 +44,18 @@ public class ClinicalTrialView implements Initializable {
 	@FXML
 	Menu menuFile;
 
+	@FXML
+	SplitPane mainSplitter;
+	
+	@FXML
+	Accordion accordion;
+	
+	@FXML
+	TitledPane clinicPane;
+	
+	@FXML
+	SplitPane splitter;
+	
 	@FXML
 	AddPatientView addPatientView;
 
@@ -204,6 +219,9 @@ public class ClinicalTrialView implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			model = new ClinicalTrialModel();
+			mainSplitter.setDividerPosition(0, 0.333);
+			splitter.setDividerPosition(0, 0.43);
+			accordion.setExpandedPane(clinicPane);
 			addPatientView.setModel(model);
 			patientsView.setModel(model);
 			readingView.setModel(model);

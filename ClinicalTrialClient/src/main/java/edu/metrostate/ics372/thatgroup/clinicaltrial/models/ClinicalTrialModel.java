@@ -657,7 +657,7 @@ public class ClinicalTrialModel {
 	 * @return true if the reading was imported; otherwise false.
 	 * @throws TrialCatalogException 
 	 */
-	public boolean addReading(String type, String id, Object value, LocalDateTime date) throws TrialCatalogException {
+	public boolean addReading(String type, String id, String patientId, String clinicId, Object value, LocalDateTime date) throws TrialCatalogException {
 		Reading reading = ReadingFactory.getReading(type);
 		reading.setPatientId(selectedPatient.getId());
 		reading.setClinicId(getSelectedOrDefaultClinic().getId());

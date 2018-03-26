@@ -15,11 +15,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-public class AddClinicView extends VBox implements Initializable {
+public class AddClinicView extends AnchorPane implements Initializable {
 	@FXML
-	private TextField textField;
+	private TextField clinicId;
+	@FXML
+	private TextField clinicName;
 	@FXML
 	private Button addButton;
 	private ClinicalTrialModel model;
@@ -52,10 +55,11 @@ public class AddClinicView extends VBox implements Initializable {
 	@FXML
 	public void addClinic(ActionEvent event){
 		try {
-			if (model.addClinic(textField.getText().trim(),textField.getText().trim())) {
+			if (model.addClinic(clinicId.getText().trim(),clinicName.getText().trim())) {
 				PopupNotification.showPopupMessage(Strings.CLINIC_ADDED_MSG, getScene());
 				clear = true;
-				textField.setText(Strings.EMPTY);
+				clinicId.setText(Strings.EMPTY);
+				clinicName.setText(Strings.EMPTY);
 			} else {
 				PopupNotification.showPopupMessage(Strings.CLINIC_NOT_ADDED_MSG, getScene());
 			}
@@ -73,14 +77,14 @@ public class AddClinicView extends VBox implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		addButton.setDisable(true);
 
-		textField.setOnKeyPressed((event) -> {
+		clinicId.setOnKeyPressed((event) -> {
 			if (event.getCode() == KeyCode.ENTER) {
-				if (validate(textField.getText())) {
+				if (validate(clinicId.getText())) {
 					addClinic(null);
 				}
 			}
 		});
-		textField.textProperty().addListener((observable, oldValue, newValue) -> {
+		clinicId.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (validate(newValue) && addButton.isDisabled()) {
 				addButton.setDisable(false);
 			} else if (!validate(newValue) && !addButton.isDisabled()) {

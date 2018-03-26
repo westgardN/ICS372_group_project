@@ -15,78 +15,102 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.geometry.Insets?>
 
-<fx:root minHeight="0.0" minWidth="0.0" prefHeight="239.0" prefWidth="160.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="0.0" minWidth="0.0" prefHeight="352.0" prefWidth="160.0" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-      <HBox alignment="CENTER" layoutX="6.0" layoutY="2.0" prefHeight="25.0" prefWidth="148.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="6.0">
-         <children>
-      				<Button fx:id="addBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="155.0" text="Add Reading" />
-         </children></HBox>
-		<VBox fx:id="form" alignment="TOP_CENTER" fillWidth="false" layoutY="24.0" prefHeight="218.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
+		<VBox prefHeight="352.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
-				<TextField fx:id="patientId" editable="false" visible="false" />
-				<ChoiceBox fx:id="type" prefHeight="25.0" prefWidth="148.0" />
-				<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID...">
-					<tooltip>
-						<Tooltip text="Required" />
-					</tooltip>
-				</TextField>
-				<StackPane prefWidth="148.0">
-					<children>
-						<StackPane fx:id="bloodPressStack">
-							<children>
-            								<HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0" spacing="5.0">
-            									<children>
-                  										<TextField fx:id="systolic" prefHeight="25.0" prefWidth="80.0" promptText="sys" />
-                  										<TextField fx:id="diastolic" prefHeight="25.0" prefWidth="80.0" promptText="dia" />
-            									</children>
-            								</HBox>
-							</children>
-						</StackPane>
-      						<TextField fx:id="value" prefWidth="148.0" promptText="Reading Value....">
+            <AnchorPane>
+               <children>
+      				<VBox alignment="TOP_CENTER" prefHeight="140.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      					<children>
+      						<Label prefHeight="17.0" prefWidth="147.0" text="Clinic:">
+      							<VBox.margin>
+      								<Insets top="5.0" />
+      							</VBox.margin>
+      						</Label>
+                        <ChoiceBox fx:id="clinicChoice" prefWidth="150.0" />
+      						<Label prefHeight="17.0" prefWidth="147.0" text="Patient:" />
+                        <ChoiceBox fx:id="patientChoice" prefWidth="150.0" />
+      						<Button fx:id="addBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="155.0" text="Add Reading">
+      							<VBox.margin>
+      								<Insets top="5.0" />
+      							</VBox.margin>
+      						</Button>
+      					</children>
+      				</VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+      				<VBox fx:id="form" alignment="TOP_CENTER" fillWidth="false" prefHeight="218.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      					<children>
+      						<ChoiceBox fx:id="type" prefHeight="25.0" prefWidth="148.0" />
+      						<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID...">
       							<tooltip>
       								<Tooltip text="Required" />
       							</tooltip>
       						</TextField>
-					</children>
-				</StackPane>
-				<DatePicker fx:id="date" prefWidth="148.0" promptText="Reading Date...">
-					<tooltip>
-						<Tooltip text="Required" />
-					</tooltip>
-				</DatePicker>
-				<HBox alignment="CENTER" prefHeight="16.0" prefWidth="148.0" spacing="5.0" VBox.vgrow="NEVER">
-					<children>
-      						<TextField fx:id="hour" prefHeight="25.0" prefWidth="46.0" promptText="HH">
+      						<StackPane prefWidth="148.0">
+      							<children>
+      								<StackPane fx:id="bloodPressStack">
+      									<children>
+      										<HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0" spacing="5.0">
+      											<children>
+      												<TextField fx:id="systolic" prefHeight="25.0" prefWidth="80.0" promptText="sys" />
+      												<TextField fx:id="diastolic" prefHeight="25.0" prefWidth="80.0" promptText="dia" />
+      											</children>
+      										</HBox>
+      									</children>
+      								</StackPane>
+      								<TextField fx:id="value" prefWidth="148.0" promptText="Reading Value....">
+      									<tooltip>
+      										<Tooltip text="Required" />
+      									</tooltip>
+      								</TextField>
+      							</children>
+      						</StackPane>
+      						<DatePicker fx:id="date" prefWidth="148.0" promptText="Reading Date...">
       							<tooltip>
-      								<Tooltip text="0-23" />
+      								<Tooltip text="Required" />
       							</tooltip>
-      						</TextField>
-      						<TextField fx:id="minutes" prefHeight="25.0" prefWidth="46.0" promptText="MM">
-      							<tooltip>
-      								<Tooltip text="0-59" />
-      							</tooltip>
-      						</TextField>
-      						<TextField fx:id="seconds" prefWidth="46.0" promptText="SS">
-      							<tooltip>
-      								<Tooltip text="0-59" />
-      							</tooltip>
-      						</TextField>
-					</children>
-					<VBox.margin>
-						<Insets />
-					</VBox.margin>
-				</HBox>
-				<HBox>
-   <children>
-   					<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" text="OK" />
-   					<Button defaultButton="false" mnemonicParsing="false" onAction="#clearForm" text="Clear" />
-   					<Button fx:id="cancelBtn" defaultButton="false" mnemonicParsing="false" text="Cancel" />
-   </children>
-				</HBox>
+      						</DatePicker>
+      						<HBox alignment="CENTER" prefHeight="16.0" prefWidth="148.0" spacing="5.0" VBox.vgrow="NEVER">
+      							<children>
+      								<TextField fx:id="hour" prefHeight="25.0" prefWidth="46.0" promptText="HH">
+      									<tooltip>
+      										<Tooltip text="0-23" />
+      									</tooltip>
+      								</TextField>
+      								<TextField fx:id="minutes" prefHeight="25.0" prefWidth="46.0" promptText="MM">
+      									<tooltip>
+      										<Tooltip text="0-59" />
+      									</tooltip>
+      								</TextField>
+      								<TextField fx:id="seconds" prefWidth="46.0" promptText="SS">
+      									<tooltip>
+      										<Tooltip text="0-59" />
+      									</tooltip>
+      								</TextField>
+      							</children>
+      							<VBox.margin>
+      								<Insets />
+      							</VBox.margin>
+      						</HBox>
+      						<HBox>
+      							<children>
+      								<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" text="OK" />
+      								<Button defaultButton="false" mnemonicParsing="false" onAction="#clearForm" text="Clear" />
+      								<Button fx:id="cancelBtn" defaultButton="false" mnemonicParsing="false" text="Cancel" />
+      							</children>
+      						</HBox>
+      					</children>
+      					<padding>
+      						<Insets top="5.0" />
+      					</padding>
+      				</VBox>
+               </children>
+            </AnchorPane>
 			</children>
-			<padding>
-				<Insets top="5.0" />
-			</padding>
 		</VBox>
 	</children>
 </fx:root>
