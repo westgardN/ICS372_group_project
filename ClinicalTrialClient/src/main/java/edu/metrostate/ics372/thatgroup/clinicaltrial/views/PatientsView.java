@@ -53,14 +53,12 @@ public class PatientsView extends VBox implements Initializable {
 	private Button endPtTrial;
 	private ClinicalTrialModel model;
 	private ListProperty<Patient> patientsProperty;
-	private boolean clear;
 
 	/**
 	 * Constructs a new PatientsView instance
 	 */
 	public PatientsView() {
 		model = null;
-		clear = false;
 		patientsProperty = new SimpleListProperty<>();
 
 		try (InputStream stream = getClass().getResourceAsStream(Strings.PATIENTS_VIEW_FXML)) {
@@ -308,7 +306,6 @@ public class PatientsView extends VBox implements Initializable {
 		try {
 			if (model.addPatient(textField.getText().trim())) {
 				PopupNotification.showPopupMessage(Strings.PATIENT_ADDED_MSG, getScene());
-				clear = true;
 				textField.setText(Strings.EMPTY);
 			} else {
 				PopupNotification.showPopupMessage(Strings.PATIENT_NOT_ADDED_MSG, getScene());
@@ -341,10 +338,9 @@ public class PatientsView extends VBox implements Initializable {
 				addButton.setDisable(false);
 			} else if (!validate(newValue) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
-				if (!clear) {
+				if (newValue != null && !newValue.trim().isEmpty()) {
 					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
 				}
-				clear = false;
 			}
 		});
 	}

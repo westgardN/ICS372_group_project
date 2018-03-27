@@ -1,5 +1,5 @@
 /**
- * File: ClinicsViews.java
+ * File: ClinicsView.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
