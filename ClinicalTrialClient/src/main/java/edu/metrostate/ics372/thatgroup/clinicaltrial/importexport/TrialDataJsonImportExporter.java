@@ -249,7 +249,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 	
 	private void prepareWrite() throws TrialException {
 		if (readings == null || readings.isEmpty()) {
-			throw new TrialException("readings cannot be null or empty");
+			throw new TrialException("Nothing to export.");
 		}
 	}
 	
