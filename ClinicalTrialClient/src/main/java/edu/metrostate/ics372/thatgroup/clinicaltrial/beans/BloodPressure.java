@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
+
 /**
  * A Blood Pressure specific reading for collecting systolic and diastolic pressure
  * values.
@@ -18,6 +20,10 @@ import java.time.format.FormatStyle;
  *
  */
 public class BloodPressure extends Reading {
+	private static final String MSG_BLOOD_PRESSURE_SLASH = " / ";
+	private static final String MSG_BLOOD_PRESSURE_ON = " on ";
+	private static final String MSG_BLOOD_PRESSURE_IS = " is: ";
+	private static final String MSG_BLOOD_PRESSURE_TAKEN = "Blood Pressure taken";
 	private static final long serialVersionUID = -7058161175665447094L;
 	private BloodPressureValue value;
 	
@@ -35,13 +41,14 @@ public class BloodPressure extends Reading {
 	 * @param id the id of this reading. If adding to a Set, this needs to be unique
 	 * @param date the date and time the reading was taken
 	 * @param value the blood pressure reading in this string format: sys/dia
+	 * @param clinicId The ID of the clinic associated with this object.
 	 */
 	public BloodPressure(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
 		super(patientId, id, date, value, clinicId);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#getValue()
+	/**
+	 * Returns the value of this BloodPressure as a BloodPressureValue value.
 	 */
 	@Override
 	public Object getValue() {
@@ -55,13 +62,12 @@ public class BloodPressure extends Reading {
 	 * 
 	 * @param value the new value for this reading. Cannot be null.
 	 * 
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#setNumberValue(java.lang.Object)
 	 */
 	@Override
 	public void setValue(Object value) {
 		if (value != null) {
 			if (value instanceof BloodPressureValue == false && value instanceof String == false) {
-				throw new IllegalArgumentException("value must be a string in systolic/diastolic format or it must be a BloodPressureValue");
+				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_INVALID_STRING_VALUE);
 			}
 			
 			if (value instanceof BloodPressureValue) {
@@ -69,7 +75,7 @@ public class BloodPressure extends Reading {
 			} else if (value instanceof String) {
 				this.value = new BloodPressureValue((String) value);
 			} else {
-				throw new IllegalArgumentException("Unknown bloodpressure value.");
+				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_UNKNOWN_STRING_VALUE);
 			}
 		} else {
 			this.value = null;
@@ -82,16 +88,16 @@ public class BloodPressure extends Reading {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Blood Pressure taken");
+		builder.append(MSG_BLOOD_PRESSURE_TAKEN);
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		if (date != null) {
 			String formattedDateTime = date.format(formatter);
-			builder.append(" on ");
+			builder.append(MSG_BLOOD_PRESSURE_ON);
 			builder.append(formattedDateTime);
 		}
-		builder.append(" is: ");
+		builder.append(MSG_BLOOD_PRESSURE_IS);
 		builder.append(((BloodPressureValue)getValue()).getSystolic());
-		builder.append(" / ");
+		builder.append(MSG_BLOOD_PRESSURE_SLASH);
 		builder.append(((BloodPressureValue)getValue()).getDiastolic());
 		return builder.toString();
 	}
@@ -103,11 +109,21 @@ public class BloodPressure extends Reading {
 	 *
 	 */
 	public class BloodPressureValue implements Serializable {
-		private static final int INDEX_DIASTOLIC = 1;
-		private static final int INDEX_SYSTOLIC = 0;
-		private static final long serialVersionUID = -6450411049437598250L;
+		/**
+		 * The String.format() string of the string value
+		 */
 		public static final String VALUE_FORMAT = "%s%s%s";
+		
+		/**
+		 * The delimiter within the value string that is used to split the string
+		 * into its component parts.
+		 */
 		public static final String DELIM = "/";
+		
+		private static final int INDEX_SYSTOLIC = 0;
+		private static final int INDEX_DIASTOLIC = 1;
+		private static final long serialVersionUID = -6450411049437598250L;
+		
 		private int systolic;
 		private int diastolic;
 		
@@ -138,7 +154,7 @@ public class BloodPressure extends Reading {
 					int d = Integer.parseInt(vals[INDEX_DIASTOLIC]);
 					
 					if (s < 0 || d < 0) {
-						throw new IllegalArgumentException("systolic and diastolic values must be greater than or equal to zero.");
+						throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_ILLEGAL_VALUE);
 					}
 					systolic = s;
 					diastolic = d;
@@ -146,7 +162,7 @@ public class BloodPressure extends Reading {
 					throw ex;
 				}
 			} else {
-				throw new IllegalArgumentException("Invalid formatted string. value must be a value must be a string in systolic/diastolic format");
+				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_INVALID_FORMAT_STRING_VALUE);
 			}
 		}
 		
@@ -161,7 +177,7 @@ public class BloodPressure extends Reading {
 		 */
 		public BloodPressureValue(int systolic, int diastolic) {
 			if (systolic < 0 || diastolic < 0) {
-				throw new IllegalArgumentException("systolic and diastolic values must be greater than or equal to zero.");
+				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_ILLEGAL_VALUE);
 			}
 			
 			this.systolic = systolic;
@@ -180,7 +196,7 @@ public class BloodPressure extends Reading {
 		 */
 		public void setDiastolic(int diastolic) {
 			if (diastolic < 0) {
-				throw new IllegalArgumentException("diastolic value must be greater than or equal to zero.");
+				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_ILLEGAL_DIASTOLIC_VALUE);
 			}
 			
 			this.diastolic = diastolic;
@@ -198,7 +214,7 @@ public class BloodPressure extends Reading {
 		 */
 		public void setSystolic(int systolic) {
 			if (systolic < 0) {
-				throw new IllegalArgumentException("systolic value must be greater than or equal to zero.");
+				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_ILLEGAL_SYSTOLIC_VALUE);
 			}
 			
 			this.systolic = systolic;
@@ -240,7 +256,7 @@ public class BloodPressure extends Reading {
 		 */
 		@Override
 		public String toString() {
-			return String.format("%d%s%d", systolic, DELIM, diastolic);
+			return String.format(VALUE_FORMAT, systolic, DELIM, diastolic);
 		}
 		
 		/* (non-Javadoc)
@@ -261,7 +277,7 @@ public class BloodPressure extends Reading {
 				// would be
 				// forgetting the "implements Cloneable" clause at the start of the
 				// class.
-				throw new RuntimeException("BloodPressureValue.clone(): This class does not implement Cloneable.");
+				throw new RuntimeException(Strings.ERR_BLOOD_PRESSURE_VALUE_CLONE_NOT_SUPPORTED);
 			}
 			
 			return answer;

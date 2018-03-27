@@ -1,5 +1,5 @@
 /**
- * 
+ * File: UnitValue.java
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
@@ -8,43 +8,63 @@ import java.io.Serializable;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
- * @author vpalo
+ * The UnitValue class represents a Long or Double value that includes
+ * a unit of measurement.
+ * 
+ * @author That Group
  *
  */
 public class UnitValue implements Serializable, Cloneable {
 	/**
-	 * 
+	 * The DEFAULT_VALUE for a UnitValue is Long.MIN_VALUE
 	 */
-	private static final long serialVersionUID = 5850081309762972449L;
 	public static final Number DEFAULT_VALUE = Long.MIN_VALUE;
+
+	/**
+	 * The DEFAULT_UNIT for a UnitValue is the empty string
+	 */
 	public static final String DEFAULT_UNIT = Strings.EMPTY;
+	
+	/**
+	 * The DELIM is the delimiter used when splitting a String
+	 * in to its value and unit. The delimiter is a space and so
+	 * the unit cannot contain any space characters.
+	 */
+	public static final String DELIM = " ";
+	
+	/**
+	 * The format string used with String.format(). All three parameters
+	 * for the format string are string values themselves.
+	 */
+	public static final String VALUE_FORMAT = "%s%s%s";
+	
+	private static final long serialVersionUID = 5850081309762972449L;
 	private static final int INDEX_VALUE = 0;
 	private static final int INDEX_UNIT = 1;
-	public static final String DELIM = " ";
-	public static final String VALUE_FORMAT = "%s%s%s";
 	private static final String PERIOD = ".";
 	private Number value;
 	private String unit;
 
 	/**
-	 * Initializes a new value with both value and unit values set to nothing
+	 * Initializes a new value with both value and unit values set to their defaults
 	 */
 	public UnitValue() {
 		this(DEFAULT_VALUE, DEFAULT_UNIT);
 	}
 	
 	/**
-	 * Initializes a new value with systolic and diastolic values set to the specified values.
+	 * Initializes a new UnitValue with the specified value and option unit as specified
+	 * in the string. The value string needs to be in the Value + DELIM + Unit format. 
 	 * 
-	 * @param value a String in systolic/diastolic format where systolic and diastolic are both
-	 * integer values both must be greater than or equal to 0.
-	 * @throws NumberFormatException indicates that value is not in systolic/diastolic format or
-	 * that systolic and diastolic are not integers
-	 * @throws IllegalArgumentException indicates that the string doesn't represent a systolic/diastolic value
-	 * or that the values are less than 0.
+	 * @param value a String in number unit format where number is a Long or Double and
+	 * unit is an optional string that denotes the measurement.
+	 * 
+	 * @throws NumberFormatException indicates that value is not a Long or Double
+	 * 
+	 * @throws IllegalArgumentException indicates that the string doesn't represent a
+	 * number unit value.
 	 */
 	public UnitValue(String value) throws NumberFormatException {
-		
 		String[] vals = value.split(DELIM);
 		
 		if (vals.length >= 1) {
@@ -66,35 +86,34 @@ public class UnitValue implements Serializable, Cloneable {
 				throw ex;
 			}
 		} else {
-			throw new IllegalArgumentException("Invalid formatted string. value must be a string in number value format");
+			throw new IllegalArgumentException(Strings.ERR_UNIT_VALUE_INVALID_FORMAT_STRING_VALUE);
 		}
 	}
 	
 	/**
-	 * Initializes a new value with systolic and diastolic values set to the specified values.
+	 * Initializes a new UnitValue with the specified Long or Double value and uses the
+	 * DEFAULT_UNIT as the unit of measurement.
 	 * 
-	 * @param systolic the systolic pressure for this value. Must be greater than or equal to 0
-	 * @param diastolic the diastolic pressure for this value. Must be greater than or equal to 0
+	 * @param numValue the numeric value to use. Must be an instance of a Long or Double.
 	 * 
-	 * @throws IllegalArgumentException indicates that systolic or diastolic are less than 0
-	 * that systolic and diastolic are not integers
+	 * @throws IllegalArgumentException indicates that numValue is null.
 	 */
 	public UnitValue(Number numValue) {
 		this(numValue, DEFAULT_UNIT);
 	}
 	
 	/**
-	 * Initializes a new value with systolic and diastolic values set to the specified values.
+	 * Initializes a new UnitValue with the specified Long or Double value and uses the
+	 * specified unit as the unit of measurement.
 	 * 
-	 * @param systolic the systolic pressure for this value. Must be greater than or equal to 0
-	 * @param diastolic the diastolic pressure for this value. Must be greater than or equal to 0
+	 * @param numValue the numeric value to use. Must be an instance of a Long or Double.
+	 * @param strUnit the unit of measurement to use for this value, which may be null.
 	 * 
-	 * @throws IllegalArgumentException indicates that systolic or diastolic are less than 0
-	 * that systolic and diastolic are not integers
+	 * @throws IllegalArgumentException indicates that numValue is null.
 	 */
 	public UnitValue(Number numValue, String strUnit) {
 		if (numValue == null) {
-			throw new IllegalArgumentException("numValue cannot be null.");
+			throw new IllegalArgumentException(Strings.ERR_UNIT_VALUE_NULL_VALUE);
 		}
 		
 		this.value = numValue;
@@ -109,7 +128,8 @@ public class UnitValue implements Serializable, Cloneable {
 	}
 	
 	/**
-	 * @param value the new number value for this value.
+	 * @param value the new number value for this value, which
+	 * must be a Double or Long
 	 */
 	public void setNumberValue(Number value) {
 		this.value = value;

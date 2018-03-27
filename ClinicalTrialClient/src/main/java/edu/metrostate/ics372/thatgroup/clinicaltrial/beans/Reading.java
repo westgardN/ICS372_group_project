@@ -22,17 +22,19 @@ import java.time.format.FormatStyle;
  * specific type. If a specific type is not needed, then an instance of the base Reading class can be
  * used.
  * 
- * Since this class is abstract, you cannot create an instance of Reading and instead you must use either
- * one of the concrete classes or use the ReadingFactory to create one of the known types of readings.
- * 
- * Two Reading objects are considered equal if they have the same id and are associated with the same patient.
- * That means that two readings that have identical ids but have different patient ids are considered to be two
+ * Two Reading objects are considered equal if they have the same id and are associated with the same clinic and patient.
+ * That means that two readings that have identical ids but have different clinic or patient ids are considered to be two
  * different readings.
  * 
  * @author That Group
  *
  */
 public class Reading implements Serializable {
+	private static final String MSG_READING_HAS_A_VALUE_OF = " has a value of ";
+	private static final String MSG_READING_TAKEN_AT = " taken at ";
+	private static final String MSG_READING_TAKEN_ON = " taken on ";
+	private static final String MSG_READING_FOR_PATIENT = " for patient ";
+	private static final String MSG_READING_TITLE = "Reading ";
 	private static final long serialVersionUID = 8166141304679594433L;
 	private transient PropertyChangeSupport pcs;
 	protected String patientId;
@@ -55,6 +57,7 @@ public class Reading implements Serializable {
 	 * @param id The ID of this reading.
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. 
+	 * @param clinicId The ID of the clinic associated with this object.
 	 */
 	public Reading(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
 		this.patientId = patientId;
@@ -120,7 +123,7 @@ public class Reading implements Serializable {
 				return false;
 		} else {
 			if (other.id != null) {
-				if (id.compareToIgnoreCase(other.id) != 0 ) {
+				if (!id.equalsIgnoreCase(other.id)) {
 					return false; 
 				}
 			} else {
@@ -132,7 +135,7 @@ public class Reading implements Serializable {
 				return false;
 		} else {
 			if (other.patientId != null) {
-				if (patientId.compareToIgnoreCase(other.patientId) != 0 ) {
+				if (!patientId.equalsIgnoreCase(other.patientId)) {
 					return false; 
 				}
 			} else {
@@ -144,7 +147,7 @@ public class Reading implements Serializable {
 				return false;
 		} else {
 			if (other.clinicId != null) {
-				if (clinicId.compareToIgnoreCase(other.clinicId) != 0 ) {
+				if (!clinicId.equalsIgnoreCase(other.clinicId)) {
 					return false; 
 				}
 			} else {
@@ -161,15 +164,15 @@ public class Reading implements Serializable {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
-		builder.append("Reading ");
+		builder.append(MSG_READING_TITLE);
 		builder.append(id);
-		builder.append(" for patient ");
+		builder.append(MSG_READING_FOR_PATIENT);
 		builder.append(patientId);
-		builder.append(" taken on ");
+		builder.append(MSG_READING_TAKEN_ON);
 		builder.append(date != null ? date.format(formatter) : null);
-		builder.append(" taken at ");
+		builder.append(MSG_READING_TAKEN_AT);
 		builder.append(clinicId);
-		builder.append(" has a value of ");
+		builder.append(MSG_READING_HAS_A_VALUE_OF);
 		builder.append(getValue());
 		return builder.toString();
 	}

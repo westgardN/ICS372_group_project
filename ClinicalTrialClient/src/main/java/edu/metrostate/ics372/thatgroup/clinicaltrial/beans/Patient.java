@@ -16,11 +16,37 @@ import java.util.Objects;
  *
  */
 public class Patient implements Serializable {
+	/**
+	 * The default ID used for a new Patient if one isn't provided.
+	 */
 	public static final String DEFAULT_ID = "default";
+	
+	/**
+	 * The PROP_ID event is fired whenever the id of this patient is changed.
+	 */
 	public static final String PROP_ID = "id";
+	
+	/**
+	 * The PROP_TRIAL_ID event is fired whenever the trial id of this patient is changed.
+	 */
 	public static final String PROP_TRIAL_ID = "trialId";
+	
+	/**
+	 * The PROP_TRIAL_START_DATE even is fired whenever the start date of this patient is changed.
+	 */
 	public static final String PROP_TRIAL_START_DATE = "trialStartDate";
+	
+	/**
+	 * The PROP_TRIAL_END_DATE even is fired whenever the end date of this patient is changed.
+	 */
 	public static final String PROP_TRIAL_END_DATE = "trialEndDate";
+	
+	private static final String MSG_PATIENT_HAS_NOT_STARTED_THE_TRIAL = " has not started the trial";
+	private static final String MSG_PATIENT_CLOSE_PAREN = ")";
+	private static final String MSG_PATIENT_DASH = " - ";
+	private static final String MSG_PATIENT_OPEN_PAREN = " (";
+	private static final String MSG_PATIENT_INACTIVE = ": inactive";
+	private static final String MSG_PATIENT_ACTIVE = ": active ";
 	private static final long serialVersionUID = 8450664877127813850L;
 	protected transient PropertyChangeSupport pcs;
 	protected String id;
@@ -153,7 +179,7 @@ public class Patient implements Serializable {
 				return false;
 		} else {
 			if (other.id != null) {
-				if (id.compareToIgnoreCase(other.id) != 0 ) {
+				if (!id.equalsIgnoreCase(other.id)) {
 					return false; 
 				}
 			} else {
@@ -165,7 +191,7 @@ public class Patient implements Serializable {
 				return false;
 		} else {
 			if (other.trialId != null) {
-				if (trialId.compareToIgnoreCase(other.trialId) != 0 ) {
+				if (!trialId.equalsIgnoreCase(other.trialId)) {
 					return false; 
 				}
 			} else {
@@ -182,18 +208,18 @@ public class Patient implements Serializable {
 		builder.append(id);
 		if (startDate != null) {
 			if (endDate == null) {
-				builder.append(": active ");
+				builder.append(MSG_PATIENT_ACTIVE);
 				builder.append(startDate.format(formatter));
 			} else {
-				builder.append(": inactive");
-				builder.append(" (");
+				builder.append(MSG_PATIENT_INACTIVE);
+				builder.append(MSG_PATIENT_OPEN_PAREN);
 				builder.append(startDate.format(formatter));
-				builder.append(" - ");
+				builder.append(MSG_PATIENT_DASH);
 				builder.append(endDate.format(formatter));
-				builder.append(")");
+				builder.append(MSG_PATIENT_CLOSE_PAREN);
 			}
 		} else {
-			builder.append(" has not started the trial");
+			builder.append(MSG_PATIENT_HAS_NOT_STARTED_THE_TRIAL);
 		}
 		
 		return builder.toString();

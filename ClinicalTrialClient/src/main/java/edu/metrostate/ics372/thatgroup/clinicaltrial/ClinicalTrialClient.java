@@ -24,7 +24,7 @@ import javafx.stage.Stage;
  * 
  * Nurses will use the software to record data that patients have entered into their journals.
  * 
- * The software can import readings from a file in JSON format containing patient readings.
+ * The software can import readings from a file in JSON or XML format containing clinics and patient readings.
  * The software supports 4 different types of items in the input file: weight reading, temp reading, blood pressure reading, and number of steps.
  * The software stores the item ID for each entry and associates it with the specified patient ID.
  * The software reads and stores the associated metadata for each item.
