@@ -26,6 +26,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.UnitValue;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
@@ -36,6 +37,7 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 	private Trial trial;
 	private Clinic clinic;
 	private Reading reading;
+	private UnitValue unitValue;
 	private StringBuilder sb; // Will hold string data for the elements.
 	private List<Reading> readings;
 	private List<Patient> patients;
@@ -86,9 +88,13 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 			int attsSize = atts != null ? atts.getLength() : 0;
 			if (attsSize > 0) {
 				String unit = atts.getValue(Strings.EMPTY, "unit");
-				String reading_id = reading != null ? reading.getId() : "";
 				
-				Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, "Reading ID: " + reading_id + " ignoring the value's unit: " + unit);
+				if (unit != null) {
+					unitValue = new UnitValue();
+					unitValue.setUnit(unit);
+				}
+			} else {
+				unitValue = null;
 			}
 		} else if (qName.equalsIgnoreCase("Patient") || qName.equalsIgnoreCase("Date")) {
 			sb = new StringBuilder();
@@ -136,7 +142,14 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 			}
 		} else if (qName.equalsIgnoreCase("Value")) {
 			if (reading != null) {
-				reading.setValue(sb.toString().trim());
+				String unit = unitValue != null ? unitValue.getUnit() : Strings.EMPTY;
+				
+				if (unit == Strings.EMPTY) {
+					reading.setValue(sb.toString().trim());
+				} else {
+					reading.setValue(new UnitValue(sb.toString().trim() + UnitValue.DELIM + unit));
+				}
+				
 			}
 		} else if (qName.equalsIgnoreCase("Reading")) {
 			if (reading.getDate() == null) {

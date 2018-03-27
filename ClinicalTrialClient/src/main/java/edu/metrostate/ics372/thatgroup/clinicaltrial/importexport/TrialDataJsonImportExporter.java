@@ -27,6 +27,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.UnitValue;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
@@ -193,12 +194,32 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 		switch(type) {
 			case ReadingFactory.TEMPERATURE:
 			{
-				boolean hasValue = reading.getValue() instanceof Double;
-				Double value = hasValue ? (Double) reading.getValue() : 0.0;
+				boolean hasValue = reading.getValue() instanceof UnitValue;
+				UnitValue unitValue = (UnitValue) reading.getValue();
+				Double value = hasValue ? (Double) unitValue.getNumberValue() : 0.0;
 				jsonWriter.name("reading_value").value(value);
+				String unit = hasValue ? unitValue.getUnit() : Strings.EMPTY;
+				
+				if (unit != null && !unit.trim().isEmpty()) {
+					jsonWriter.name("reading_value_unit").value(unit);
+				}
+				
 				break;
 			}
 			case ReadingFactory.WEIGHT:
+			{
+				boolean hasValue = reading.getValue() instanceof UnitValue;
+				UnitValue unitValue = (UnitValue) reading.getValue();
+				Long value = hasValue ? (Long) unitValue.getNumberValue() : 0L;
+				jsonWriter.name("reading_value").value(value);
+				String unit = hasValue ? unitValue.getUnit() : Strings.EMPTY;
+				
+				if (unit != null && !unit.trim().isEmpty()) {
+					jsonWriter.name("reading_value_unit").value(unit);
+				}
+				
+				break;
+			}
 			case ReadingFactory.STEPS:
 			{
 				boolean hasValue = reading.getValue() instanceof Integer;
@@ -288,6 +309,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 				String reading_type = null;
 				String reading_id = null;
 				String reading_value = null;
+				String reading_value_unit = null;
 				long reading_date = 0;
 				
 				jsonReader.beginObject();
@@ -305,6 +327,8 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 						reading_id = jsonReader.nextString();
 					} else if (name.equalsIgnoreCase("reading_value")) {
 						reading_value = jsonReader.nextString();
+					} else if (name.equalsIgnoreCase("reading_value_unit")) {
+						reading_value_unit = jsonReader.nextString();
 					} else if (name.equalsIgnoreCase("reading_date")) {
 						reading_date = jsonReader.nextLong();
 					} else {
@@ -317,6 +341,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					reading.setId(reading_id != null ? reading_id.trim() : null);
 					reading.setClinicId(clinic_id != null ? clinic_id.trim() : null);
 					reading.setPatientId(patient_id != null ? patient_id.trim() : null);
+					reading_value = reading_value_unit != null ? reading_value + UnitValue.DELIM + reading_value_unit : reading_value;
 					reading.setValue(reading_value);
 					reading.setDate(Instant.ofEpochMilli(reading_date).atZone(ZoneId.systemDefault()).toLocalDateTime());
 					

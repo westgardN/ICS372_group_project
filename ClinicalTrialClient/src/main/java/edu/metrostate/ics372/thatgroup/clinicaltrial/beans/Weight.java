@@ -17,13 +17,13 @@ import java.time.format.FormatStyle;
  */
 public class Weight extends Reading {
 	private static final long serialVersionUID = 5373498553571356119L;
-	private int value;
+	private UnitValue value;
 
 	/**
 	 * Initializes an empty weight reading with the weight set to Integer.MIN_VALUE
 	 */
 	public Weight() {
-		this(null, null, null, Integer.MIN_VALUE, null);
+		this(null, null, null, Long.MIN_VALUE, null);
 	}
 	
 	/**
@@ -54,23 +54,19 @@ public class Weight extends Reading {
 	@Override
 	public void setValue(Object value) {
 		if (value != null) {
-			if (value instanceof Number == false && value instanceof String == false) {
+			if (value instanceof UnitValue == false && value instanceof Number == false && value instanceof String == false) {
 				throw new IllegalArgumentException("value must be a number.");
 			}
 			
-			if (value instanceof Number) {
-				Number num = (Number) value;
-				
-				if (num.intValue() < 0 && num.intValue() != Integer.MIN_VALUE) {
-					throw new IllegalArgumentException("value must be greater than or equal to zero.");
-				}
-				
-				this.value = num.intValue();
+			if (value instanceof UnitValue) {
+				this.value = ((UnitValue)value).clone();
 			} else if (value instanceof String) {
-				this.value = Integer.parseInt((String)value);
+				this.value = new UnitValue((String) value);
+			} else if (value instanceof Number) {
+				this.value = new UnitValue((Number) value);
 			}
 		} else {
-			this.value = Integer.MIN_VALUE;
+			this.value = new UnitValue(Long.MIN_VALUE);
 		}
 	}
 	

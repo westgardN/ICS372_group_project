@@ -17,7 +17,7 @@ import java.time.format.FormatStyle;
  */
 public class Temp extends Reading {
 	private static final long serialVersionUID = -1060997244536301933L;
-	protected double value;
+	protected UnitValue value;
 
 	/**
 	 * Initializes an empty temperature reading with the temperature initialized
@@ -40,7 +40,7 @@ public class Temp extends Reading {
 	}
 
 	/**
-	 * Returns the temperature of this reading as a double value.
+	 * Returns the temperature of this reading as a unit value.
 	 */
 	@Override
 	public Object getValue() {
@@ -53,19 +53,19 @@ public class Temp extends Reading {
 	@Override
 	public void setValue(Object value) {
 		if (value != null) {
-			if (value instanceof Number == false && value instanceof String == false) {
+			if (value instanceof UnitValue == false && value instanceof Number == false && value instanceof String == false) {
 				throw new IllegalArgumentException("value must be a number.");
 			}
 			
-			if (value instanceof Number) {
-				Number num = (Number) value;
-				
-				this.value = num.doubleValue();
+			if (value instanceof UnitValue) {
+				this.value = ((UnitValue)value).clone();
 			} else if (value instanceof String) {
-				this.value = Double.parseDouble((String)value);
+				this.value = new UnitValue((String) value);
+			} else if (value instanceof Number) {
+				this.value = new UnitValue((Number) value);
 			}
 		} else {
-			this.value = Double.NEGATIVE_INFINITY;
+			this.value = new UnitValue(Double.NEGATIVE_INFINITY);
 		}
 	}
 	
