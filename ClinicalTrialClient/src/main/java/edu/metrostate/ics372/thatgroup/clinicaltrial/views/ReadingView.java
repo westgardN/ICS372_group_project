@@ -29,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -40,7 +39,7 @@ import javafx.scene.layout.VBox;
  *
  * @author That Group
  */
-public class ReadingView extends AnchorPane implements Initializable {
+public class ReadingView extends VBox implements Initializable {
 	private enum ErrCause {
 		DATE, TIME, DATE_TIME, ID, BP, TEMP, VALUE;
 	}
@@ -50,16 +49,24 @@ public class ReadingView extends AnchorPane implements Initializable {
 	 * entered are of the correct format for their respective fields
 	 */
 	private class ReadingFormValidator {
-		private final String ALPHANUMERIC = "^[a-zA-Z0-9]+$"; // Only numbers and or letters
-		private final String INT_INPUT = "^[0-9]*$"; // Only numbers
-		private final String DECIMAL_INPUT = "[-+]?[0-9]*\\.?[0-9]+"; // Only numbers or decimals
-		private final String HOURS = "^0*([0-9]|1[0-9]|2[0-3])$"; // Only numbers between 0 & 23
-		private final String MIN_SEC = "^0*([0-9]|[1-4][0-9]|5[0-9])$"; // Only numbers between 0 & 59
+		private final String ALPHANUMERIC = "^[a-zA-Z0-9]+$"; 
+		private final String INT_INPUT = "^[0-9]*$"; 
+		private final String DECIMAL_INPUT = "[-+]?[0-9]*\\.?[0-9]+"; 
+		private final String HOURS = "^0*([0-9]|1[0-9]|2[0-3])$"; 
+		private final String MIN_SEC = "^0*([0-9]|[1-4][0-9]|5[0-9])$";
 
 		private boolean validateInput() {
-			String readingType = type.getSelectionModel().getSelectedItem().toLowerCase();
-
-			if (!hasValidDate()) {
+			String readingType = type.getSelectionModel().getSelectedItem();
+			Clinic clinic = clinicChoice.getSelectionModel().getSelectedItem();
+			Patient patient = patientChoice.getSelectionModel().getSelectedItem();
+			
+			if (readingType == null || clinic == null || patient == null) {
+				return false;
+			}
+			
+			readingType = readingType.toLowerCase();
+			
+			if (!hasValidDate(patient)) {
 				generateErrorMessage(ErrCause.DATE);
 				return false;
 			}
@@ -67,7 +74,7 @@ public class ReadingView extends AnchorPane implements Initializable {
 				generateErrorMessage(ErrCause.TIME);
 				return false;
 			}
-			if (!hasValidDateTime()) {
+			if (!hasValidDateTime(patient)) {
 				generateErrorMessage(ErrCause.DATE_TIME);
 				return false;
 			}
@@ -110,17 +117,17 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return isFilled(hour) && isFilled(minutes) && isFilled(seconds);
 		}
 
-		private boolean hasValidDate() {
+		private boolean hasValidDate(Patient patient) {
 			boolean answer = false;
 
-			LocalDate ld = date.getValue() != null ? date.getValue() : null;
-			Patient selectedPatient = model.getSelectedPatient();
-			LocalDate sd = selectedPatient != null ? selectedPatient.getTrialStartDate() : null;
-
-			if (sd != null && ld != null && !ld.isAfter(LocalDate.now()) && !ld.isBefore(sd)) {
-				answer = true;
+			if (patient != null) {
+				LocalDate ld = date.getValue() != null ? date.getValue() : null;
+				LocalDate sd = patient != null ? patient.getTrialStartDate() : null;
+	
+				if (sd != null && ld != null && !ld.isAfter(LocalDate.now()) && !ld.isBefore(sd)) {
+					answer = true;
+				}
 			}
-
 			return answer;
 		}
 
@@ -137,10 +144,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 			return answer;
 		}
 
-		private boolean hasValidDateTime() {
+		private boolean hasValidDateTime(Patient patient) {
 			boolean answer = false;
 
-			if (hasValidDate()) {
+			if (hasValidDate(patient)) {
 				LocalTime lt = getTime();
 				LocalDate ld = date.getValue() != null ? date.getValue() : null;
 
@@ -187,18 +194,11 @@ public class ReadingView extends AnchorPane implements Initializable {
 		}
 	}
 
-	private ReadingFormValidator validator;
 	private ClinicalTrialModel model;
 	@FXML
 	private ChoiceBox<Clinic> clinicChoice;
 	@FXML
 	private ChoiceBox<Patient> patientChoice;
-	@FXML
-	private Button addBtn;
-	@FXML
-	private VBox form;
-//	@FXML
-//	private TextField patientId;
 	@FXML
 	private ChoiceBox<String> type;
 	@FXML
@@ -216,20 +216,22 @@ public class ReadingView extends AnchorPane implements Initializable {
 	@FXML
 	private Button okBtn;
 	@FXML
-	private Button cancelBtn;
-	@FXML
 	private StackPane bloodPressStack;
 	@FXML
 	private TextField systolic;
 	@FXML
 	private TextField diastolic;
-
+	
+	private ReadingFormValidator validator;
+	private boolean selected;
 	/**
 	 * Constructs a new ReadingView instance
 	 */
 	public ReadingView() {
 		model = null;
-
+		validator = new ReadingFormValidator();
+		selected = false;
+		
 		try (InputStream stream = getClass().getResourceAsStream(Strings.READING_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
@@ -258,60 +260,31 @@ public class ReadingView extends AnchorPane implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 		type.setItems(model.getReadingTypes());
-		type.getSelectionModel().selectFirst();
 		clinicChoice.setItems(model.getClinics());
-		clinicChoice.getSelectionModel().selectFirst();
 		patientChoice.setItems(model.getPatients());
-		patientChoice.getSelectionModel().selectFirst();
-		/*
-		 * If the selected patient from the patients list is active in the trial, show
-		 * the add reading button to allow the user to create and add new readings for
-		 * the patient
-		 */
+		
 		model.addPropertyChangeListener((evt) -> {
 			switch (evt.getPropertyName()) {
-			case ClinicalTrialModel.PROP_SELECTED_PATIENT:
-				Patient patient = null;
-				clear();
-				form.setVisible(false);
-				if (evt.getNewValue() instanceof Patient) {
-					patient = (Patient) evt.getNewValue();
-				}
-
-				if (patient != null && model.hasPatientStartedTrial(patient)) {
-					patientChoice.getSelectionModel().select(model.getSelectedPatient());
-					//patientId.setText(patientChoice.getSelectionModel().getSelectedItem().getId());
-					addBtn.setDisable(false);
-				} else if (patient != null) {
-					addBtn.setDisable(true);
-				}
-				break;
 			case ClinicalTrialModel.PROP_SELECTED_READING:
 				Reading reading = null;
 
 				if (evt.getNewValue() instanceof Reading) {
 					reading = (Reading) evt.getNewValue();
+					clear();
 					if (reading != null) {
 						load(reading);
-						form.setVisible(true);
-					} else {
-						clear();
-					}
-					try {
-						clinicChoice.getSelectionModel().select(model.getClinic(reading.getClinicId()));
-						patientChoice.getSelectionModel().select(model.getPatient(reading.getPatientId()));
-					} catch (TrialCatalogException e) {
-						e.printStackTrace();
 					}
 				}
-				break;
-			case ClinicalTrialModel.PROP_SELECTED_CLINIC:
-				Clinic clinic = null;
-				if (evt.getNewValue() instanceof Clinic) {
-					clinic = (Clinic) evt.getNewValue();
-				}
-				if (clinic != null) {
-					clinicChoice.getSelectionModel().select(model.getSelectedClinic());
+				
+				if (reading == null) {
+					clear();
+					selected = false;
+					okBtn.setText(Strings.ADD);
+					id.setDisable(false);
+				} else {
+					selected = true;
+					okBtn.setText(Strings.UPDATE);
+					id.setDisable(true);
 				}
 				break;
 			}
@@ -326,10 +299,14 @@ public class ReadingView extends AnchorPane implements Initializable {
 		}
 
 		id.setText(reading.getId());
-		//patientId.setText(reading.getPatientId());
 
 		setValue(reading);
 
+		Clinic clinic = new Clinic(reading.getClinicId(), model.getTrialId(), null);
+		Patient patient = new Patient(reading.getPatientId(), model.getTrialId(), null, null);
+		clinicChoice.getSelectionModel().select(clinic);
+		patientChoice.getSelectionModel().select(patient);
+		
 	}
 
 	private void setValue(Reading reading) {
@@ -359,8 +336,6 @@ public class ReadingView extends AnchorPane implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		validator = new ReadingFormValidator();
 		date.setValue(LocalDate.now());
-		form.setVisible(false);
-		addBtn.setDisable(true);
 
 		type.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSel, newSel) -> {
 			if (newSel != null && newSel.toLowerCase().equals(Strings.BP_VALUE)) {
@@ -372,64 +347,42 @@ public class ReadingView extends AnchorPane implements Initializable {
 			}
 		});
 
-		addBtn.setOnAction((event) -> {
-			Patient patient = model.getSelectedPatient();
-
-			if (model.isPatientInTrial(patient)) {
-				clear();
-				form.setVisible(true);
-				addBtn.setDisable(true);
-			} else {
-				PopupNotification.showPopupMessage(Strings.INACTIVE_PATIENT_MSG, getScene());
-			}
-		});
-
 		okBtn.setOnAction((event) -> {
 			if (validator.validateInput()) {
-				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(),
-						date.getValue())) {
-					try {
-						model.fireUpdatePatient(model.getSelectedPatient());
-						model.fireUpdateClinic(model.getSelectedClinic());
-					} catch (TrialCatalogException e) {
-						PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
-					}
+				String msgS = selected ? Strings.READING_UPDATED_MSG : Strings.READING_ADDED_MSG;
+				String msgF = selected ? Strings.READING_NOT_UPDATED_MSG : Strings.READING_NOT_ADDED_MSG;
+				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), LocalDateTime.of(date.getValue(), getTime()))) {
 					id.setText(Strings.EMPTY);
-					PopupNotification.showPopupMessage(Strings.READING_ADDED_MSG, getScene());
+					PopupNotification.showPopupMessage(msgS, getScene());
 				} else {
-					PopupNotification.showPopupMessage(Strings.READING_NOT_ADDED_MSG, getScene());
+					PopupNotification.showPopupMessage(msgF, getScene());
 				}
-			}
-		});
-
-		cancelBtn.setOnAction((event) -> {
-			Patient patient = model.getSelectedPatient();
-			clear();
-
-			form.setVisible(false);
-
-			if (model.isPatientInTrial(patient)) {
-				addBtn.setDisable(false);
-			} else {
-				addBtn.setDisable(true);
 			}
 		});
 	}
 
-	private boolean addReading(String rType, String rId, String rVal, LocalDate rDateTime) {
+	private boolean addReading(String rType, String rId, String rVal, LocalDateTime rDateTime) {
 		boolean answer = false;
+		
 		String pid = patientChoice.getSelectionModel().getSelectedItem().getId();
 		String cid = clinicChoice.getSelectionModel().getSelectedItem().getId();
+		Reading reading = ReadingFactory.getReading(rType);
+		
+		reading.setClinicId(cid);
+		reading.setPatientId(pid);
+		reading.setId(rId);
+		reading.setDate(rDateTime);
+		reading.setValue(rVal);
+		
 		try {
 			if (rType.toLowerCase().equals(Strings.BP_VALUE)) {
-				rType = Strings.BP_JSON;
-				rVal = String.format("%s/%s", systolic.getText(), diastolic.getText());
+				reading.setValue(String.format("%s/%s", systolic.getText(), diastolic.getText()));
 			}
-			answer = model.addReading(rType, rId, pid, cid, rVal, LocalDateTime.of(rDateTime, getTime()));
+			answer = model.updateOrAdd(reading);
 		} catch (TrialCatalogException e) {
 			PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 		}
-
+		
 		return answer;
 	}
 
@@ -459,6 +412,10 @@ public class ReadingView extends AnchorPane implements Initializable {
 		hour.clear();
 		minutes.clear();
 		seconds.clear();
+		type.getSelectionModel().clearSelection();
+		patientChoice.getSelectionModel().clearSelection();
+		clinicChoice.getSelectionModel().clearSelection();
+		okBtn.setText(Strings.ADD);
 	}
 
 	/**
