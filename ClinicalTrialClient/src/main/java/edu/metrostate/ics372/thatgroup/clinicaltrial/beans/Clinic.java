@@ -12,15 +12,28 @@ import java.util.Objects;
  * The Clinic class represents a clinic in a trial. A clinic has an
  * id, name, and associated trial id.
  * 
- * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading
- * 
  * @author That Group
  *
  */
 public class Clinic implements Serializable {
+	/**
+	 * The default ID used for a new Clinic if one isn't provided.
+	 */
 	public static final String DEFAULT_ID = "default";
+	
+	/**
+	 * The PROP_ID event is fired whenever the id of this clinic is changed.
+	 */
 	public static final String PROP_ID = "id";
+
+	/**
+	 * The PROP_TRIAL_ID event is fired whenever the trial id of this clinic is changed.
+	 */
 	public static final String PROP_TRIAL_ID = "trialId";
+	
+	/**
+	 * The PROP_NAME event is fired whenever the name of this clinic is changed.
+	 */
 	public static final String PROP_NAME = "name";
 	private static final long serialVersionUID = 6613024190196045827L;
 	protected transient PropertyChangeSupport pcs;
@@ -89,7 +102,7 @@ public class Clinic implements Serializable {
 		if (!Objects.equals(this.trialId, trialId)) {
 			String oldValue = this.trialId;
 			this.trialId = trialId;
-			getPcs().firePropertyChange("PROP_TRIAL_ID", oldValue, this.trialId);
+			getPcs().firePropertyChange(PROP_TRIAL_ID, oldValue, this.trialId);
 		}
 	}
 	
@@ -107,7 +120,7 @@ public class Clinic implements Serializable {
 		if (!Objects.equals(this.name, name)) {
 			String oldValue = this.name;
 			this.name = name;
-			getPcs().firePropertyChange("PROP_NAME", oldValue, this.name);
+			getPcs().firePropertyChange(PROP_NAME, oldValue, this.name);
 		}
 	}
 
@@ -152,14 +165,14 @@ public class Clinic implements Serializable {
 			if (other.id != null) {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
+		} else if (!id.equalsIgnoreCase(other.id)) {
 			return false;
 		}
 		if (trialId == null) {
 			if (other.trialId != null) {
 				return false;
 			}
-		} else if (!trialId.equals(other.trialId)) {
+		} else if (!trialId.equalsIgnoreCase(other.trialId)) {
 			return false;
 		}
 		return true;

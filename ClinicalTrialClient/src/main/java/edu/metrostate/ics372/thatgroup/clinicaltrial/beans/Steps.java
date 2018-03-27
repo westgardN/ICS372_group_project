@@ -7,15 +7,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
+
 /**
  * A Step reading consists of a single integer as its value
  * 
- * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading
+ * @see edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading
  * 
  * @author That Group
  *
  */
 public class Steps extends Reading {
+	private static final String MSG_STEPS_IS = " is: ";
+	private static final String MSG_STEPS_ON = " on ";
+	private static final String MSG_STEPS_TAKEN = "Steps taken";
 	private static final long serialVersionUID = 125481244831517121L;
 	protected int value;
 
@@ -33,6 +38,7 @@ public class Steps extends Reading {
 	 * @param id The ID of this reading.
 	 * @param date The date and time the reading was taken.
 	 * @param value The value of the reading. Must be a Number
+	 * @param clinicId The ID of the clinic associated with this object.
 	 */
 	public Steps(String patientId, String id, LocalDateTime date, Object value, String clinicId) {
 		super(patientId, id, date, value, clinicId);
@@ -54,14 +60,14 @@ public class Steps extends Reading {
 	public void setValue(Object value) {
 		if (value != null) {
 			if (value instanceof Number == false && value instanceof String == false) {
-				throw new IllegalArgumentException("value must be a number.");
+				throw new IllegalArgumentException(Strings.ERR_VALUE_NAN);
 			}
 			
 			if (value instanceof Number) {
 				Number num = (Number) value;
 				
 				if (num.intValue() < 0 && num.intValue() != Integer.MIN_VALUE) {
-					throw new IllegalArgumentException("value must be greater than or equal to zero.");
+					throw new IllegalArgumentException(Strings.ERR_VALUE_NEGATIVE);
 				}
 				
 				this.value = num.intValue();
@@ -79,14 +85,14 @@ public class Steps extends Reading {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Steps taken");
-		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+		builder.append(MSG_STEPS_TAKEN);
 		if (date != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 			String formattedDateTime = date.format(formatter);
-			builder.append(" on ");
+			builder.append(MSG_STEPS_ON);
 			builder.append(formattedDateTime);
 		}
-		builder.append(" is: ");
+		builder.append(MSG_STEPS_IS);
 		builder.append(getValue());
 		return builder.toString();
 	}
