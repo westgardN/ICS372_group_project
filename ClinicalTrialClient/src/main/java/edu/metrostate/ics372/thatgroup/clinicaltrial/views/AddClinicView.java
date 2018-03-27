@@ -1,3 +1,6 @@
+/**
+ * File: AddClinicView.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
@@ -17,6 +20,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * This view is responsible for displaying the form to add a new clinic to the
+ * system
+ * 
+ * @author That Group
+ *
+ */
+
 public class AddClinicView extends AnchorPane implements Initializable {
 	@FXML
 	private TextField clinicId;
@@ -28,7 +39,7 @@ public class AddClinicView extends AnchorPane implements Initializable {
 	private boolean clear;
 
 	/**
-	 * Constructs a new AddPatientView instance
+	 * Constructs a new AddClinicView instance
 	 */
 	public AddClinicView() {
 		model = null;
@@ -42,15 +53,30 @@ public class AddClinicView extends AnchorPane implements Initializable {
 			throw new RuntimeException(exception);
 		}
 	}
-
+	/**
+	 * Returns the view model associated with this view
+	 * 
+	 * @return the model
+	 */
 	public ClinicalTrialModel getModel() {
 		return model;
 	}
-
+	
+	/**
+	 * Sets the view model associated with this view
+	 * 
+	 * @param model model to set
+	 */
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 	}
 	
+	/**
+	 * Adds a new clinic to the system
+	 * 
+	 * @param event
+	 *            the triggering entity of this action
+	 */
 	@FXML
 	public void addClinic(ActionEvent event){
 		try {
@@ -71,7 +97,10 @@ public class AddClinicView extends AnchorPane implements Initializable {
 			PopupNotification.showPopupMessage(sb.toString(), getScene());
 		}
 	}
-
+	/**
+	 * Initializes this view and sets action events and listeners to the new clinic
+	 * ID TextField, new clinic name TextField and the Add Button
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		addButton.setDisable(true);
@@ -95,6 +124,12 @@ public class AddClinicView extends AnchorPane implements Initializable {
 			}
 		});
 	}
+	/**
+	 * Checks the string text to see if only contains letters or numbers.
+	 * 
+	 * @param text string to be validated
+	 * @return answer true if text passed validation, false if it does not.
+	 */
 	private boolean validate(String text) {
 		boolean answer = false;
 		
