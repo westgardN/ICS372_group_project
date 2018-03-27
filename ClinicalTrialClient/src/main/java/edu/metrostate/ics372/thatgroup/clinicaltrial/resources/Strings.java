@@ -61,4 +61,14 @@ public class Strings {
 	public static final String SPECIAL_CHAR_MSG = "No special characters allowed.";
 	public static final String SELECT_PATIENT_TRIAL_DATE_TITLE_FMT = "Select Trial %s Date for Patient %s";
 	public static final String SELECT_PATIENT_TRIAL_DATE_LABEL_FMT = "Please select the date patient %s %s the trial";
+	public static final String ERR_TRIAL_DATA_EXPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";
+	public static final String ERR_TRIAL_DATA_IMPORTER_EXPORTER_NULL_FILE = "filename cannot be null.";
+	public static final String ERR_TRIAL_DATA_IMPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";
+	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_STREAM = "Unable to read from the input stream:\n ";
+	public static final String ERR_TRIAL_DATA_EXPORTER_BAD_STREAM = "Unable to write to the output stream:\n ";
+	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_TRIAL = "trial must be non null have a valid id.";
+	public static final String ERR_TRIAL_DATA_EXPORTER_NO_DATA = "Nothing to export.";
+	public static final String ERR_TRIAL_DATA_IMPORTER_PARSING_STREAM = "An error was encountered while parsing the import stream:\n ";
+	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_TRIAL_AND_IS = "trial cannot be null and must have a valid id. is must be a valid InputSteam";
+	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_XML = "Unable to process import file as it does not appear to be a valid XML import file.";
 }

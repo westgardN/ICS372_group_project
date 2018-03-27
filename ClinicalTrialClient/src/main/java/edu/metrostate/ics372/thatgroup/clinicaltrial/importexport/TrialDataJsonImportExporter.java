@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.time.DateTimeException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,13 +33,35 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
- * The TrialDataJsonImportExporter is used for importing and exporting a List of Reading objects to and from a
- * JSON file. It includes methods to read from a JSON file and write to a JSON file.
+ * The TrialDataJsonImportExporter is used for importing and exporting
+ * trial data to and from a JSON file. It includes methods to read
+ * from a JSON file and write to a JSON file.
  * 
  * @author That Group
  *
  */
 public class TrialDataJsonImportExporter implements TrialDataImporter, TrialDataExporter {
+	private static final String MSG_UNKNOWN_READING_PROPERTY = " unknown Reading property: ";
+	private static final String MSG_READING_ID = "Reading ID: ";
+	private static final String MSG_WITH_VALUE = " with value: ";
+	private static final String MSG_UNKNOWN_PATIENT_PROPERTY = " unknown Patient property: ";
+	private static final String MSG_PATIENT_ID = "Patient ID: ";
+	private static final String MSG_UNKNOWN_CLINIC_PROPERTY = " unknown Clinic property: ";
+	private static final String MSG_CLINIC_ID = "Clinic ID: ";
+	private static final String JSON_TRIAL_ID = "trial_id";
+	private static final String JSON_PATIENTS = "patients";
+	private static final String JSON_CLINICS = "clinics";
+	private static final String JSON_PATIENT_READINGS = "patient_readings";
+	private static final String JSON_READING_ID = "reading_id";
+	private static final String JSON_PATIENT_ID = "patient_id";
+	private static final String JSON_CLINIC_ID = "clinic_id";
+	private static final String JSON_CLINIC_NAME = "clinic_name";
+	private static final String JSON_READING_TYPE = "reading_type";
+	private static final String JSON_READING_VALUE = "reading_value";
+	private static final String JSON_READING_VALUE_UNIT = "reading_value_unit";
+	private static final String JSON_READING_DATE = "reading_date";
+	private static final String JSON_PATIENT_TRIAL_START_DATE = "patient_trial_start_date";
+	private static final String JSON_PATIENT_TRIAL_END_DATE = "patient_trial_end_date";
 	private Trial trial;
 	private List<Reading> readings;
 	private List<Patient> patients;
@@ -62,15 +85,16 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 	}
 
 	/**
-	 * Reads the specified JSON file and returns a List of Reading object references read from the
-	 * file.
+	 * Reads the specified JSON file and returns true if the import was successful.
+	 * If the import was successful, then the lists for the imported objects will be
+	 * valid after this method returns.
 	 * 
-	 * @param filePath The file to import readings from. This file must exist and it must be in JSON format
+	 * @param trial the trial that the data is being imported into. Cannot be null.
+	 * @param is the ImportStream to read the data from.
 	 * 
-	 * @return A list of the readings that were read from the file.
+	 * @return true if the import was successful; otherwise false is returned.
 	 * 
-	 * @throws IOException indicates an error occurred while operating on the file.
-	 * @throws TrialException 
+	 * @throws TrialException indicates an error occurred while operating on the file. 
 	 */
 	@Override
 	public boolean read(Trial trial, InputStream is) throws TrialException {
@@ -86,18 +110,20 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			while (jsonReader.hasNext()) {
 				String name = jsonReader.nextName();
 				
-				if (name.equalsIgnoreCase("patient_readings")) {
+				if (name.equalsIgnoreCase(JSON_PATIENT_READINGS)) {
 					readReadings(jsonReader);
-				} else if (name.equalsIgnoreCase("clinics")) {
+				} else if (name.equalsIgnoreCase(JSON_CLINICS)) {
 					readClinics(jsonReader);
+				} else if (name.equalsIgnoreCase(JSON_PATIENTS)) {
+					readPatients(jsonReader);
 				}
 			}
 			
 			jsonReader.endObject();
 			
-			answer = !readings.isEmpty();
+			answer = true;
 		} catch (JsonSyntaxException | IOException e) {
-			throw new TrialException("Unable to read from the input stream:\n" + e.getMessage(), e);
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_BAD_STREAM + e.getMessage(), e);
 		}
 		
 		return answer;
@@ -122,12 +148,12 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 	}
 	
 	/**
-	 * Writes a List of Reading objects to the specified file in JSON format
+	 * Writes the lists of Reading objects, Patient objects, and Clinic objects associated
+	 * with this trial to the specified file in JSON format.
 	 * 
-	 * @param readings the list of readings to write to the file
-	 * @param filePathOut the file to write to. If it already exists, it is overwritten.
+	 * @param os the OutputStream that the data will be written to.
 	 *  
-	 * @throws IOException indicates an error occurred while operating on the file.
+	 * @throws TrialException indicates an error occurred while exporting the data.
 	 */
 	@Override
 	public boolean write(OutputStream os) throws TrialException {
@@ -141,30 +167,45 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			jsonWriter.beginObject();
 			
 			if (clinics != null) {
-				jsonWriter.name("clinics");
+				jsonWriter.name(JSON_CLINICS);
 				jsonWriter.beginArray();
 				
 				for (Clinic clinic : clinics) {
 					jsonWriter.beginObject();
-					jsonWriter.name("clinic_id").value(clinic.getId());
-					jsonWriter.name("clinic_name").value(clinic.getName());
+					jsonWriter.name(JSON_CLINIC_ID).value(clinic.getId());
+					jsonWriter.name(JSON_CLINIC_NAME).value(clinic.getName());
+					jsonWriter.name(JSON_TRIAL_ID).value(clinic.getTrialId());
 					jsonWriter.endObject();
 				}
 				jsonWriter.endArray();
 			}
 			
-			jsonWriter.name("patient_readings");
+			if (patients != null) {
+				jsonWriter.name(JSON_PATIENTS);
+				jsonWriter.beginArray();
+				
+				for (Patient patient : patients) {
+					jsonWriter.beginObject();
+					jsonWriter.name(JSON_PATIENT_ID).value(patient.getId());
+					writeDates(jsonWriter, patient);
+					jsonWriter.name(JSON_TRIAL_ID).value(patient.getTrialId());
+					jsonWriter.endObject();
+				}
+				jsonWriter.endArray();
+			}
+			
+			jsonWriter.name(JSON_PATIENT_READINGS);
 			jsonWriter.beginArray();
 			
 			for (Reading reading : readings) {
 				jsonWriter.beginObject();
 				String type = ReadingFactory.getReadingType(reading);
-				jsonWriter.name("patient_id").value(reading.getPatientId());
-				jsonWriter.name("clinic_id").value(reading.getClinicId());
-				jsonWriter.name("reading_type").value(type);
-				jsonWriter.name("reading_id").value(reading.getId());
+				jsonWriter.name(JSON_PATIENT_ID).value(reading.getPatientId());
+				jsonWriter.name(JSON_CLINIC_ID).value(reading.getClinicId());
+				jsonWriter.name(JSON_READING_TYPE).value(type);
+				jsonWriter.name(JSON_READING_ID).value(reading.getId());
 				writeValue(jsonWriter, type, reading);
-				writeDate(jsonWriter, reading);
+				writeDateTime(jsonWriter, reading);
 				jsonWriter.endObject();
 			}
 			
@@ -174,20 +215,38 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			answer = true;
 
 		} catch (IOException e) {
-			throw new TrialException("Unable to write to the output stream", e);
+			throw new TrialException(Strings.ERR_TRIAL_DATA_EXPORTER_BAD_STREAM + e.getMessage(), e);
 		}
 		
 		return answer;
 	}
 
-	private void writeDate(JsonWriter jsonWriter, Reading reading) throws IOException {
+	///////////////////////////// End TrialDataExporter Interface ///////////////////
+	
+	private void writeDates(JsonWriter jsonWriter, Patient patient) throws IOException {
+		long date = 0;
+		
+		if (patient.getTrialStartDate() != null) {
+			date = patient.getTrialStartDate().toEpochDay();
+			jsonWriter.name(JSON_PATIENT_TRIAL_START_DATE).value(date);
+			date = 0;
+		}
+		
+		if (patient.getTrialEndDate() != null) {
+			date = patient.getTrialStartDate().toEpochDay();
+			jsonWriter.name(JSON_PATIENT_TRIAL_END_DATE).value(date);
+			date = 0;
+		}		
+	}
+
+	private void writeDateTime(JsonWriter jsonWriter, Reading reading) throws IOException {
 		long date = 0;
 		
 		if (reading.getDate() != null) {
 			date = reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 		}
 		
-		jsonWriter.name("reading_date").value(date);
+		jsonWriter.name(JSON_READING_DATE).value(date);
 	}
 
 	private void writeValue(JsonWriter jsonWriter, String type, Reading reading) throws IOException {
@@ -197,11 +256,11 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 				boolean hasValue = reading.getValue() instanceof UnitValue;
 				UnitValue unitValue = (UnitValue) reading.getValue();
 				Double value = hasValue ? (Double) unitValue.getNumberValue() : 0.0;
-				jsonWriter.name("reading_value").value(value);
+				jsonWriter.name(JSON_READING_VALUE).value(value);
 				String unit = hasValue ? unitValue.getUnit() : Strings.EMPTY;
 				
 				if (unit != null && !unit.trim().isEmpty()) {
-					jsonWriter.name("reading_value_unit").value(unit);
+					jsonWriter.name(JSON_READING_VALUE_UNIT).value(unit);
 				}
 				
 				break;
@@ -211,11 +270,11 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 				boolean hasValue = reading.getValue() instanceof UnitValue;
 				UnitValue unitValue = (UnitValue) reading.getValue();
 				Long value = hasValue ? (Long) unitValue.getNumberValue() : 0L;
-				jsonWriter.name("reading_value").value(value);
+				jsonWriter.name(JSON_READING_VALUE).value(value);
 				String unit = hasValue ? unitValue.getUnit() : Strings.EMPTY;
 				
 				if (unit != null && !unit.trim().isEmpty()) {
-					jsonWriter.name("reading_value_unit").value(unit);
+					jsonWriter.name(JSON_READING_VALUE_UNIT).value(unit);
 				}
 				
 				break;
@@ -224,22 +283,21 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			{
 				boolean hasValue = reading.getValue() instanceof Integer;
 				Integer value = hasValue ? (Integer) reading.getValue() : 0;
-				jsonWriter.name("reading_value").value(value);
+				jsonWriter.name(JSON_READING_VALUE).value(value);
 				break;
 			}
 			default:
 				boolean hasValue = reading.getValue() != null;
 				String value = hasValue ? reading.getValue().toString() : Strings.EMPTY;
-				jsonWriter.name("reading_value").value(value);
+				jsonWriter.name(JSON_READING_VALUE).value(value);
 				break;
 		}
 		
 	}
 
-	///////////////////////////// End TrialDataExporter Interface ///////////////////
 	private void prepareRead() throws TrialException {
 		if (trial == null || trial.getId() == null || trial.getId().trim().isEmpty()) {
-			throw new TrialException("trial must be non null have a valid id.");
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_BAD_TRIAL);
 		}
 		
 		readings = new LinkedList<Reading>();
@@ -248,8 +306,10 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 	}
 	
 	private void prepareWrite() throws TrialException {
-		if (readings == null || readings.isEmpty()) {
-			throw new TrialException("Nothing to export.");
+		if ((readings == null || readings.isEmpty()) 
+				&& (clinics == null || clinics.isEmpty())
+				&& (patients == null || patients.isEmpty())) {
+			throw new TrialException(Strings.ERR_TRIAL_DATA_EXPORTER_NO_DATA);
 		}
 	}
 	
@@ -260,18 +320,21 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			while (jsonReader.hasNext()) {
 				String clinic_id = null;
 				String clinic_name = null;
+				String trial_id = trial.getId();
 				
 				jsonReader.beginObject();
 				
 				while (jsonReader.hasNext()) {
 					String name = jsonReader.nextName();
 					
-					if (name.equalsIgnoreCase("clinic_id")) {
+					if (name.equalsIgnoreCase(JSON_CLINIC_ID)) {
 						clinic_id = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("clinic_name")) {
+					} else if (name.equalsIgnoreCase(JSON_CLINIC_NAME)) {
 						clinic_name = jsonReader.nextString();
+					} else if (name.equalsIgnoreCase(JSON_TRIAL_ID)) {
+						trial_id = jsonReader.nextString();
 					} else {
-						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, "Clinic ID: " + clinic_id + " unknown Clinic property: " + name + " with value: " + jsonReader.nextString());
+						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, MSG_CLINIC_ID + clinic_id + MSG_UNKNOWN_CLINIC_PROPERTY + name + MSG_WITH_VALUE + jsonReader.nextString());
 					}
 				}
 				
@@ -280,13 +343,12 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 						clinic_name = clinic_id;
 					}
 					
-					Clinic clinic = new Clinic(clinic_id, trial.getId(), clinic_name);
+					Clinic clinic = new Clinic(clinic_id, trial_id, clinic_name);
 					
 					if (!clinics.contains(clinic)) {
 						clinics.add(clinic);
 					} else {
-						clinics.remove(clinic);
-						clinics.add(clinic);
+						clinics.set(clinics.indexOf(clinic), clinic);
 					}
 				}
 				
@@ -295,7 +357,57 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			
 			jsonReader.endArray();
 		} catch (IOException | IllegalStateException | NumberFormatException | DateTimeException ex) {
-			throw new TrialException("An error was encountered while parsing the import stream", ex);
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_PARSING_STREAM + ex.getMessage(), ex);
+		}
+	}
+	
+	private void readPatients(JsonReader jsonReader) throws TrialException {
+		try {
+			jsonReader.beginArray();
+			
+			while (jsonReader.hasNext()) {
+				String patient_id = null;
+				long lStartDate = -1;
+				long lEndDate = -1;
+				String trial_id = trial.getId();
+
+				jsonReader.beginObject();
+				
+				while (jsonReader.hasNext()) {
+					String name = jsonReader.nextName();
+					
+					if (name.equalsIgnoreCase(JSON_PATIENT_ID)) {
+						patient_id = jsonReader.nextString();
+					} else if (name.equalsIgnoreCase(JSON_PATIENT_TRIAL_START_DATE)) {
+						lStartDate = jsonReader.nextLong();
+					} else if (name.equalsIgnoreCase(JSON_PATIENT_TRIAL_END_DATE)) {
+						lEndDate = jsonReader.nextLong();
+					} else if (name.equalsIgnoreCase(JSON_TRIAL_ID)) {
+						trial_id = jsonReader.nextString();
+					} else {
+						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, MSG_PATIENT_ID + patient_id + MSG_UNKNOWN_PATIENT_PROPERTY + name + MSG_WITH_VALUE + jsonReader.nextString());
+					}
+				}
+				
+				if (patient_id != null && !patient_id.trim().isEmpty()) {
+					LocalDate startDate = lStartDate >= 0 ? LocalDate.ofEpochDay(lStartDate) : null;
+					LocalDate endDate = lEndDate >= 0 ? LocalDate.ofEpochDay(lEndDate) : null;
+					
+					Patient patient = new Patient(patient_id, trial_id, startDate, endDate);
+					
+					if (!patients.contains(patient)) {
+						patients.add(patient);
+					} else {
+						patients.set(patients.indexOf(patient), patient);
+					}
+				}
+				
+				jsonReader.endObject();
+			}
+			
+			jsonReader.endArray();
+		} catch (IOException | IllegalStateException | NumberFormatException | DateTimeException ex) {
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_PARSING_STREAM + ex.getMessage(), ex);
 		}
 	}
 	
@@ -317,22 +429,22 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 				while (jsonReader.hasNext()) {
 					String name = jsonReader.nextName();
 					
-					if (name.equalsIgnoreCase("patient_id")) {
+					if (name.equalsIgnoreCase(JSON_PATIENT_ID)) {
 						patient_id = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("clinic_id")) {
+					} else if (name.equalsIgnoreCase(JSON_CLINIC_ID)) {
 						clinic_id = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("reading_type")) {
+					} else if (name.equalsIgnoreCase(JSON_READING_TYPE)) {
 						reading_type = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("reading_id")) {
+					} else if (name.equalsIgnoreCase(JSON_READING_ID)) {
 						reading_id = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("reading_value")) {
+					} else if (name.equalsIgnoreCase(JSON_READING_VALUE)) {
 						reading_value = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("reading_value_unit")) {
+					} else if (name.equalsIgnoreCase(JSON_READING_VALUE_UNIT)) {
 						reading_value_unit = jsonReader.nextString();
-					} else if (name.equalsIgnoreCase("reading_date")) {
+					} else if (name.equalsIgnoreCase(JSON_READING_DATE)) {
 						reading_date = jsonReader.nextLong();
 					} else {
-						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, "Reading ID: " + reading_id + " unknown Reading property: " + name + " with value: " + jsonReader.nextString());
+						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, MSG_READING_ID + reading_id + MSG_UNKNOWN_READING_PROPERTY + name + MSG_WITH_VALUE + jsonReader.nextString());
 					}
 				}
 				
@@ -374,7 +486,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			
 			jsonReader.endArray();
 		} catch (IOException | IllegalStateException | NumberFormatException | DateTimeException ex) {
-			throw new TrialException("An error was encountered while parsing the import stream", ex);
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_PARSING_STREAM + ex.getMessage(), ex);
 		}
 	}
 }
