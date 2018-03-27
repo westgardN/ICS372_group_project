@@ -24,12 +24,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
@@ -40,27 +39,21 @@ import javafx.stage.Modality;
  * @author That Group
  *
  */
-public class PatientsView extends VBox implements Initializable {
-	@FXML
-	private TextField textField;
-	@FXML
-	private Button addButton;
+public class PatientsView extends AnchorPane implements Initializable {
 	@FXML
 	private ListView<Patient> listView;
+	private ClinicalTrialModel model;
+	private ListProperty<Patient> patientsProperty;
 	@FXML
 	private Button startPtTrial;
 	@FXML
 	private Button endPtTrial;
-	private ClinicalTrialModel model;
-	private ListProperty<Patient> patientsProperty;
-	private boolean clear;
 
 	/**
 	 * Constructs a new PatientsView instance
 	 */
 	public PatientsView() {
 		model = null;
-		clear = false;
 		patientsProperty = new SimpleListProperty<>();
 
 		try (InputStream stream = getClass().getResourceAsStream(Strings.PATIENTS_VIEW_FXML)) {
@@ -175,7 +168,7 @@ public class PatientsView extends VBox implements Initializable {
 				patient.setTrialStartDate(startDate);
 				patient.setTrialEndDate(null);
 				try {
-					model.updateOrAdd(patient);
+					model.update(patient);
 				} catch (TrialCatalogException ex) {
 					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 				}
@@ -249,7 +242,7 @@ public class PatientsView extends VBox implements Initializable {
 			if (isDateOnOrAfter(endDate, patient.getTrialStartDate()) && isDateOnOrBefore(endDate, LocalDate.now())) {
 				patient.setTrialEndDate(endDate);
 				try {
-					model.updateOrAdd(patient);
+					model.update(patient);
 				} catch (TrialCatalogException ex) {
 					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 				}
@@ -290,91 +283,9 @@ public class PatientsView extends VBox implements Initializable {
 		return answer;		
 	}
 	
-	private void clear() {
-		textField.setDisable(false);
-		textField.setText(Strings.EMPTY);
-		addButton.setText(Strings.ADD);
-	}
-	
-	/**
-	 * Adds a new patient to the system, but does not automatically add the patient
-	 * to the trial as an active member
-	 * 
-	 * @param event
-	 *            the triggering entity of this action
-	 */
-	@FXML
-	public void addPatient(ActionEvent event) {
-		try {
-			if (model.addPatient(textField.getText().trim())) {
-				PopupNotification.showPopupMessage(Strings.PATIENT_ADDED_MSG, getScene());
-				clear = true;
-				textField.setText(Strings.EMPTY);
-			} else {
-				PopupNotification.showPopupMessage(Strings.PATIENT_NOT_ADDED_MSG, getScene());
-			}
-		} catch (TrialCatalogException e) {
-			StringBuilder sb = new StringBuilder();
-			
-			sb.append(Strings.PATIENT_NOT_ADDED_MSG);
-			sb.append("\nReceived Error: ");
-			sb.append(e.getMessage());
-			PopupNotification.showPopupMessage(sb.toString(), getScene());
-		}
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		startPtTrial.setDisable(true);
 		endPtTrial.setDisable(true);
-		addButton.setDisable(true);
-
-		textField.setOnKeyPressed((event) -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				if (validate(textField.getText())) {
-					addPatient(null);
-				}
-			}
-		});
-		textField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (validate(newValue) && addButton.isDisabled()) {
-				addButton.setDisable(false);
-			} else if (!validate(newValue) && !addButton.isDisabled()) {
-				addButton.setDisable(true);
-				if (!clear) {
-					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
-				}
-				clear = false;
-			}
-		});
 	}
-
-	private boolean validate(String text) {
-		boolean answer = false;
-		
-		if (model != null && text != null && !text.trim().isEmpty()) {
-			if (text.matches("^[A-Za-z0-9_]+$")) {
-				answer = true;
-			}
-		}
-		
-		return answer;
-	}
-	
-	/**
-	 * Clears the input fields present on the input form and clears the
-	 * current selection in the list
-	 * 
-	 * @param event
-	 *            the triggering entity of this action
-	 */
-	public void clearForm(ActionEvent event) {
-		int index = listView.getSelectionModel().getSelectedIndex();
-		
-		if (index >= 0 && index < patientsProperty.size() && listView.getSelectionModel().isSelected(index)) {
-			listView.getSelectionModel().clearSelection(index);
-		}
-		clear();
-	}
-
 }

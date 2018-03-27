@@ -10,12 +10,16 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddPatientView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.PatientsView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ReadingView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ReadingsView?>
+<?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddClinicView?>
 <?import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicsView?>
 
-<BorderPane prefHeight="680" prefWidth="900" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"	fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView">
+<BorderPane prefHeight="680" prefWidth="900"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView">
 	<top>
 		<VBox>
 			<children>
@@ -23,10 +27,13 @@
 					<menus>
 						<Menu fx:id="menuFile" mnemonicParsing="false" text="File">
 							<items>
-								<MenuItem mnemonicParsing="false" onAction="#importReadings" text="Import Readings..." />
-								<MenuItem mnemonicParsing="false" onAction="#exportReadings" text="Export Readings..." />
+								<MenuItem mnemonicParsing="false" onAction="#importReadings"
+									text="Import Readings..." />
+								<MenuItem mnemonicParsing="false" onAction="#exportReadings"
+									text="Export Readings..." />
 								<SeparatorMenuItem />
-								<MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
+								<MenuItem mnemonicParsing="false" onAction="#exit"
+									text="Exit" />
 							</items>
 						</Menu>
 					</menus>
@@ -35,34 +42,84 @@
 		</VBox>
 	</top>
 	<center>
-		<SplitPane dividerPositions="0.33" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+		<SplitPane fx:id="mainSplitter" prefHeight="160.0"
+			prefWidth="200.0" BorderPane.alignment="CENTER">
 			<items>
-				<SplitPane dividerPositions="0.55" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+				<SplitPane fx:id="splitter" orientation="VERTICAL"
+					prefHeight="200.0" prefWidth="160.0">
 					<items>
-						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0"
+							prefWidth="160.0">
 							<children>
-								<Accordion expandedPane="$patientsPane" prefHeight="324.0" prefWidth="898.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+								<Accordion fx:id="accordion" prefHeight="324.0" prefWidth="898.0"
+									AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+									AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 									<panes>
-										<TitledPane animated="true" text="Clinics">
+										<TitledPane fx:id="clinicPane" animated="true" text="Clinic">
 											<content>
-												<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+												<AnchorPane minHeight="0.0" minWidth="0.0"
+													prefHeight="180.0" prefWidth="200.0">
 													<children>
-														<VBox AnchorPane.bottomAnchor="0.0"	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+														<VBox AnchorPane.bottomAnchor="0.0"
+															AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+															AnchorPane.topAnchor="0.0">
 															<children>
-																<ClinicsView fx:id="clinicsView"/>
+																<AnchorPane>
+																	<children>
+																		<StackPane prefHeight="125.0"
+																			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+																			AnchorPane.topAnchor="0.0">
+																			<AddClinicView fx:id="addClinicView"
+																				minHeight="0.0" minWidth="0.0" prefHeight="180.0" />
+																		</StackPane>
+																	</children>
+																</AnchorPane>
+																<AnchorPane VBox.vgrow="ALWAYS">
+																	<children>
+																		<StackPane prefHeight="225.0"
+																			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+																			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+																			VBox.vgrow="ALWAYS">
+																			<ClinicsView fx:id="clinicsView"
+																				minHeight="0.0" minWidth="0.0" prefHeight="337.0" />
+																		</StackPane>
+																	</children>
+																</AnchorPane>
 															</children>
 														</VBox>
 													</children>
 												</AnchorPane>
 											</content>
 										</TitledPane>
-										<TitledPane fx:id="patientsPane" animated="true" text="Patients">
+										<TitledPane animated="true" text="Patients">
 											<content>
-												<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+												<AnchorPane minHeight="0.0" minWidth="0.0"
+													prefHeight="180.0" prefWidth="200.0">
 													<children>
-														<VBox AnchorPane.bottomAnchor="0.0"	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+														<VBox AnchorPane.bottomAnchor="0.0"
+															AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+															AnchorPane.topAnchor="0.0">
 															<children>
-																<PatientsView fx:id="patientsView"/>
+																<AnchorPane>
+																	<children>
+																		<StackPane prefHeight="95.0"
+																			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+																			AnchorPane.topAnchor="0.0">
+																			<AddPatientView fx:id="addPatientView"
+																				minHeight="0.0" minWidth="0.0" prefHeight="180.0" />
+																		</StackPane>
+																	</children>
+																</AnchorPane>
+																<AnchorPane VBox.vgrow="ALWAYS">
+																	<children>
+																		<StackPane prefHeight="225.0"
+																			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+																			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+																			<PatientsView fx:id="patientsView"
+																				minHeight="0.0" minWidth="0.0" prefHeight="337.0" />
+																		</StackPane>
+																	</children>
+																</AnchorPane>
 															</children>
 														</VBox>
 													</children>
@@ -73,10 +130,12 @@
 								</Accordion>
 							</children>
 						</AnchorPane>
-						<ReadingView fx:id="readingView" minHeight="0.0" minWidth="0.0" prefHeight="100.0" />
+						<ReadingView fx:id="readingView" minHeight="0.0"
+							minWidth="0.0" prefHeight="100.0" />
 					</items>
 				</SplitPane>
-				<ReadingsView fx:id="readingsView" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+				<ReadingsView fx:id="readingsView" minHeight="0.0"
+					minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
 			</items>
 		</SplitPane>
 	</center>
@@ -86,7 +145,4 @@
 			</children>
 		</HBox>
 	</bottom>
-	<BorderPane.margin>
-    	<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-    </BorderPane.margin>
 </BorderPane>

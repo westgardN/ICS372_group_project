@@ -117,7 +117,12 @@ public class Clinic implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
+		builder.append(id);
+		builder.append(" [Name: ");
 		builder.append(name);
+		builder.append("] [Trial ");
+		builder.append(trialId);
+		builder.append("]");
 		return builder.toString();
 	}
 	

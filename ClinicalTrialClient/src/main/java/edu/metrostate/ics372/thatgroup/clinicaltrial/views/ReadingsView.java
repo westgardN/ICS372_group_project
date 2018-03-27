@@ -87,7 +87,6 @@ public class ReadingsView extends AnchorPane implements Initializable {
 			String prop = event.getPropertyName();
 			if (prop.equals(ClinicalTrialModel.PROP_JOURNAL)
 					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)
-					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_CLINIC)
 					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_READING)) {
 				fillTable();
 				try {

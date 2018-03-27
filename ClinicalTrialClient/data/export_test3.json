@@ -15,10 +15,6 @@
         {
             "clinic_id": "485",
             "clinic_name": "Sound as a Bell Health System"
-        },
-        {
-            "clinic_id": "2345",
-            "clinic_name": "Walter"
         }
     ],
     "patient_readings": [
@@ -43,32 +39,32 @@
             "clinic_id": "default",
             "reading_type": "weight",
             "reading_id": "48934j",
-            "reading_value": 150,
-            "reading_date": 1515354694000
+            "reading_value": 189,
+            "reading_date": 1515354694421
         },
         {
             "patient_id": "336558",
-            "clinic_id": "485",
+            "clinic_id": "medical",
             "reading_type": "blood_press",
             "reading_id": "85545",
             "reading_value": "120/60",
-            "reading_date": 1515354694000
+            "reading_date": 1515354694411
         },
         {
             "patient_id": "336558",
-            "clinic_id": "mercy",
+            "clinic_id": "default",
             "reading_type": "blood_press",
             "reading_id": "sadrsfdsfd",
             "reading_value": "123/1231",
-            "reading_date": 1521997528000
+            "reading_date": 1521997528757
         },
         {
             "patient_id": "15566",
-            "clinic_id": "mercy",
+            "clinic_id": "485",
             "reading_type": "temp",
             "reading_id": "15dde",
-            "reading_value": 101.3,
-            "reading_date": 1522080650000
+            "reading_value": 102.6,
+            "reading_date": 1522080650681
         },
         {
             "patient_id": "15566",
@@ -80,11 +76,11 @@
         },
         {
             "patient_id": "6",
-            "clinic_id": "mercy",
+            "clinic_id": "485",
             "reading_type": "steps",
             "reading_id": "151e5dde",
-            "reading_value": 999999,
-            "reading_date": 1522080650000
+            "reading_value": 3664,
+            "reading_date": 1522080650681
         },
         {
             "patient_id": "85545",
@@ -93,22 +89,6 @@
             "reading_id": "ern222",
             "reading_value": 150,
             "reading_date": 1522080650681
-        },
-        {
-            "patient_id": "12513",
-            "clinic_id": "default",
-            "reading_type": "blood_press",
-            "reading_id": "12453",
-            "reading_value": "120/80",
-            "reading_date": 1522111249620
-        },
-        {
-            "patient_id": "12513",
-            "clinic_id": "mercy",
-            "reading_type": "steps",
-            "reading_id": "1234567",
-            "reading_value": 123245,
-            "reading_date": 1522116627293
         }
     ]
 }

@@ -105,7 +105,7 @@ public class ClinicalTrialModel {
 	private ObservableList<Patient> patients;
 	private ObservableList<Clinic> clinics;
 	private ObservableList<Reading> journal;
-	private ObservableList<String> readingTypes;
+	private ObservableList<String> readingTypes = FXCollections.observableArrayList(ReadingFactory.getPrettyReadingTypes());
 
 	private TrialCatalog catalog;
 	/**
@@ -130,7 +130,6 @@ public class ClinicalTrialModel {
 		if (!clinics.contains(defaultClinic)) {
 			clinics.add(defaultClinic);
 		}
-		readingTypes = FXCollections.observableArrayList(ReadingFactory.getPrettyReadingTypes());
 		selectedPatient = null;
 		selectedClinic = null;
 		selectedReading = null;
@@ -167,6 +166,58 @@ public class ClinicalTrialModel {
 	 */
 	public Reading getSelectedReading() {
 		return selectedReading;
+	}
+	
+	/**
+	 * Notifies any registered listeners that the specified patient has been updated, if the patient
+	 * is in the trial's list of patients. Otherwise nothing happens.
+	 * 
+	 * @param patient the patient that was updated.
+	 * @throws TrialCatalogException 
+	 */
+	public void fireUpdatePatient(Patient patient) throws TrialCatalogException {
+		if (patient != null && catalog.exists(patient)) {
+			Patient oldValue = null;
+			pcs.firePropertyChange(PROP_UPDATE_PATIENT, oldValue, patient);
+		}
+	}
+	
+	/**
+	 * Notifies any registered listeners that the specified patient has been updated, if the patient
+	 * is in the trial's list of patients. Otherwise nothing happens.
+	 * 
+	 * @param patientId the patient that was updated.
+	 * @throws TrialCatalogException 
+	 */
+	public void fireUpdatePatient(String patientId) throws TrialCatalogException {
+		Patient patient = getPatient(patientId);
+		fireUpdatePatient(patient);
+	}
+	
+	/**
+	 * Notifies any registered listeners that the specified clinic has been updated,
+	 * if the clinic is in the trial's list of clinics. Otherwise nothing happens.
+	 * 
+	 * @param clinic the clinic that was updated.
+	 * @throws TrialCatalogException 
+	 */
+	public void fireUpdateClinic(Clinic clinic) throws TrialCatalogException {
+		if (clinic != null && catalog.exists(clinic)) {
+			Clinic oldValue = null;
+			pcs.firePropertyChange(PROP_UPDATE_CLINIC, oldValue, clinic);
+		}
+	}
+	
+	/**
+	 * Notifies any registered listeners that the specified clinic has been updated,
+	 * if the clinic is in the trial's list of clinics. Otherwise nothing happens.
+	 * 
+	 * @param clinicId the clinic that was updated.
+	 * @throws TrialCatalogException 
+	 */
+	public void fireUpdateClinic(String clinicId) throws TrialCatalogException {
+		Clinic clinic = getClinic(clinicId);
+		fireUpdateClinic(clinic);
 	}
 	
 	/**
@@ -471,7 +522,7 @@ public class ClinicalTrialModel {
 	 * @return true if the patient was update and false if the patient was not.
 	 * @throws TrialCatalogException 
 	 */
-	public boolean updateOrAdd(Patient patient) throws TrialCatalogException {
+	public boolean update(Patient patient) throws TrialCatalogException {
 		boolean answer = false;
 		
 		if (patient != null) {
@@ -494,43 +545,6 @@ public class ClinicalTrialModel {
 	}
 	
 	/**
-	 * Updates the specified clinic in the catalog. If the patient is not in the catalog, it
-	 * is added. Returns true if the clinic was updated and false if the clinic was not.
-	 * Fires a PROP_CLINICS change notification if the clinic was added to the catalog or
-	 * a PROP_UPDATE_CLINIC if the clinic was simply updated.
-	 * 
-	 * @param clinic the clinic to update 
-	 * @return true if the clinic was update and false if the clinic was not.
-	 * @throws TrialCatalogException 
-	 */
-	public boolean updateOrAdd(Clinic clinic) throws TrialCatalogException {
-		boolean answer = false;
-		
-		if (clinic != null) {
-			if (catalog.exists(clinic)) {
-				answer = catalog.update(clinic);
-				if (answer) {
-					pcs.firePropertyChange(PROP_UPDATE_CLINIC, null, clinic);
-					int index = clinics.indexOf(clinic);
-					
-					if (index >= 0) {
-						clinics.set(index, clinic);
-					}
-				}
-			} else {
-				answer = catalog.insert(clinic);
-				if (answer) {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
-					clinics.add(clinic);
-				}
-			}
-		}
-		
-		return answer;
-	}
-	
-	/**
 	 * Updates the specified patient in the catalog. If the patient is not in the catalog, it
 	 * is added. Returns true if the patient was updated and false if the patient was not.
 	 * Fires a PROP_PATIENTS change notification if the patient was added to the catalog or
@@ -540,7 +554,7 @@ public class ClinicalTrialModel {
 	 * @return true if the patient was update and false if the patient was not.
 	 * @throws TrialCatalogException 
 	 */
-	public boolean updateOrAdd(Reading reading) throws TrialCatalogException {
+	public boolean update(Reading reading) throws TrialCatalogException {
 		boolean answer = false;
 		
 		if (reading != null) {
@@ -548,11 +562,6 @@ public class ClinicalTrialModel {
 				answer = catalog.update(reading);
 				if (answer) {
 					pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
-					int index = journal.indexOf(reading);
-					
-					if (index >= 0) {
-						journal.set(index, reading);
-					}					
 				}
 			} else {
 				answer = catalog.insert(reading);
@@ -664,7 +673,7 @@ public class ClinicalTrialModel {
 		reading.setValue(value);
 		reading.setDate(date);
 		
-		return updateOrAdd(reading);
+		return update(reading);
 	}
 
 	/**
