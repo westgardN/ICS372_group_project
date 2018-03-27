@@ -13,6 +13,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
@@ -23,15 +25,11 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.views.AddClinicView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TitledPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -50,21 +48,6 @@ public class ClinicalTrialView implements Initializable {
 	Menu menuFile;
 
 	@FXML
-	SplitPane mainSplitter;
-	
-	@FXML
-	Accordion accordion;
-	
-	@FXML
-	TitledPane clinicPane;
-	
-	@FXML
-	SplitPane splitter;
-	
-	@FXML
-	AddPatientView addPatientView;
-
-	@FXML
 	PatientsView patientsView;
 
 	@FXML
@@ -72,9 +55,6 @@ public class ClinicalTrialView implements Initializable {
 
 	@FXML
 	ReadingsView readingsView;
-	
-	@FXML
-	AddClinicView addClinicView;
 	
 	@FXML
 	ClinicsView clinicsView;
@@ -100,74 +80,97 @@ public class ClinicalTrialView implements Initializable {
 		Clinic selectedClinic = model.getSelectedClinic();
 
 		if (file != null) {
-			try (InputStream is = new FileInputStream(file)) {
-				TrialDataImporter importer = TrialDataImportExporterFactory.getTrialImporter(file.getName());
-				
-				boolean success = importer.read(model.getTrial(), is);
-				if (success) {
-					int readingCount = 0;
-					int patientCount = 0;
-					int clinicCount = 0;
-					List<Reading> readings = importer.getReadings();
-					List<Clinic> clinics = importer.getClinics();
-					List<Patient> patients = importer.getPatients();
+			PopupNotification.showPopupMessage("Importing...", stage.getScene());
+			disableMenu(true);
+			ExecutorService executor = Executors.newCachedThreadPool();
+			
+			executor.submit(() -> {
+				try (InputStream is = new FileInputStream(file)) {
+					TrialDataImporter importer = TrialDataImportExporterFactory.getTrialImporter(file.getName());
 					
-					for (Clinic clinic : clinics) {
-						if (model.getClinic(clinic.getId()) == null) {
-							model.addClinic(clinic.getId(), clinic.getName() == null ? clinic.getId() : clinic.getName());
-							clinicCount++;
-						}
-					}
-					
-					for (Patient patient : patients) {
-						if (model.getPatient(patient.getId()) == null) {
-							model.addPatient(patient.getId(), patient.getTrialStartDate());
-							patientCount++;
-						}
-					}
-	
-					for (Reading reading : readings) {
-						if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
-							reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
-						}
+					boolean success = importer.read(model.getTrial(), is);
+					if (success) {
+						model.setSelectedClinic(null);
+						model.setSelectedPatient(null);
+						int readingCount = 0;
+						int patientCount = 0;
+						int clinicCount = 0;
+						List<Reading> readings = importer.getReadings();
+						List<Clinic> clinics = importer.getClinics();
+						List<Patient> patients = importer.getPatients();
 						
-						Clinic clinic = model.getClinic(reading.getClinicId());
-						
-						if (clinic == null) {
-							if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
-								++clinicCount;
-								clinic = model.getClinic(reading.getClinicId());
+						for (Clinic clinic : clinics) {
+							if (model.getClinic(clinic.getId()) == null) {
+								model.addClinic(clinic.getId(), clinic.getName() == null ? clinic.getId() : clinic.getName());
+								clinicCount++;
 							}
 						}
 						
-						Patient patient = model.getPatient(reading.getPatientId());					
-	
-						if (patient == null) {
-							if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
-								++patientCount;
-								patient = model.getPatient(reading.getPatientId());
+						for (Patient patient : patients) {
+							if (model.getPatient(patient.getId()) == null) {
+								model.addPatient(patient.getId(), patient.getTrialStartDate());
+								patientCount++;
 							}
 						}
-	
-						if (patient != null && clinic != null) {
-							if (model.importReading(reading)) {
-								readingCount++;
+		
+						for (Reading reading : readings) {
+							if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
+								reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
+							}
+							
+							Clinic clinic = model.getClinic(reading.getClinicId());
+							
+							if (clinic == null) {
+								if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
+									++clinicCount;
+									clinic = model.getClinic(reading.getClinicId());
+								}
+							}
+							
+							Patient patient = model.getPatient(reading.getPatientId());					
+		
+							if (patient == null) {
+								if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
+									++patientCount;
+									patient = model.getPatient(reading.getPatientId());
+								}
+							}
+		
+							if (patient != null && clinic != null) {
+								if (model.importReading(reading)) {
+									readingCount++;
+								}
 							}
 						}
+						model.setSelectedClinic(selectedClinic, true);
+						model.setSelectedPatient(selectedPatient, true);
+						final int cCount = clinicCount;
+						final int pCount = patientCount;
+						final int rCount = readingCount;
+						Platform.runLater(() -> {
+							PopupNotification.showPopupMessage(
+									"Imported " + cCount + " clinic(s), " + pCount + " patients(s) and " + rCount + " reading(s)",
+									stage.getScene());
+							disableMenu(false);
+						});
+					} else {
+						Platform.runLater(() -> {
+							PopupNotification.showPopupMessage("The file was not imported.", stage.getScene());
+							disableMenu(false);
+						});
 					}
-					PopupNotification.showPopupMessage(
-							"Imported " + clinicCount + " clinic(s), " + patientCount + " patients(s) and " + readingCount + " reading(s)",
-							stage.getScene());
-				} else {
-					PopupNotification.showPopupMessage("The file was not imported.", stage.getScene());
+				} catch (IOException | TrialException e) {
+					Platform.runLater(() -> {
+						PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
+						disableMenu(false);
+					});
 				}
-				model.setSelectedClinic(selectedClinic, true);
-				model.setSelectedPatient(selectedPatient, true);
-				
-			} catch (IOException | TrialException e) {
-				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
-			}
+			});
 		}
+	}
+
+	private void disableMenu(boolean value) {
+		menuFile.setDisable(value);
 	}
 
 	/**
@@ -187,18 +190,30 @@ public class ClinicalTrialView implements Initializable {
 		File file = fileChooser.showSaveDialog(stage);
 
 		if (file != null) {
-			try (OutputStream os = new FileOutputStream(file)){
-				List<Clinic> clinics = model.getClinics();
-				List<Reading> readings = model.getReadings();
-				TrialDataExporter exporter = TrialDataImportExporterFactory.getTrialExporter(file.getName());
-				exporter.setClinics(clinics);
-				exporter.setReadings(readings);
-				
-				exporter.write(os);
-				PopupNotification.showPopupMessage("Exported " + clinics.size() + " clinics(s)" + " and " + readings.size() + " reading(s)", stage.getScene());
-			} catch (TrialException | IOException e) {
-				PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
-			}
+			PopupNotification.showPopupMessage("Exporting...", stage.getScene());
+			disableMenu(true);
+			ExecutorService executor = Executors.newCachedThreadPool();
+			
+			executor.submit(() -> {
+				try (OutputStream os = new FileOutputStream(file)){
+					List<Clinic> clinics = model.getClinics();
+					List<Reading> readings = model.getReadings();
+					TrialDataExporter exporter = TrialDataImportExporterFactory.getTrialExporter(file.getName());
+					exporter.setClinics(clinics);
+					exporter.setReadings(readings);
+					
+					exporter.write(os);
+					Platform.runLater(() -> {
+						PopupNotification.showPopupMessage("Exported " + clinics.size() + " clinics(s)" + " and " + readings.size() + " reading(s)", stage.getScene());
+						disableMenu(false);
+					});
+				} catch (TrialException | IOException e) {
+					Platform.runLater(() -> {
+						PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
+						disableMenu(false);
+					});
+				}				
+			}); 
 		}
 	}
 
@@ -246,14 +261,9 @@ public class ClinicalTrialView implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			model = new ClinicalTrialModel();
-			mainSplitter.setDividerPosition(0, 0.333);
-			splitter.setDividerPosition(0, 0.43);
-			accordion.setExpandedPane(clinicPane);
-			addPatientView.setModel(model);
 			patientsView.setModel(model);
 			readingView.setModel(model);
 			readingsView.setModel(model);
-			addClinicView.setModel(model);
 			clinicsView.setModel(model);
 		} catch (TrialCatalogException e) {
 			if (stage != null) {
