@@ -55,10 +55,16 @@ public class WeightTest {
 	@Test
 	public void testWeightLongValue() {
 		Weight weight = new Weight();
-		
+	
+		UnitValue value = (UnitValue) weight.getValue();
+		Long longVal = (Long) value.getNumberValue();
+		String strUnit = value.getUnit();
+	
 		weight.setValue(LONG_VALUE);
+		UnitValue newVal = new UnitValue(longVal, strUnit);
 		
-		assertEquals(LONG_VALUE, weight.getValue());
+		assertEquals(newVal, value);
+		
 		
 	}
 	
@@ -70,9 +76,15 @@ public class WeightTest {
 	public void testWeightStringValue() {
 		Weight weight = new Weight();
 		
+		UnitValue value = (UnitValue) weight.getValue();
+		Long longVal = (Long) value.getNumberValue();
+		String strUnit = value.getUnit();
+	
 		weight.setValue(STRING_VALUE);
+		UnitValue newVal = new UnitValue(longVal, strUnit);
 		
-		assertEquals(STRING_VALUE, weight.getValue());
+		assertEquals(newVal, value);	
+		
 		
 	}
 	
@@ -102,11 +114,20 @@ public class WeightTest {
 		Weight weight = new Weight(DEFAULT_PATIENT_ID, DEFAULT_ID, DEFAULT_DATE, LONG_VALUE, DEFAULT_CLINIC_ID);
 		weight.setPatientId(DEFAULT_PATIENT_ID);
 		
+		UnitValue value = (UnitValue) weight.getValue();
+		Long longVal = (Long) value.getNumberValue();
+		String strUnit = value.getUnit();
+		UnitValue newVal = new UnitValue(longVal, strUnit);
+		
+		//assertEquals(LONG_VALUE, weight.getValue());
+		assertEquals(newVal, value);//for unit value
+		assertEquals(newVal, value);	
 		assertNotNull(weight);
 		assertEquals(DEFAULT_PATIENT_ID, weight.getPatientId());
 		assertEquals(DEFAULT_ID,  weight.getId());
 		assertEquals(DEFAULT_DATE, weight.getDate());
-		assertEquals(LONG_VALUE, weight.getValue());
+			
+	
 		assertEquals(DEFAULT_CLINIC_ID, weight.getClinicId());
 	}
 

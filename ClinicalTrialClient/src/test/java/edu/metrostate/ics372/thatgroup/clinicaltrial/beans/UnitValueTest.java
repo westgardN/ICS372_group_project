@@ -8,11 +8,12 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * @author nicolewestgard
+ * @author That Group
  *
  */
 public class UnitValueTest {
 
+	
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.UnitValue#hashCode()}.
 	 */
