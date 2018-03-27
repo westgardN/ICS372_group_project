@@ -19,6 +19,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogExce
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialManager;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -427,9 +428,11 @@ public class ClinicalTrialModel {
 		if (!catalog.exists(clinic)) {
 			answer = catalog.insert(clinic);
 			if (answer) {
-				int oldValue = clinics.size();
-				pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
-				clinics.add(clinic);
+				Platform.runLater(() -> {
+					int oldValue = clinics.size();
+					pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
+					clinics.add(clinic);
+				});
 			}
 		}
 		return answer;
@@ -453,9 +456,11 @@ public class ClinicalTrialModel {
 		if (!catalog.exists(patient)) {
 			answer = catalog.insert(patient);
 			if (answer) {
-				int oldValue = patients.size();
-				pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
-				patients.add(patient);
+				Platform.runLater(() -> {
+					int oldValue = patients.size();
+					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
+					patients.add(patient);
+				});
 			}
 		}
 		return answer;
@@ -478,14 +483,18 @@ public class ClinicalTrialModel {
 			if (catalog.exists(patient)) {
 				answer = catalog.update(patient);
 				if (answer) {
-					pcs.firePropertyChange(PROP_UPDATE_PATIENT, null, patient);
+					Platform.runLater(() -> {
+						pcs.firePropertyChange(PROP_UPDATE_PATIENT, null, patient);
+					});
 				}
 			} else {
 				answer = catalog.insert(patient);
 				if (answer) {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
-					patients.add(patient);
+					Platform.runLater(() -> {
+						int oldValue = patients.size();
+						pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
+						patients.add(patient);
+					});
 				}
 			}
 		}
@@ -510,19 +519,23 @@ public class ClinicalTrialModel {
 			if (catalog.exists(clinic)) {
 				answer = catalog.update(clinic);
 				if (answer) {
-					pcs.firePropertyChange(PROP_UPDATE_CLINIC, null, clinic);
-					int index = clinics.indexOf(clinic);
-					
-					if (index >= 0) {
-						clinics.set(index, clinic);
-					}
+					Platform.runLater(() -> {
+						pcs.firePropertyChange(PROP_UPDATE_CLINIC, null, clinic);
+						int index = clinics.indexOf(clinic);
+						
+						if (index >= 0) {
+							clinics.set(index, clinic);
+						}
+					});
 				}
 			} else {
 				answer = catalog.insert(clinic);
 				if (answer) {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
-					clinics.add(clinic);
+					Platform.runLater(() -> {
+						int oldValue = patients.size();
+						pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
+						clinics.add(clinic);
+					});
 				}
 			}
 		}
@@ -547,19 +560,23 @@ public class ClinicalTrialModel {
 			if (catalog.exists(reading)) {
 				answer = catalog.update(reading);
 				if (answer) {
-					pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
-					int index = journal.indexOf(reading);
-					
-					if (index >= 0) {
-						journal.set(index, reading);
-					}					
+					Platform.runLater(() -> {
+						pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
+						int index = journal.indexOf(reading);
+						
+						if (index >= 0) {
+							journal.set(index, reading);
+						}					
+					});
 				}
 			} else {
 				answer = catalog.insert(reading);
 				if (answer) {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-					journal.add(reading);
+					Platform.runLater(() -> {
+						int oldValue = patients.size();
+						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
+						journal.add(reading);
+					});
 				}
 			}
 		}
@@ -586,9 +603,11 @@ public class ClinicalTrialModel {
 			if (!catalog.exists(reading)) {
 				answer = catalog.insert(reading);
 				if (answer && journal != null) {
-					int oldValue = journal.size();
-					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-					journal.add(reading);
+					Platform.runLater(() -> {
+						int oldValue = journal.size();
+						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
+						journal.add(reading);
+					});
 				}
 			}
 		}
@@ -635,9 +654,11 @@ public class ClinicalTrialModel {
 		if (canAddReading(reading, true)) {
 			answer = catalog.insert(reading);
 			if (answer && journal != null) {
-				int oldValue = journal.size();
-				pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-				journal.add(reading);				
+				Platform.runLater(() -> {
+					int oldValue = journal.size();
+					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
+					journal.add(reading);				
+				});
 			}
 		}
 		
