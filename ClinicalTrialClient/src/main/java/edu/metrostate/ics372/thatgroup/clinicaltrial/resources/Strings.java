@@ -9,6 +9,10 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.resources;
  * @author That Group
  */
 public class Strings {
+	public static final String PROMPT_UNIT = "Unit";
+	public static final String PROMPT_DIASTOLIC = "Diastolic";
+	public static final String PROMPT_SYSTOLIC = "Systolic";
+	public static final String PROMPT_VALUE = "Value";
 	public static final String ADD = "Add";
 	public static final String UPDATE = "Update" ;
 	public static final String LOGO_PATH = "/img/logov2_256x256.png";
@@ -29,8 +33,9 @@ public class Strings {
 	public static final String ERR_DATE_TIME_MSG = "Please check the date and time fields to ensure that it falls between this patient's start date and now.";
 	public static final String ERR_ID_MSG = "Invalid reading id detected.  Please check the reading id input fields for errors.";
 	public static final String ERR_BLOOD_PRESSURE_MSG = "Invalid blood pressure detected.  Please check the blood pressure input fields for errors.";
-	public static final String ERR_TEMP_MSG = "Invalid temperature detected.  Please check the reading value input field for errors.";
-	public static final String ERR_VALUE_MSG = "Invalid input detected.  Please check the reading value input field for errors.";
+	public static final String ERR_TEMP_MSG = "Invalid temperature or unit detected. Please check the value and unit fields for errors.";
+	public static final String ERR_WEIGHT_MSG = "Invalid weight or unit detected. Please check the value and unit fields for errors.";
+	public static final String ERR_VALUE_MSG = "Invalid input detected. Please check the reading value input field for errors.";
 	public static final String ERR_RECEIVED_MSG = "Received error: ";
 	public static final String INACTIVE_PATIENT_MSG = "This patient is not active in the clinical trial.";
 	public static final String PATIENT_NOT_ADDED_MSG = "Unable to add patient to the trial.";

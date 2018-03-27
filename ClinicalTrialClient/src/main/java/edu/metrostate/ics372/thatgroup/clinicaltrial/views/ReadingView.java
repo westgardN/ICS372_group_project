@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.UnitValue;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.BloodPressure.BloodPressureValue;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
@@ -41,7 +42,7 @@ import javafx.scene.layout.VBox;
  */
 public class ReadingView extends VBox implements Initializable {
 	private enum ErrCause {
-		DATE, TIME, DATE_TIME, ID, BP, TEMP, VALUE;
+		DATE, TIME, DATE_TIME, ID, BP, TEMP, WEIGHT, VALUE;
 	}
 
 	/*
@@ -49,7 +50,8 @@ public class ReadingView extends VBox implements Initializable {
 	 * entered are of the correct format for their respective fields
 	 */
 	private class ReadingFormValidator {
-		private final String ALPHANUMERIC = "^[a-zA-Z0-9]+$"; 
+		private final String ALPHA_NUMERIC = "^[a-zA-Z0-9_]+$";
+		private final String ALPHA_NUMERIC_SPACE = "^[a-zA-Z0-9_\\s]+$";
 		private final String INT_INPUT = "^[0-9]*$"; 
 		private final String DECIMAL_INPUT = "[-+]?[0-9]*\\.?[0-9]+"; 
 		private final String HOURS = "^0*([0-9]|1[0-9]|2[0-3])$"; 
@@ -64,8 +66,6 @@ public class ReadingView extends VBox implements Initializable {
 				return false;
 			}
 			
-			readingType = readingType.toLowerCase();
-			
 			if (!hasValidDate(patient)) {
 				generateErrorMessage(ErrCause.DATE);
 				return false;
@@ -78,23 +78,25 @@ public class ReadingView extends VBox implements Initializable {
 				generateErrorMessage(ErrCause.DATE_TIME);
 				return false;
 			}
-			if (!isFilled(id) || !id.getText().matches(ALPHANUMERIC)) {
+			if (!isFilled(id) || !id.getText().matches(ALPHA_NUMERIC)) {
 				generateErrorMessage(ErrCause.ID);
 				return false;
 			}
-			if (readingType.equals(Strings.BP_VALUE) && !validateBloodPressure()) {
+			if (readingType.equals(ReadingFactory.PRETTY_BLOOD_PRESSURE) && !validateBloodPressure()) {
 				generateErrorMessage(ErrCause.BP);
 				return false;
-			}
-			if (readingType.equals(Strings.TEMP_VALUE) && !validateTemp()) {
+			} else if (readingType.equals(ReadingFactory.PRETTY_TEMPERATURE) && !validateTemp()) {
 				generateErrorMessage(ErrCause.TEMP);
 				return false;
-			}
-			if (!isFilled(value) && !readingType.equals(Strings.TEMP_VALUE) && !readingType.equals(Strings.BP_VALUE)
-					|| isFilled(value) && !value.getText().matches(INT_INPUT) && !readingType.equals(Strings.TEMP_VALUE)
-							&& !readingType.equals(Strings.BP_VALUE)) {
-				generateErrorMessage(ErrCause.VALUE);
+			} else if (readingType.equals(ReadingFactory.PRETTY_WEIGHT) && !validateWeight()) {
+				generateErrorMessage(ErrCause.WEIGHT);
 				return false;
+			} else if (!isFilled(value) || isFilled(value) && !value.getText().matches(INT_INPUT)) {
+				if (!readingType.equals(ReadingFactory.PRETTY_BLOOD_PRESSURE) && !readingType.equals(ReadingFactory.PRETTY_TEMPERATURE)
+						&& !readingType.equals(ReadingFactory.PRETTY_WEIGHT)) {
+					generateErrorMessage(ErrCause.VALUE);
+					return false;
+				}
 			}
 			return true;
 		}
@@ -104,13 +106,26 @@ public class ReadingView extends VBox implements Initializable {
 		}
 
 		private boolean validateBloodPressure() {
-			return isFilled(systolic) && systolic.getText().matches(INT_INPUT) && isFilled(diastolic)
-					&& diastolic.getText().matches(INT_INPUT);
+			return isFilled(multiValueA) && multiValueA.getText().matches(INT_INPUT)
+					&& isFilled(multiValueB) && multiValueA.getText().matches(INT_INPUT);
 		}
 
 		private boolean validateTemp() {
-			return isFilled(value) && value.getText().matches(INT_INPUT)
-					|| isFilled(value) && value.getText().matches(DECIMAL_INPUT);
+			boolean answer = false;
+			if ((isFilled(multiValueA) && (multiValueA.getText().matches(INT_INPUT) || multiValueA.getText().matches(DECIMAL_INPUT)))
+					&& (!isFilled(multiValueB) || (multiValueB.getText().matches(ALPHA_NUMERIC_SPACE)))) {
+				answer = true;
+			}
+			return answer; 
+		}
+
+		private boolean validateWeight() {
+			boolean answer = false;
+			if ((isFilled(multiValueA) && multiValueA.getText().matches(INT_INPUT))
+					&& (!isFilled(multiValueB) || (multiValueB.getText().matches(ALPHA_NUMERIC_SPACE)))) {
+				answer = true;
+			}
+			return answer; 
 		}
 
 		private boolean timeIsNotEmpty() {
@@ -186,6 +201,9 @@ public class ReadingView extends VBox implements Initializable {
 			case TEMP:
 				PopupNotification.showPopupMessage(Strings.ERR_TEMP_MSG, getScene());
 				break;
+			case WEIGHT:
+				PopupNotification.showPopupMessage(Strings.ERR_WEIGHT_MSG, getScene());
+				break;
 			case VALUE:
 				PopupNotification.showPopupMessage(Strings.ERR_VALUE_MSG, getScene());
 			default:
@@ -216,11 +234,11 @@ public class ReadingView extends VBox implements Initializable {
 	@FXML
 	private Button okBtn;
 	@FXML
-	private StackPane bloodPressStack;
+	private StackPane multiValue;
 	@FXML
-	private TextField systolic;
+	private TextField multiValueA;
 	@FXML
-	private TextField diastolic;
+	private TextField multiValueB;
 	
 	private ReadingFormValidator validator;
 	private boolean selected;
@@ -313,14 +331,26 @@ public class ReadingView extends VBox implements Initializable {
 		String strType = ReadingFactory.getPrettyReadingType(reading);
 		type.getSelectionModel().clearSelection();
 		type.getSelectionModel().select(strType);
-		if (strType.equals(ReadingFactory.PRETTY_BLOOD_PRESSURE)) {
-			BloodPressure bp = (BloodPressure) reading;
-			BloodPressureValue bpv = bp.getValue() != null ? (BloodPressureValue) bp.getValue() : null;
+		switch (strType) {
+			case ReadingFactory.PRETTY_BLOOD_PRESSURE:
+				BloodPressure bp = (BloodPressure) reading;
+				BloodPressureValue bpv = bp.getValue() != null ? (BloodPressureValue) bp.getValue() : null;
 
-			if (bpv != null) {
-				systolic.setText(String.valueOf(bpv.getSystolic()));
-				diastolic.setText(String.valueOf(bpv.getDiastolic()));
-			}
+				if (bpv != null) {
+					multiValueA.setText(String.valueOf(bpv.getSystolic()));
+					multiValueB.setText(String.valueOf(bpv.getDiastolic()));
+				}
+				break;
+			case ReadingFactory.PRETTY_TEMPERATURE:
+			case ReadingFactory.PRETTY_WEIGHT:
+				UnitValue uv = reading.getValue() != null ? (UnitValue) reading.getValue() : null;
+
+				if (uv != null) {
+					multiValueA.setText(String.valueOf(uv.getNumberValue()));
+					multiValueB.setText(String.valueOf(uv.getUnit()));
+				}
+				break;
+			default:
 		}
 
 		if (reading.getValue() != null) {
@@ -338,21 +368,40 @@ public class ReadingView extends VBox implements Initializable {
 		date.setValue(LocalDate.now());
 
 		type.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSel, newSel) -> {
-			if (newSel != null && newSel.toLowerCase().equals(Strings.BP_VALUE)) {
-				bloodPressStack.setVisible(true);
-				value.setVisible(false);
+			if (newSel != null) {
+				switch (newSel) {
+					case ReadingFactory.PRETTY_BLOOD_PRESSURE:
+						multiValueA.setPromptText(Strings.PROMPT_DIASTOLIC);
+						multiValueB.setPromptText(Strings.PROMPT_SYSTOLIC);
+						multiValue.setVisible(true);
+						value.setVisible(false);
+						break;
+					case ReadingFactory.PRETTY_TEMPERATURE:
+					case ReadingFactory.PRETTY_WEIGHT:
+						multiValueA.setPromptText(Strings.PROMPT_VALUE);
+						multiValueB.setPromptText(Strings.PROMPT_UNIT);
+						multiValue.setVisible(true);
+						value.setVisible(false);
+						break;
+					default:
+						multiValue.setVisible(false);
+						value.setVisible(true);
+				}
 			} else {
-				bloodPressStack.setVisible(false);
+				multiValue.setVisible(false);
 				value.setVisible(true);
 			}
 		});
 
 		okBtn.setOnAction((event) -> {
 			if (validator.validateInput()) {
+				boolean wasSelected = selected;
 				String msgS = selected ? Strings.READING_UPDATED_MSG : Strings.READING_ADDED_MSG;
 				String msgF = selected ? Strings.READING_NOT_UPDATED_MSG : Strings.READING_NOT_ADDED_MSG;
 				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), LocalDateTime.of(date.getValue(), getTime()))) {
-					id.setText(Strings.EMPTY);
+					if (!wasSelected) {
+						id.setText(Strings.EMPTY);
+					}
 					PopupNotification.showPopupMessage(msgS, getScene());
 				} else {
 					PopupNotification.showPopupMessage(msgF, getScene());
@@ -375,8 +424,14 @@ public class ReadingView extends VBox implements Initializable {
 		reading.setValue(rVal);
 		
 		try {
-			if (rType.toLowerCase().equals(Strings.BP_VALUE)) {
-				reading.setValue(String.format("%s/%s", systolic.getText(), diastolic.getText()));
+			switch (rType) {
+				case ReadingFactory.PRETTY_BLOOD_PRESSURE:
+					reading.setValue(String.format(BloodPressureValue.VALUE_FORMAT, multiValueA.getText(), BloodPressureValue.DELIM, multiValueB.getText()));
+					break;
+				case ReadingFactory.PRETTY_TEMPERATURE:
+				case ReadingFactory.PRETTY_WEIGHT:
+					reading.setValue(String.format(UnitValue.VALUE_FORMAT, multiValueA.getText(), UnitValue.DELIM, multiValueB.getText()));
+					break;
 			}
 			answer = model.updateOrAdd(reading);
 		} catch (TrialCatalogException e) {
@@ -406,8 +461,8 @@ public class ReadingView extends VBox implements Initializable {
 	private void clear() {
 		id.clear();
 		value.clear();
-		systolic.clear();
-		diastolic.clear();
+		multiValueA.clear();
+		multiValueB.clear();
 		date.setValue(LocalDate.now());
 		hour.clear();
 		minutes.clear();
