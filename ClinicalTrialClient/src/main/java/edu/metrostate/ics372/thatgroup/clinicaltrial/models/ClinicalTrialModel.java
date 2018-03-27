@@ -566,7 +566,7 @@ public class ClinicalTrialModel {
 						
 						if (index >= 0) {
 							journal.set(index, reading);
-						}					
+						}
 					});
 				}
 			} else {
@@ -657,7 +657,7 @@ public class ClinicalTrialModel {
 				Platform.runLater(() -> {
 					int oldValue = journal.size();
 					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-					journal.add(reading);				
+					journal.add(reading);
 				});
 			}
 		}

@@ -1,0 +1,115 @@
+{
+    "clinics": [
+        {
+            "clinic_id": "default",
+            "clinic_name": "default"
+        },
+        {
+            "clinic_id": "mercy",
+            "clinic_name": "mercy"
+        },
+        {
+            "clinic_id": "medical",
+            "clinic_name": "medical"
+        },
+        {
+            "clinic_id": "485",
+            "clinic_name": "Sound as a Bell Health System"
+        },
+        {
+            "clinic_id": "2345",
+            "clinic_name": "Walter"
+        }
+    ],
+    "patient_readings": [
+        {
+            "patient_id": "12513",
+            "clinic_id": "mercy",
+            "reading_type": "temp",
+            "reading_id": "1a545",
+            "reading_value": 98.6,
+            "reading_date": 1521987778341
+        },
+        {
+            "patient_id": "15566",
+            "clinic_id": "default",
+            "reading_type": "steps",
+            "reading_id": "1adf4",
+            "reading_value": 6958,
+            "reading_date": 1515354694431
+        },
+        {
+            "patient_id": "12513",
+            "clinic_id": "default",
+            "reading_type": "weight",
+            "reading_id": "48934j",
+            "reading_value": 150,
+            "reading_date": 1515354694000
+        },
+        {
+            "patient_id": "336558",
+            "clinic_id": "485",
+            "reading_type": "blood_press",
+            "reading_id": "85545",
+            "reading_value": "120/60",
+            "reading_date": 1515354694000
+        },
+        {
+            "patient_id": "336558",
+            "clinic_id": "mercy",
+            "reading_type": "blood_press",
+            "reading_id": "sadrsfdsfd",
+            "reading_value": "123/1231",
+            "reading_date": 1522127128000
+        },
+        {
+            "patient_id": "15566",
+            "clinic_id": "mercy",
+            "reading_type": "temp",
+            "reading_id": "15dde",
+            "reading_value": 101.3,
+            "reading_value_unit": "Kilo",
+            "reading_date": 1522131050000
+        },
+        {
+            "patient_id": "15566",
+            "clinic_id": "485",
+            "reading_type": "blood_press",
+            "reading_id": "52523",
+            "reading_value": "150/73",
+            "reading_date": 1522080650681
+        },
+        {
+            "patient_id": "6",
+            "clinic_id": "mercy",
+            "reading_type": "steps",
+            "reading_id": "151e5dde",
+            "reading_value": 999999,
+            "reading_date": 1522080650000
+        },
+        {
+            "patient_id": "85545",
+            "clinic_id": "485",
+            "reading_type": "weight",
+            "reading_id": "ern222",
+            "reading_value": 150,
+            "reading_date": 1522080650681
+        },
+        {
+            "patient_id": "12513",
+            "clinic_id": "default",
+            "reading_type": "blood_press",
+            "reading_id": "12453",
+            "reading_value": "120/80",
+            "reading_date": 1522111249620
+        },
+        {
+            "patient_id": "12513",
+            "clinic_id": "mercy",
+            "reading_type": "steps",
+            "reading_id": "1234567",
+            "reading_value": 123245,
+            "reading_date": 1522116627293
+        }
+    ]
+}

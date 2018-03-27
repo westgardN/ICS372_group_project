@@ -55,7 +55,7 @@ public class BloodPressure extends Reading {
 	 * 
 	 * @param value the new value for this reading. Cannot be null.
 	 * 
-	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#setValue(java.lang.Object)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading#setNumberValue(java.lang.Object)
 	 */
 	@Override
 	public void setValue(Object value) {
@@ -106,7 +106,8 @@ public class BloodPressure extends Reading {
 		private static final int INDEX_DIASTOLIC = 1;
 		private static final int INDEX_SYSTOLIC = 0;
 		private static final long serialVersionUID = -6450411049437598250L;
-		private static final String DELIM = "/";
+		public static final String VALUE_FORMAT = "%s%s%s";
+		public static final String DELIM = "/";
 		private int systolic;
 		private int diastolic;
 		

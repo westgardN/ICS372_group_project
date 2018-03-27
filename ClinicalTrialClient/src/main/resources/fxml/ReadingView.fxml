@@ -38,12 +38,12 @@
 				</TextField>
 				<StackPane prefWidth="148.0" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="4">
 					<children>
-						<StackPane fx:id="bloodPressStack">
+						<StackPane fx:id="multiValue">
 							<children>
 								<HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0" spacing="5.0">
 									<children>
-										<TextField fx:id="systolic" prefHeight="25.0" prefWidth="80.0" promptText="sys" />
-										<TextField fx:id="diastolic" prefHeight="25.0" prefWidth="80.0" promptText="dia" />
+										<TextField fx:id="multiValueA" prefHeight="25.0" prefWidth="80.0" promptText="sys" />
+										<TextField fx:id="multiValueB" prefHeight="25.0" prefWidth="80.0" promptText="dia" />
 									</children>
 								</HBox>
 							</children>
