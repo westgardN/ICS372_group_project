@@ -12,11 +12,16 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Steps;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Temp;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
- * The ReadingFactory is utility Factory class for creating Reading objects of various types.
+ * The ReadingFactory is a factory class for creating Reading objects of various types.
  * 
- * You can use ReadingFactory.
+ * You can use ReadingFactory to get the type of an existing Reading instance or use
+ * it to create type specific readings.
+ * 
+ * @see edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading
+ * 
  * @author That Group
  *
  */
@@ -94,7 +99,7 @@ public class ReadingFactory {
 			answer = new Weight();
 			break;
 		default:
-			throw new IllegalArgumentException("Unknown reading type: " + type);
+			throw new IllegalArgumentException(Strings.ERR_READING_FACTORY_UNKNOWN_READING_TYPE + type);
 		}
 		
 		return answer;
@@ -123,7 +128,7 @@ public class ReadingFactory {
 		} else if (reading != null) {
 			answer = reading.getClass().getName();
 		} else {
-			throw new IllegalArgumentException("reading cannot be null or is an unknown type.");
+			throw new IllegalArgumentException(Strings.ERR_READING_FACTORY_NULL_OR_UNKNOWN_READING);
 		}
 		
 		return answer;
@@ -151,7 +156,7 @@ public class ReadingFactory {
 		} else if (reading != null) {
 			answer = reading.getClass().getName();
 		} else {
-			throw new IllegalArgumentException("reading cannot be null or is an unknown type.");
+			throw new IllegalArgumentException(Strings.ERR_READING_FACTORY_NULL_OR_UNKNOWN_READING);
 		}
 		
 		return answer;

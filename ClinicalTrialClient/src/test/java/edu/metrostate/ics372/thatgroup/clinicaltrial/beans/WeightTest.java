@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import org.junit.Test;
 
 /**
- * @author vpalo
+ * @author That group
  *
  */
 public class WeightTest {
@@ -49,27 +49,61 @@ public class WeightTest {
 	}
 
 	/**
-	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#getValue()}.
+	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#getValue()} and 
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#setValue(java.lang.Object)}..
 	 */
 	@Test
-	public void testGetValue() {
-		fail("Not yet implemented");
+	public void testWeightLongValue() {
+		Weight weight = new Weight();
+	
+		UnitValue value = (UnitValue) weight.getValue();
+		Long longVal = (Long) value.getNumberValue();
+		String strUnit = value.getUnit();
+	
+		weight.setValue(LONG_VALUE);
+		UnitValue newVal = new UnitValue(longVal, strUnit);
+		
+		assertEquals(newVal, value);
+		
+		
 	}
-
+	
 	/**
-	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#setValue(java.lang.Object)}.
+	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#getValue()} and 
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#setValue(java.lang.Object)}..
 	 */
 	@Test
-	public void testSetValue() {
-		fail("Not yet implemented");
+	public void testWeightStringValue() {
+		Weight weight = new Weight();
+		
+		UnitValue value = (UnitValue) weight.getValue();
+		Long longVal = (Long) value.getNumberValue();
+		String strUnit = value.getUnit();
+	
+		weight.setValue(STRING_VALUE);
+		UnitValue newVal = new UnitValue(longVal, strUnit);
+		
+		assertEquals(newVal, value);	
+		
+		
 	}
+	
 
 	/**
 	 * Test method for {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Weight#Weight()}.
 	 */
 	@Test
 	public void testWeight() {
-		fail("Not yet implemented");
+		Weight weight = new Weight(null, null, null, STRING_VALUE, null);
+		weight.setPatientId(DEFAULT_PATIENT_ID);
+		
+		assertNotNull(weight);
+		assertEquals(DEFAULT_PATIENT_ID, weight.getPatientId());
+		assertNull(weight.getId());
+		assertNull(weight.getDate());
+		assertNotNull( weight.getValue());
+		assertNull(weight.getClinicId());
+		
 	}
 
 	/**
@@ -77,7 +111,24 @@ public class WeightTest {
 	 */
 	@Test
 	public void testWeightStringStringLocalDateTimeObjectString() {
-		fail("Not yet implemented");
+		Weight weight = new Weight(DEFAULT_PATIENT_ID, DEFAULT_ID, DEFAULT_DATE, LONG_VALUE, DEFAULT_CLINIC_ID);
+		weight.setPatientId(DEFAULT_PATIENT_ID);
+		
+		UnitValue value = (UnitValue) weight.getValue();
+		Long longVal = (Long) value.getNumberValue();
+		String strUnit = value.getUnit();
+		UnitValue newVal = new UnitValue(longVal, strUnit);
+		
+		//assertEquals(LONG_VALUE, weight.getValue());
+		assertEquals(newVal, value);//for unit value
+		assertEquals(newVal, value);	
+		assertNotNull(weight);
+		assertEquals(DEFAULT_PATIENT_ID, weight.getPatientId());
+		assertEquals(DEFAULT_ID,  weight.getId());
+		assertEquals(DEFAULT_DATE, weight.getDate());
+			
+	
+		assertEquals(DEFAULT_CLINIC_ID, weight.getClinicId());
 	}
 
 }

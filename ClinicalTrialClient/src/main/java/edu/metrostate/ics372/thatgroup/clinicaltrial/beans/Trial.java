@@ -9,11 +9,11 @@ import java.time.format.FormatStyle;
 import java.util.Objects;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
- * The Trial bean is used to hold information about a clinical trial. The trial
- * contains a list of all the patients that have and that currently are, a part
- * of it.
+ * The Trial bean is used to describe information about a clinical trial. The trial
+ * simply contains an ID, start date, and end date. 
  * 
  * The trial class also supports property change notification.
  * 
@@ -21,23 +21,33 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
  *
  */
 public class Trial implements Serializable, Cloneable {
+	private static final String MSG_NOT_YET_BEGUN = "This trial has not yet begun.";
+
+	private static final String MSG_CLOSE_PAREN = ")";
+
+	private static final String MSG_DASH = " - ";
+
+	private static final String MSG_OPEN_PAREN = " (";
+
+	private static final String MSG_TRIAL = "Trial ";
+
 	/**
-	 * The default trial id. 
+	 * The default ID used for a new Trial if one isn't provided.
 	 */
 	public static final String DEFAULT_ID = "default";
 
 	/**
-	 * The id property of the trial. Used to uniquely identify a trial
+	 * The PROP_ID event is fired whenever the id of this trial is changed.
 	 */
 	public static final String PROP_ID = "id";
 
 	/**
-	 * The start date property of the trial. Used to denote when the trial began
+	 * The PROP_START_DATE event is fired whenever the start date of this trial is changed.
 	 */
 	public static final String PROP_START_DATE = "startDate";
 
 	/**
-	 * The end date property of the trial. Used to denote when the trial ended
+	 * The PROP_END_DATE event is fired whenever the end date of this trial is changed.
 	 */
 	public static final String PROP_END_DATE = "endDate";
 
@@ -164,7 +174,9 @@ public class Trial implements Serializable, Cloneable {
 	public boolean hasPatientStartedTrial(Patient patient) {
 		boolean answer = false;
 
-		if (Objects.equals(patient.getTrialId(), id) && patient.getTrialStartDate() != null && patient.getTrialEndDate() == null) {
+		if (Objects.equals(patient.getTrialId(), id) 
+				&& patient.getTrialStartDate() != null
+				&& patient.getTrialEndDate() == null) {
 			answer = true;
 		}
 
@@ -185,7 +197,8 @@ public class Trial implements Serializable, Cloneable {
 	public boolean isPatientInTrial(Patient patient) {
 		boolean answer = false;
 
-		if (Objects.equals(patient.getTrialId(), id) && patient.getTrialStartDate() != null) {
+		if (Objects.equals(patient.getTrialId(), id)
+				&& patient.getTrialStartDate() != null) {
 			answer = true;
 		}
 
@@ -214,7 +227,7 @@ public class Trial implements Serializable, Cloneable {
 				return false;
 		} else {
 			if (other.id != null) {
-				if (id.compareToIgnoreCase(other.id) != 0) {
+				if (!id.equalsIgnoreCase(other.id)) {
 					return false;
 				}
 			} else {
@@ -229,18 +242,18 @@ public class Trial implements Serializable, Cloneable {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 		StringBuilder builder = new StringBuilder();
-		builder.append("Trial ");
+		builder.append(MSG_TRIAL);
 		builder.append(id);
 		if (startDate != null) {
-			builder.append(" (");
+			builder.append(MSG_OPEN_PAREN);
 			builder.append(startDate.format(formatter));
 			if (endDate != null) {
-				builder.append(" - ");
+				builder.append(MSG_DASH);
 				builder.append(endDate.format(formatter));
 			}
-			builder.append(")");
+			builder.append(MSG_CLOSE_PAREN);
 		} else {
-			builder.append("This trial has not yet begun.");
+			builder.append(MSG_NOT_YET_BEGUN);
 		}
 		
 		return builder.toString();
@@ -253,7 +266,7 @@ public class Trial implements Serializable, Cloneable {
         try {
             answer = (Trial) super.clone();
         } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Trial.clone(): This class doe not implement Cloneable.");
+            throw new RuntimeException(Strings.ERR_TRIAL_CLONE_NOT_SUPPOERTED);
         }
         
         answer.id = this.id;
