@@ -602,11 +602,13 @@ public class ClinicalTrialModel {
 		if (reading != null) {
 			if (!catalog.exists(reading)) {
 				answer = catalog.insert(reading);
-				if (answer && journal != null) {
+				if (answer) {
 					Platform.runLater(() -> {
-						int oldValue = journal.size();
-						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-						journal.add(reading);
+						if (journal != null) {
+							int oldValue = journal.size();
+							pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
+							journal.add(reading);
+						}
 					});
 				}
 			}
@@ -653,11 +655,13 @@ public class ClinicalTrialModel {
 		
 		if (canAddReading(reading, true)) {
 			answer = catalog.insert(reading);
-			if (answer && journal != null) {
+			if (answer) {
 				Platform.runLater(() -> {
-					int oldValue = journal.size();
-					pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-					journal.add(reading);
+					if (journal != null) {
+						int oldValue = journal.size();
+						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
+						journal.add(reading);
+					}
 				});
 			}
 		}
