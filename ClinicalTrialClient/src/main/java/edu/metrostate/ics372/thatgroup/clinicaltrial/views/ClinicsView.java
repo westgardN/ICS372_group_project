@@ -1,3 +1,6 @@
+/**
+ * File: ClinicsViews.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.views;
 
 import java.io.IOException;
@@ -18,12 +21,23 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * This view displays the clinics in a list which the user can select
+ * to view all readings from that clinic.
+ * 
+ * @author That Group
+ *
+ */ 
 public class ClinicsView extends AnchorPane implements Initializable {
 	@FXML
 	private ListView<Clinic> listView;
 	private ClinicalTrialModel model;
 	private ListProperty<Clinic> clinicProperty;
 
+	/**
+	 * Constructs a new ClinicsView instance
+	 */
+	
 	public ClinicsView() {
 		model = null;
 		clinicProperty = new SimpleListProperty<>();
@@ -39,10 +53,20 @@ public class ClinicsView extends AnchorPane implements Initializable {
 
 	}
 	
+	/**
+	 * Returns the view model associated with this view.
+	 * @return the model
+	 */
 	public ClinicalTrialModel getModel() {
 		return model;
 	}
-
+	
+	/**
+	 * Sets the view model associated with this view and adds listeners for the list
+	 * of clinics and the currently selected clinic from the list.
+	 * 
+	 * @param model model to set
+	 */
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
