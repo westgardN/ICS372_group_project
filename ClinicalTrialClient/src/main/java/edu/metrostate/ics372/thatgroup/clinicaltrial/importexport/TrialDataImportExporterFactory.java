@@ -4,26 +4,42 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.importexport;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
+ * The TrialDataImportExporterFactory is used to take the guess work out of which
+ * TrialDataImporter or TrialDataExporter to instantiate.
+ * 
  * @author That Group
  *
  */
 public class TrialDataImportExporterFactory {
+	private static final char PERIOD = '.';
+
+	/**
+	 * The file extension for an XML file
+	 */
 	public static final String XML = ".xml";
+	
+	/**
+	 * The file extension for a JSON file
+	 */
 	public static final String JSON = ".json";
 	
 	/**
-	 * @throws TrialException 
+	 * Returns a TrialDataExporter based on the supplied filename.
 	 * 
+	 * @return a TrialDataExporter based on the supplied filename.
+	 * @throws TrialException Indicates that filename is null or
+	 * an unsupported type.
 	 */
 	public static TrialDataExporter getTrialExporter(String filename) throws TrialException {
 		TrialDataExporter answer = null;
 		
 		if (filename != null) {
-	        String ext = "";
+	        String ext = Strings.EMPTY;
 	        
-	        int extIndex = filename.lastIndexOf('.');
+	        int extIndex = filename.lastIndexOf(PERIOD);
 	        
 	        if (extIndex >= 0) {
 	            ext = filename.substring(extIndex).toLowerCase();
@@ -34,27 +50,30 @@ public class TrialDataImportExporterFactory {
 	        		answer = new TrialDataJsonImportExporter();
 	        		break;
         		default:
-        			throw new TrialException(ext + " is not a supported export type.");
+        			throw new TrialException(String.format(Strings.ERR_TRIAL_DATA_EXPORTER_UNSUPPORTED_MSG, ext));
 	        }
 
 		} else {
-			throw new TrialException("filename cannot be null.");
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_EXPORTER_NULL_FILE);
 		}
 		
 		return answer;
 	}
 
 	/**
-	 * @throws TrialException 
+	 * Returns a TrialDataImporter based on the supplied filename.
 	 * 
+	 * @return a TrialDataImporter based on the supplied filename.
+	 * @throws TrialException Indicates that filename is null or
+	 * an unsupported type.
 	 */
 	public static TrialDataImporter getTrialImporter(String filename) throws TrialException {
 		TrialDataImporter answer = null;
 		
 		if (filename != null) {
-	        String ext = "";
+	        String ext = Strings.EMPTY;
 	        
-	        int extIndex = filename.lastIndexOf('.');
+	        int extIndex = filename.lastIndexOf(PERIOD);
 	        
 	        if (extIndex >= 0) {
 	            ext = filename.substring(extIndex).toLowerCase();
@@ -68,11 +87,11 @@ public class TrialDataImportExporterFactory {
 	        		answer = new TrialDataXmlImporter();
 	        		break;
         		default:
-        			throw new TrialException(ext + " is not a supported import type.");
+        			throw new TrialException(String.format(Strings.ERR_TRIAL_DATA_IMPORTER_UNSUPPORTED_MSG, ext));
 	        }
 
 		} else {
-			throw new TrialException("filename cannot be null.");
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_EXPORTER_NULL_FILE);
 		}
 		
 		return answer;

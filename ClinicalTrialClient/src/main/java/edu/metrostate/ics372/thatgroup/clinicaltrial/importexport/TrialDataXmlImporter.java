@@ -1,3 +1,6 @@
+/**
+ * File: TrialDataXmlImporter.java
+ */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.importexport;
 
 import java.io.IOException;
@@ -31,9 +34,25 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
- * A private class used for processing the layouts.xml file.
+ * The TrialDataJsonImportExporter is used for importing
+ * trial data from an XML file. It includes a method to read
+ * from an XML file.
+ * 
+ * @author That Group
+ *
  */
 public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImporter {
+	private static final String LOG_INVALID_READING_DATE = " invalid reading date.";
+	private static final String LOG_READING_ID = "Reading ID: ";
+	private static final String XML_DATE = "Date";
+	private static final String XML_PATIENT = "Patient";
+	private static final String XML_UNIT = "unit";
+	private static final String XML_VALUE = "Value";
+	private static final String XML_TYPE = "type";
+	private static final String XML_READING = "Reading";
+	private static final String XML_ID = "id";
+	private static final String XML_CLINIC = "Clinic";
+	private static final String XML_READING_SET = "ReadingSet";
 	private Trial trial;
 	private Clinic clinic;
 	private Reading reading;
@@ -43,8 +62,9 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 	private List<Patient> patients;
 	private List<Clinic> clinics;
 	
-	/*
-	 * constructor
+	/**
+	 * Initializes a new TrialDataXmlImporter with no trial and empty lists of Reading, Clinic
+	 * and Patient. 
 	 */
 	public TrialDataXmlImporter() {
 		readings = new LinkedList<>();
@@ -57,23 +77,23 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 	//////////////////////////// Begin ContentHandler Interface
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-		if (qName.equalsIgnoreCase("ReadingSet")) {
+		if (qName.equalsIgnoreCase(XML_READING_SET)) {
 			clinic = null;
 			reading = null;
 			sb = null;
-		} else if (qName.equalsIgnoreCase("Clinic")) {
+		} else if (qName.equalsIgnoreCase(XML_CLINIC)) {
 			sb = new StringBuilder();
 			clinic = new Clinic();
 			clinic.setTrialId(trial.getId());
 			int attsSize = atts != null ? atts.getLength() : 0;
 			if (attsSize > 0) {
-				clinic.setId(atts.getValue(Strings.EMPTY, "id"));
+				clinic.setId(atts.getValue(Strings.EMPTY, XML_ID));
 			}
-		} else if (qName.equalsIgnoreCase("Reading")) {
+		} else if (qName.equalsIgnoreCase(XML_READING)) {
 			int attsSize = atts != null ? atts.getLength() : 0;
 			if (attsSize > 0) {
-				String id = atts.getValue(Strings.EMPTY, "id");
-				String type = atts.getValue(Strings.EMPTY, "type");
+				String id = atts.getValue(Strings.EMPTY, XML_ID);
+				String type = atts.getValue(Strings.EMPTY, XML_TYPE);
 
 				if (id != null && type != null) {
 					reading = ReadingFactory.getReading(type);
@@ -83,11 +103,11 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 					}
 				}
 			}
-		} else if (qName.equalsIgnoreCase("Value")) {
+		} else if (qName.equalsIgnoreCase(XML_VALUE)) {
 			sb = new StringBuilder();
 			int attsSize = atts != null ? atts.getLength() : 0;
 			if (attsSize > 0) {
-				String unit = atts.getValue(Strings.EMPTY, "unit");
+				String unit = atts.getValue(Strings.EMPTY, XML_UNIT);
 				
 				if (unit != null) {
 					unitValue = new UnitValue();
@@ -96,22 +116,22 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 			} else {
 				unitValue = null;
 			}
-		} else if (qName.equalsIgnoreCase("Patient") || qName.equalsIgnoreCase("Date")) {
+		} else if (qName.equalsIgnoreCase(XML_PATIENT) || qName.equalsIgnoreCase(XML_DATE)) {
 			sb = new StringBuilder();
 		}
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (qName.equalsIgnoreCase("ReadingSet")) {
-		} else if (qName.equalsIgnoreCase("Clinic")) {
+		if (qName.equalsIgnoreCase(XML_READING_SET)) {
+		} else if (qName.equalsIgnoreCase(XML_CLINIC)) {
 			if (clinic != null) {
 				clinic.setName(sb.toString().trim());
 				if (!clinics.contains(clinic)) {
 					clinics.add(clinic);
 				}
 			}
-		} else if (qName.equalsIgnoreCase("Patient")) {
+		} else if (qName.equalsIgnoreCase(XML_PATIENT)) {
 			String patientId = sb.toString().trim();
 			
 			if (reading != null && patientId != null) {
@@ -121,7 +141,7 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 					patients.add(p);
 				}
 			}
-		} else if (qName.equalsIgnoreCase("Date")) {
+		} else if (qName.equalsIgnoreCase(XML_DATE)) {
 			if (reading != null) {
 				try {
 					String strLongDate = sb.toString().trim();
@@ -137,10 +157,10 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 					}
 				} catch (NumberFormatException ex) {
 					reading.setDate(LocalDateTime.now());
-					Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, "Reading ID: " + reading.getId() + " invalid reading date.");
+					Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.INFO, LOG_READING_ID + reading.getId() + LOG_INVALID_READING_DATE);
 				}
 			}
-		} else if (qName.equalsIgnoreCase("Value")) {
+		} else if (qName.equalsIgnoreCase(XML_VALUE)) {
 			if (reading != null) {
 				String unit = unitValue != null ? unitValue.getUnit() : Strings.EMPTY;
 				
@@ -151,7 +171,7 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 				}
 				
 			}
-		} else if (qName.equalsIgnoreCase("Reading")) {
+		} else if (qName.equalsIgnoreCase(XML_READING)) {
 			if (reading.getDate() == null) {
 				reading.setDate(LocalDateTime.now());
 			}
@@ -169,10 +189,8 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 		}
 	}
 
-	////////////////////////////// End ContentHandler Interface
-	////////////////////////////// ////////////////////////////////////
-	///////////////////////////// Begin ErrorHandler Interface
-	////////////////////////////// ///////////////////////////////////
+	////////////////////////////// End ContentHandler Interface ////////////////////////////
+	///////////////////////////// Begin ErrorHandler Interface	////////////////////////////
 	@Override
 	public void warning(SAXParseException ex) throws SAXException {
 		Logger.getLogger(TrialDataXmlImporter.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
@@ -206,10 +224,22 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 		return clinics;
 	}
 
+	/**
+	 * Reads the specified XML file and returns true if the import was successful.
+	 * If the import was successful, then the lists for the imported objects will be
+	 * valid after this method returns.
+	 * 
+	 * @param trial the trial that the data is being imported into. Cannot be null.
+	 * @param is the ImportStream to read the data from.
+	 * 
+	 * @return true if the import was successful; otherwise false is returned.
+	 * 
+	 * @throws TrialException indicates an error occurred while operating on the file. 
+	 */
 	@Override
 	public boolean read(Trial trial, InputStream is) throws TrialException {
 		if (trial == null || trial.getId() == null || trial.getId().trim().isEmpty() || is == null) {
-			throw new TrialException("trial cannot be null and must have a valid id. is must be a valid InputSteam");
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_BAD_TRIAL_AND_IS);
 		}
 		
 		boolean answer = false;
@@ -228,7 +258,7 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 			reader.parse(new InputSource(is));
 			answer = !readings.isEmpty();
 		} catch (ParserConfigurationException | SAXException | IOException ex) {
-			throw new TrialException("Unable to process import file as it does not appear to be a valid XML import file.", ex);
+			throw new TrialException(Strings.ERR_TRIAL_DATA_IMPORTER_BAD_XML, ex);
 		}
 
 		return answer;
