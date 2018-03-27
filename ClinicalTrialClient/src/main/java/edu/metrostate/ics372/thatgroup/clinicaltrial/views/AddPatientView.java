@@ -127,6 +127,12 @@ public class AddPatientView extends AnchorPane implements Initializable {
 		});
 	}
 
+	/**
+	 * Checks the string text to see if only contains letters or numbers.
+	 * 
+	 * @param text string to be validated
+	 * @return answer true if text passed validation, false if it does not.
+	 */
 	private boolean validate(String text) {
 		boolean answer = false;
 		
