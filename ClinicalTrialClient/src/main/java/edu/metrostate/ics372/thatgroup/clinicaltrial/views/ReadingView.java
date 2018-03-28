@@ -479,6 +479,7 @@ public class ReadingView extends VBox implements Initializable {
 	}
 
 	private void clear() {
+		id.setDisable(false);
 		id.clear();
 		value.clear();
 		multiValueA.clear();
