@@ -42,16 +42,8 @@ import javafx.stage.Stage;
  * @author That Group
  */
 public class ClinicalTrialView implements Initializable {
-	private static final String MSG_EXPORTED = "Exported";
-	private static final String MSG_IMPORTED = "Imported";
-	private static final String MSG_START_EXPORTING = "Exporting...";
-	private static final String SYS_PROP_USER_DIR = "user.dir";
-	private static final String PROMPT_EXTENSION_ALL = "*.*";
-	private static final String PROMPT_ALL_FILES = "All Files";
-	private static final String PROMPT_EXTENSION_JSON = "*.json";
-	private static final String PROMPT_EXPORT_FILES = "Export Files";
-	Stage stage;
-	ClinicalTrialModel model;
+	private Stage stage;
+	private ClinicalTrialModel model;
 
 	@FXML
 	Menu menuFile;
@@ -76,12 +68,12 @@ public class ClinicalTrialView implements Initializable {
 	 */
 	public void importReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Select Import File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Import Files", "*.json;*.xml"),
-				new ExtensionFilter("JSON Files", PROMPT_EXTENSION_JSON),
-				new ExtensionFilter("XML Files", "*.xml"),
-				new ExtensionFilter(PROMPT_ALL_FILES, PROMPT_EXTENSION_ALL));
-		fileChooser.setInitialDirectory(new File(System.getProperty(SYS_PROP_USER_DIR))); // user.dir is the directory the JVM
+		fileChooser.setTitle(Strings.PROMPT_SELECT_IMPORT_FILE);
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter(Strings.PROMPT_IMPORT_FILES, Strings.PROMPT_EXTENSION_IMPORT_FILE),
+				new ExtensionFilter(Strings.PROMPT_JSON_FILES, Strings.PROMPT_EXTENSION_JSON),
+				new ExtensionFilter(Strings.PROMPT_XML_FILES, Strings.PROMPT_EXTENSION_XML),
+				new ExtensionFilter(Strings.PROMPT_ALL_FILES, Strings.PROMPT_EXTENSION_ALL));
+		fileChooser.setInitialDirectory(new File(System.getProperty(Strings.SYS_PROP_USER_DIR))); // user.dir is the directory the JVM
 																					// was executed from.
 		File file = fileChooser.showOpenDialog(stage);
 
@@ -89,84 +81,86 @@ public class ClinicalTrialView implements Initializable {
 		Clinic selectedClinic = model.getSelectedClinic();
 
 		if (file != null) {
-			PopupNotification.showPopupMessage("Importing...", stage.getScene());
+			PopupNotification.showPopupMessage(Strings.MSG_START_IMPORTING, stage.getScene());
 			setDisable(true);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			
 			executor.submit(() -> {
-				try (InputStream is = new FileInputStream(file)) {
+				try {
 					TrialDataImporter importer = TrialDataImportExporterFactory.getTrialImporter(file.getName());
-					
-					boolean success = importer.read(model.getTrial(), is);
-					if (success) {
-						model.setSelectedClinic(null);
-						model.setSelectedPatient(null);
-						int readingCount = 0;
-						int patientCount = 0;
-						int clinicCount = 0;
-						List<Reading> readings = importer.getReadings();
-						List<Clinic> clinics = importer.getClinics();
-						List<Patient> patients = importer.getPatients();
-						
-						for (Clinic clinic : clinics) {
-							if (model.getClinic(clinic.getId()) == null) {
-								model.addClinic(clinic.getId(), clinic.getName() == null ? clinic.getId() : clinic.getName());
-								clinicCount++;
-							}
-						}
-						
-						for (Patient patient : patients) {
-							if (model.getPatient(patient.getId()) == null) {
-								model.addPatient(patient.getId(), patient.getTrialStartDate(), patient.getTrialEndDate());
-								patientCount++;
-							}
-						}
-		
-						for (Reading reading : readings) {
-							if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
-								reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
-							}
+
+					try (InputStream is = new FileInputStream(file)) {					
+						boolean success = importer.read(model.getTrial(), is);
+						if (success) {
+							model.setSelectedClinic(null);
+							model.setSelectedPatient(null);
+							int readingCount = 0;
+							int patientCount = 0;
+							int clinicCount = 0;
+							List<Reading> readings = importer.getReadings();
+							List<Clinic> clinics = importer.getClinics();
+							List<Patient> patients = importer.getPatients();
 							
-							Clinic clinic = model.getClinic(reading.getClinicId());
-							
-							if (clinic == null) {
-								if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
-									++clinicCount;
-									clinic = model.getClinic(reading.getClinicId());
+							for (Clinic clinic : clinics) {
+								if (model.getClinic(clinic.getId()) == null) {
+									model.addClinic(clinic.getId(), clinic.getName() == null ? clinic.getId() : clinic.getName());
+									clinicCount++;
 								}
 							}
 							
-							Patient patient = model.getPatient(reading.getPatientId());					
-		
-							if (patient == null) {
-								if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
-									++patientCount;
-									patient = model.getPatient(reading.getPatientId());
+							for (Patient patient : patients) {
+								if (model.getPatient(patient.getId()) == null) {
+									model.addPatient(patient.getId(), patient.getTrialStartDate(), patient.getTrialEndDate());
+									patientCount++;
 								}
 							}
-		
-							if (patient != null && clinic != null) {
-								if (model.importReading(reading)) {
-									readingCount++;
+			
+							for (Reading reading : readings) {
+								if (reading.getClinicId() == null || reading.getClinicId().trim().isEmpty()) {
+									reading.setClinicId(model.getSelectedOrDefaultClinic().getId());
+								}
+								
+								Clinic clinic = model.getClinic(reading.getClinicId());
+								
+								if (clinic == null) {
+									if (model.addClinic(reading.getClinicId(), reading.getClinicId())) {
+										++clinicCount;
+										clinic = model.getClinic(reading.getClinicId());
+									}
+								}
+								
+								Patient patient = model.getPatient(reading.getPatientId());					
+			
+								if (patient == null) {
+									if (model.addPatient(reading.getPatientId(), LocalDate.now())) {
+										++patientCount;
+										patient = model.getPatient(reading.getPatientId());
+									}
+								}
+			
+								if (patient != null && clinic != null) {
+									if (model.importReading(reading)) {
+										readingCount++;
+									}
 								}
 							}
+							model.setSelectedClinic(selectedClinic, true);
+							model.setSelectedPatient(selectedPatient, true);
+							final int cCount = clinicCount;
+							final int pCount = patientCount;
+							final int rCount = readingCount;
+							Platform.runLater(() -> {
+								PopupNotification.showPopupMessage(
+										String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, Strings.MSG_IMPORTED, cCount, pCount, rCount),
+										stage.getScene());
+								setDisable(false);
+							});
+						} else {
+							Platform.runLater(() -> {
+								PopupNotification.showPopupMessage(Strings.ERR_FILE_NOT_IMPORTED, stage.getScene());
+								setDisable(false);
+							});
 						}
-						model.setSelectedClinic(selectedClinic, true);
-						model.setSelectedPatient(selectedPatient, true);
-						final int cCount = clinicCount;
-						final int pCount = patientCount;
-						final int rCount = readingCount;
-						Platform.runLater(() -> {
-							PopupNotification.showPopupMessage(
-									String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, MSG_IMPORTED, cCount, pCount, rCount),
-									stage.getScene());
-							setDisable(false);
-						});
-					} else {
-						Platform.runLater(() -> {
-							PopupNotification.showPopupMessage(Strings.ERR_FILE_NOT_IMPORTED, stage.getScene());
-							setDisable(false);
-						});
 					}
 				} catch (IOException | TrialException e) {
 					Platform.runLater(() -> {
@@ -195,15 +189,15 @@ public class ClinicalTrialView implements Initializable {
 	public void exportReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(Strings.PROMPT_SELECT_EXPORT_FILE);
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter(PROMPT_EXPORT_FILES, PROMPT_EXTENSION_JSON),
-				new ExtensionFilter(PROMPT_ALL_FILES, PROMPT_EXTENSION_ALL));
-		fileChooser.setInitialDirectory(new File(System.getProperty(SYS_PROP_USER_DIR))); // user.dir is the directory the JVM
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter(Strings.PROMPT_EXPORT_FILES, Strings.PROMPT_EXTENSION_JSON),
+				new ExtensionFilter(Strings.PROMPT_ALL_FILES, Strings.PROMPT_EXTENSION_ALL));
+		fileChooser.setInitialDirectory(new File(System.getProperty(Strings.SYS_PROP_USER_DIR))); // user.dir is the directory the JVM
 																					// was executed from. We may want to
 																					// change this to something else.
 		File file = fileChooser.showSaveDialog(stage);
 
 		if (file != null) {
-			PopupNotification.showPopupMessage(MSG_START_EXPORTING, stage.getScene());
+			PopupNotification.showPopupMessage(Strings.MSG_START_EXPORTING, stage.getScene());
 			setDisable(true);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			
@@ -220,7 +214,7 @@ public class ClinicalTrialView implements Initializable {
 					exporter.write(os);
 					Platform.runLater(() -> {
 						PopupNotification.showPopupMessage(
-								String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, MSG_EXPORTED, clinics.size(), patients.size(), readings.size()),
+								String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, Strings.MSG_EXPORTED, clinics.size(), patients.size(), readings.size()),
 								stage.getScene());
 						setDisable(false);
 					});

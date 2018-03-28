@@ -41,6 +41,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
  *
  */
 public class TrialDataJsonImportExporter implements TrialDataImporter, TrialDataExporter {
+	private static final String INDENT = "    ";
 	private static final String MSG_UNKNOWN_READING_PROPERTY = " unknown Reading property: ";
 	private static final String MSG_READING_ID = "Reading ID: ";
 	private static final String MSG_WITH_VALUE = " with value: ";
@@ -162,7 +163,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 		
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os))) {
 			JsonWriter jsonWriter = new JsonWriter(bw);
-			jsonWriter.setIndent("    ");
+			jsonWriter.setIndent(INDENT);
 			
 			jsonWriter.beginObject();
 			
