@@ -127,6 +127,9 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 		} else if (qName.equalsIgnoreCase(XML_CLINIC)) {
 			if (clinic != null) {
 				clinic.setName(sb.toString().trim());
+				if (clinic.getName() == null) {
+					clinic.setName(clinic.getId());
+				}
 				if (!clinics.contains(clinic)) {
 					clinics.add(clinic);
 				}
