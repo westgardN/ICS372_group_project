@@ -41,6 +41,14 @@ import javafx.stage.Modality;
  *
  */
 public class PatientsView extends VBox implements Initializable {
+	private static final String REGEX_NO_SPECIAL_CHARS = "^[A-Za-z0-9_]+$";
+	private static final int MAX_ID_LENGTH = 32;
+	private static final String TITLE_OK = "OK";
+	private static final String HEADER_ENDED = "ended";
+	private static final String HEADER_STARTED = "started";
+	private static final String TITLE_END = "End";
+	private static final String TITLE_START = "Start";
+	private static final String NEW_LINE = "\n";
 	@FXML
 	private TextField textField;
 	@FXML
@@ -189,12 +197,12 @@ public class PatientsView extends VBox implements Initializable {
 		dialog.initOwner(this.getScene().getWindow());
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		
-		String action = start ? "Start" : "End";
+		String action = start ? TITLE_START : TITLE_END;
 		String title = String.format(Strings.SELECT_PATIENT_TRIAL_DATE_TITLE_FMT, action, patient.getId());
 		
 		dialog.setTitle(title);
 		
-		action = start ? "started" : "ended";
+		action = start ? HEADER_STARTED : HEADER_ENDED;
 		String header = String.format(Strings.SELECT_PATIENT_TRIAL_DATE_LABEL_FMT, patient.getId(), action);
 		
 		dialog.setHeaderText(header);
@@ -204,7 +212,7 @@ public class PatientsView extends VBox implements Initializable {
 		
 		dialog.setGraphic(new ImageView(img));
 		
-		ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+		ButtonType okButtonType = new ButtonType(TITLE_OK, ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 		
 		LocalDate ld = start ? patient.getTrialStartDate() : patient.getTrialEndDate();
@@ -314,7 +322,9 @@ public class PatientsView extends VBox implements Initializable {
 			StringBuilder sb = new StringBuilder();
 			
 			sb.append(Strings.PATIENT_NOT_ADDED_MSG);
-			sb.append("\nReceived Error: ");
+			sb.append(NEW_LINE);
+			sb.append(Strings.ERR_RECEIVED_MSG);
+			sb.append(NEW_LINE);
 			sb.append(e.getMessage());
 			PopupNotification.showPopupMessage(sb.toString(), getScene());
 		}
@@ -348,8 +358,8 @@ public class PatientsView extends VBox implements Initializable {
 	private boolean validate(String text) {
 		boolean answer = false;
 		
-		if (model != null && text != null && !text.trim().isEmpty()) {
-			if (text.matches("^[A-Za-z0-9_]+$")) {
+		if (model != null && text != null && !text.trim().isEmpty() && text.trim().length() <= MAX_ID_LENGTH) {
+			if (text.matches(REGEX_NO_SPECIAL_CHARS)) {
 				answer = true;
 			}
 		}

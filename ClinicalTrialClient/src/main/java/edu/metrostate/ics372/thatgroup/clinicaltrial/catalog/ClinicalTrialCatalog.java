@@ -18,6 +18,7 @@ import java.util.List;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
@@ -61,35 +62,35 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	private void validateParam(Trial trial) throws TrialCatalogException {
 		if (!isValidTrial(trial)) {
-			throw new TrialCatalogException("trial cannot be null and must have a valid id.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_TRIAL_INVALID);
 		}
 	}
 
 	private void validateParam(Clinic clinic) throws TrialCatalogException {
 		if (clinic == null || clinic.getId() == null || clinic.getId().trim().isEmpty()) {
-			throw new TrialCatalogException("clinic cannot be null and must have a valid id.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_CLINIC_INVALID);
 		}
 	}
 
 	private void validateParam(Patient patient) throws TrialCatalogException {
 		if (patient == null || patient.getId() == null || patient.getId().trim().isEmpty()) {
-			throw new TrialCatalogException("patient cannot be null and must have a valid id.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_PATIENT_INVALID);
 		}
 	}
 
 	private void validateParam(Reading reading) throws TrialCatalogException {
 		if (reading == null || reading.getId() == null || reading.getId().trim().isEmpty()) {
-			throw new TrialCatalogException("reading cannot be null and must have a valid id.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_READING_INVALID);
 		}
 	}
 
 	private void validateIsInit() throws TrialCatalogException {
 		if (!isValidTrial(trial)) {
-			throw new TrialCatalogException("There is no active trial. Please call init with a valid Trial.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_NO_ACTIVE_TRIAL);
 		}
 
 		if (!databaseExists(trial)) {
-			throw new TrialCatalogException("The database for the active trial has been deleted.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_HAS_BEEN_DELETED);
 		}
 	}
 
@@ -755,11 +756,16 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	/**
+	 * Used to retrieve all trial catalogs in the storage folder.
+	 * 
+	 * @return a list of String with one entry per catalog found.
+	 */
 	public List<String> getAllTrialCatalogNamesInDirectory() {
 		List<String> catalogs = new ArrayList<>();
 		String catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
 		for (File file : Paths.get(catalogStoragePath).toFile().listFiles()) {
-			String catalogName = file.getName().replaceAll(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION, "");
+			String catalogName = file.getName().replaceAll(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION, Strings.EMPTY);
 			catalogs.add(catalogName);
 		}
 		return catalogs;

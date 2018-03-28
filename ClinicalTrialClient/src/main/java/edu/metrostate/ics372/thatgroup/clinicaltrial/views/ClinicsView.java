@@ -33,6 +33,10 @@ import javafx.scene.layout.VBox;
  *
  */ 
 public class ClinicsView extends VBox implements Initializable {
+	private static final int MAX_CLINIC_ID = 32;
+	private static final int MAX_CLINIC_NAME = 255;
+	private static final String REGEX_NO_SPECIAL_CHARS = "^[A-Za-z0-9_]+$";
+	private static final String REGEX_NO_SPECIAL_CHARS_ALLOW_SPACES = "^[A-Za-z0-9_\\s]+$";
 	@FXML
 	private TextField clinicId;
 	@FXML
@@ -189,9 +193,9 @@ public class ClinicsView extends VBox implements Initializable {
 		});
 		
 		clinicId.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (validate(newValue, false) && validate(clinicName.getText(), true) && addButton.isDisabled()) {
+			if (validate(newValue, MAX_CLINIC_ID, false) && validate(clinicName.getText(), MAX_CLINIC_NAME, true) && addButton.isDisabled()) {
 				addButton.setDisable(false);
-			} else if (!validate(newValue, false) && !addButton.isDisabled()) {
+			} else if (!validate(newValue, MAX_CLINIC_ID, false) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
 				if (newValue != null && !newValue.trim().isEmpty()) {
 					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
@@ -200,9 +204,9 @@ public class ClinicsView extends VBox implements Initializable {
 		});
 		
 		clinicName.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (validate(newValue, true) && validate(clinicId.getText(), false) && addButton.isDisabled()) {
+			if (validate(newValue, MAX_CLINIC_NAME, true) && validate(clinicId.getText(), MAX_CLINIC_ID, false) && addButton.isDisabled()) {
 				addButton.setDisable(false);
-			} else if (!validate(newValue, true) && !addButton.isDisabled()) {
+			} else if (!validate(newValue, MAX_CLINIC_NAME, true) && !addButton.isDisabled()) {
 				addButton.setDisable(true);
 				if (newValue != null && !newValue.trim().isEmpty()) {
 					PopupNotification.showPopupMessage(Strings.SPECIAL_CHAR_MSG, getScene());
@@ -214,18 +218,18 @@ public class ClinicsView extends VBox implements Initializable {
 	private boolean validate() {
 		boolean answer = false;
 		
-		if (validate(clinicId.getText(), false) && validate(clinicName.getText(), true)) {
+		if (validate(clinicId.getText(), MAX_CLINIC_ID, false) && validate(clinicName.getText(), MAX_CLINIC_NAME, true)) {
 			answer = true;
 		}
 		
 		return answer;
 	}
 	
-	private boolean validate(String text, boolean allowSpace) {
+	private boolean validate(String text, int maxLength, boolean allowSpace) {
 		boolean answer = false;
-		String matchString = allowSpace ? "^[A-Za-z0-9_\\s]+$" : "^[A-Za-z0-9_]+$";
+		String matchString = allowSpace ? REGEX_NO_SPECIAL_CHARS_ALLOW_SPACES : REGEX_NO_SPECIAL_CHARS;
 		
-		if (text != null && !text.trim().isEmpty()) {
+		if (text != null && !text.trim().isEmpty() && text.trim().length() <= maxLength) {
 			if (text.matches(matchString)) {
 				answer = true;
 			}

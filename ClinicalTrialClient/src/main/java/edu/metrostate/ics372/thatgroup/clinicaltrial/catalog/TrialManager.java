@@ -5,6 +5,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
 /**
  * The <code>TrialManager</code> is responsible for returning a Singleton
@@ -43,15 +44,15 @@ public class TrialManager {
 	 * @param trial the trial to get an instance of.
 	 * @return the <code>TrialCatalog</code> that is associated with
 	 * this <code>TrialManager</code> instance.
-	 * @throws TrialCatalogException
+	 * @throws TrialCatalogException indicates the catalog is already initialized.
 	 */
 	public TrialCatalog getTrialCatalog(Trial trial) throws TrialCatalogException {
 		if (!catalog.isInit()) {
 			if (!catalog.init(trial)) {
-				throw new TrialCatalogException("Unable to initialize the catalog");
+				throw new TrialCatalogException(Strings.ERR_CATALOG_INIT);
 			}
 		} else {
-			throw new TrialCatalogException("Catalog already initialized.");
+			throw new TrialCatalogException(Strings.ERR_CATALOG_ALREADY_INIT);
 		}
 
 		return catalog;

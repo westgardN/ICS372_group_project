@@ -22,6 +22,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataExpor
 import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataImportExporterFactory;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.importexport.TrialDataImporter;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
@@ -41,6 +42,14 @@ import javafx.stage.Stage;
  * @author That Group
  */
 public class ClinicalTrialView implements Initializable {
+	private static final String MSG_EXPORTED = "Exported";
+	private static final String MSG_IMPORTED = "Imported";
+	private static final String MSG_START_EXPORTING = "Exporting...";
+	private static final String SYS_PROP_USER_DIR = "user.dir";
+	private static final String PROMPT_EXTENSION_ALL = "*.*";
+	private static final String PROMPT_ALL_FILES = "All Files";
+	private static final String PROMPT_EXTENSION_JSON = "*.json";
+	private static final String PROMPT_EXPORT_FILES = "Export Files";
 	Stage stage;
 	ClinicalTrialModel model;
 
@@ -69,10 +78,10 @@ public class ClinicalTrialView implements Initializable {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Import File");
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Import Files", "*.json;*.xml"),
-				new ExtensionFilter("JSON Files", "*.json"),
+				new ExtensionFilter("JSON Files", PROMPT_EXTENSION_JSON),
 				new ExtensionFilter("XML Files", "*.xml"),
-				new ExtensionFilter("All Files", "*.*"));
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
+				new ExtensionFilter(PROMPT_ALL_FILES, PROMPT_EXTENSION_ALL));
+		fileChooser.setInitialDirectory(new File(System.getProperty(SYS_PROP_USER_DIR))); // user.dir is the directory the JVM
 																					// was executed from.
 		File file = fileChooser.showOpenDialog(stage);
 
@@ -81,7 +90,7 @@ public class ClinicalTrialView implements Initializable {
 
 		if (file != null) {
 			PopupNotification.showPopupMessage("Importing...", stage.getScene());
-			disableMenu(true);
+			setDisable(true);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			
 			executor.submit(() -> {
@@ -108,7 +117,7 @@ public class ClinicalTrialView implements Initializable {
 						
 						for (Patient patient : patients) {
 							if (model.getPatient(patient.getId()) == null) {
-								model.addPatient(patient.getId(), patient.getTrialStartDate());
+								model.addPatient(patient.getId(), patient.getTrialStartDate(), patient.getTrialEndDate());
 								patientCount++;
 							}
 						}
@@ -149,28 +158,32 @@ public class ClinicalTrialView implements Initializable {
 						final int rCount = readingCount;
 						Platform.runLater(() -> {
 							PopupNotification.showPopupMessage(
-									"Imported " + cCount + " clinic(s), " + pCount + " patients(s) and " + rCount + " reading(s)",
+									String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, MSG_IMPORTED, cCount, pCount, rCount),
 									stage.getScene());
-							disableMenu(false);
+							setDisable(false);
 						});
 					} else {
 						Platform.runLater(() -> {
-							PopupNotification.showPopupMessage("The file was not imported.", stage.getScene());
-							disableMenu(false);
+							PopupNotification.showPopupMessage(Strings.ERR_FILE_NOT_IMPORTED, stage.getScene());
+							setDisable(false);
 						});
 					}
 				} catch (IOException | TrialException e) {
 					Platform.runLater(() -> {
 						PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
-						disableMenu(false);
+						setDisable(false);
 					});
 				}
 			});
 		}
 	}
 
-	private void disableMenu(boolean value) {
+	private void setDisable(boolean value) {
 		menuFile.setDisable(value);
+		clinicsView.setDisable(value);
+		patientsView.setDisable(value);
+		readingsView.setDisable(value);
+		readingView.setDisable(value);
 	}
 
 	/**
@@ -181,36 +194,40 @@ public class ClinicalTrialView implements Initializable {
 	 */
 	public void exportReadings(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Select Export File");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Export Files", "*.json"),
-				new ExtensionFilter("All Files", "*.*"));
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir"))); // user.dir is the directory the JVM
+		fileChooser.setTitle(Strings.PROMPT_SELECT_EXPORT_FILE);
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter(PROMPT_EXPORT_FILES, PROMPT_EXTENSION_JSON),
+				new ExtensionFilter(PROMPT_ALL_FILES, PROMPT_EXTENSION_ALL));
+		fileChooser.setInitialDirectory(new File(System.getProperty(SYS_PROP_USER_DIR))); // user.dir is the directory the JVM
 																					// was executed from. We may want to
 																					// change this to something else.
 		File file = fileChooser.showSaveDialog(stage);
 
 		if (file != null) {
-			PopupNotification.showPopupMessage("Exporting...", stage.getScene());
-			disableMenu(true);
+			PopupNotification.showPopupMessage(MSG_START_EXPORTING, stage.getScene());
+			setDisable(true);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			
 			executor.submit(() -> {
 				try (OutputStream os = new FileOutputStream(file)){
+					List<Patient> patients = model.getPatients();
 					List<Clinic> clinics = model.getClinics();
 					List<Reading> readings = model.getReadings();
 					TrialDataExporter exporter = TrialDataImportExporterFactory.getTrialExporter(file.getName());
+					exporter.setPatients(patients);
 					exporter.setClinics(clinics);
 					exporter.setReadings(readings);
 					
 					exporter.write(os);
 					Platform.runLater(() -> {
-						PopupNotification.showPopupMessage("Exported " + clinics.size() + " clinics(s)" + " and " + readings.size() + " reading(s)", stage.getScene());
-						disableMenu(false);
+						PopupNotification.showPopupMessage(
+								String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, MSG_EXPORTED, clinics.size(), patients.size(), readings.size()),
+								stage.getScene());
+						setDisable(false);
 					});
 				} catch (TrialException | IOException e) {
 					Platform.runLater(() -> {
 						PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
-						disableMenu(false);
+						setDisable(false);
 					});
 				}				
 			}); 

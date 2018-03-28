@@ -90,7 +90,7 @@ public class ClinicTest {
 		
 		Clinic clinic = new Clinic();
 		String result = clinic.toString();
-		String expected = clinic.getName();
+		String expected = "null";
 		assertEquals(expected, result);
 	}
 

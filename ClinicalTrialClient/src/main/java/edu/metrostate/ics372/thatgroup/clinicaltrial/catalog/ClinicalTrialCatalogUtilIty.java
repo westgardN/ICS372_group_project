@@ -29,6 +29,18 @@ import java.sql.Statement;
  *
  */
 public class ClinicalTrialCatalogUtilIty {
+	private static final String OS_XDG_DATA_HOME = "XDG_DATA_HOME";
+	private static final String OS_LIBRARY = "Library";
+	private static final String OS_APPDATA = "APPDATA";
+	private static final String SYS_PROP_OS_NAME = "os.name";
+	private static final String DB_FOLDER = "catalogs";
+	private static final String APP_TITLE = "Clinical Trial Client";
+	private static final String THAT_GROUP = "That Group";
+	private static final String SYS_PROP_USER_HOME = "user.home";
+	private static final String CONNECTOR_PREFIX = "jdbc:sqlite:";
+	private static final String WINDOWS = "WIN";
+	private static final String MAC = "MAC";
+	private static final String LINUX = "NUX";
 	private static String catalogStoragePath = getEnvironmentSpecificStoragePath();
 	public final static String CATALOG_EXTENSION = ".db";
 	private static String currentCatalogName;
@@ -53,7 +65,6 @@ public class ClinicalTrialCatalogUtilIty {
 	 * @throws SQLException
 	 */
 	public static Connection getConnection(String trialName) throws SQLException {
-		final String CONNECTOR_PREFIX = "jdbc:sqlite:";
 		Connection answer = null;
 		String connectionUrl = CONNECTOR_PREFIX + catalogStoragePath + trialName.concat(CATALOG_EXTENSION);
 		try {
@@ -75,21 +86,18 @@ public class ClinicalTrialCatalogUtilIty {
 	 */
 	public static String getEnvironmentSpecificStoragePath() {
 		Path path = null;
-		final String WINDOWS = "WIN";
-		final String MAC = "MAC";
-		final String LINUX = "NUX";
-		final String HOME = System.getProperty("user.home");
-		final String STORAGE_DIR = Paths.get("That Group", "Clinical Trial Client", "catalogs").toString();
-		String environment = System.getProperty("os.name").toUpperCase();
+		final String HOME = System.getProperty(SYS_PROP_USER_HOME);
+		final String STORAGE_DIR = Paths.get(THAT_GROUP, APP_TITLE, DB_FOLDER).toString();
+		String environment = System.getProperty(SYS_PROP_OS_NAME).toUpperCase();
 
 		if (environment.contains(WINDOWS)) {
-			path = Paths.get(System.getenv("APPDATA"), STORAGE_DIR);
+			path = Paths.get(System.getenv(OS_APPDATA), STORAGE_DIR);
 		} else if (environment.contains(MAC)) {
-			path = Paths.get(HOME, "Library", STORAGE_DIR);
+			path = Paths.get(HOME, OS_LIBRARY, STORAGE_DIR);
 		} else if (environment.contains(LINUX)) {
-			if (System.getenv("XDG_DATA_HOME") != null) {
-				path = Paths.get(System.getenv("XDG_DATA_HOME"), STORAGE_DIR);
-				System.out.println(Paths.get(System.getenv("XDG_DATA_HOME")));
+			if (System.getenv(OS_XDG_DATA_HOME) != null) {
+				path = Paths.get(System.getenv(OS_XDG_DATA_HOME), STORAGE_DIR);
+				System.out.println(Paths.get(System.getenv(OS_XDG_DATA_HOME)));
 			} else {
 				path = Paths.get(HOME, STORAGE_DIR);
 			}
