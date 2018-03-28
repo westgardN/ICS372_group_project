@@ -79,7 +79,7 @@ public class ClinicalTrialView implements Initializable {
 
 		Patient selectedPatient = model.getSelectedPatient();
 		Clinic selectedClinic = model.getSelectedClinic();
-
+		
 		if (file != null) {
 			PopupNotification.showPopupMessage(Strings.MSG_START_IMPORTING, stage.getScene());
 			setDisable(true);
@@ -87,6 +87,7 @@ public class ClinicalTrialView implements Initializable {
 			
 			executor.submit(() -> {
 				try {
+					model.setImporting(true);
 					TrialDataImporter importer = TrialDataImportExporterFactory.getTrialImporter(file.getName());
 
 					try (InputStream is = new FileInputStream(file)) {					
@@ -150,6 +151,7 @@ public class ClinicalTrialView implements Initializable {
 							final int pCount = patientCount;
 							final int rCount = readingCount;
 							Platform.runLater(() -> {
+								model.setImporting(false);
 								PopupNotification.showPopupMessage(
 										String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, Strings.MSG_IMPORTED, cCount, pCount, rCount),
 										stage.getScene());
@@ -157,6 +159,7 @@ public class ClinicalTrialView implements Initializable {
 							});
 						} else {
 							Platform.runLater(() -> {
+								model.setImporting(false);
 								PopupNotification.showPopupMessage(Strings.ERR_FILE_NOT_IMPORTED, stage.getScene());
 								setDisable(false);
 							});
@@ -164,6 +167,7 @@ public class ClinicalTrialView implements Initializable {
 					}
 				} catch (IOException | TrialException e) {
 					Platform.runLater(() -> {
+						model.setImporting(false);
 						PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 						setDisable(false);
 					});
