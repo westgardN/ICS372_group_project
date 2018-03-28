@@ -62,6 +62,7 @@ public class TrialManager {
 			catalog = catalogs.get(trial);
 		} else {
 			catalog = new ClinicalTrialCatalog();
+			catalogs.put(trial, catalog);
 		}
 		
 		initCatalog(catalog, trial);
