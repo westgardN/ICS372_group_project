@@ -24,7 +24,7 @@ public class TrialDataJsonImportExporterTest {
 	public void testReadAndWrite() {
 		System.out.println("Import / Export JSON Test: Importing...");
 			
-		String testFile = "./data/export_test.json";
+		String testFile = "./data/test_sample.json";
 		List<Reading> readings = null;
 		
 		try (InputStream is = new FileInputStream(Paths.get(testFile).toFile());){
@@ -37,16 +37,19 @@ public class TrialDataJsonImportExporterTest {
 			readings = importer.getReadings();
 			List<Clinic> clinics = importer.getClinics();
 			List<Patient> patients = importer.getPatients();
-			
+			int expectedReadings = 13;
+			int expectedClinics = 6;
+			int expectedPatients = 6;
+
 			assertNotNull(readings);
 			assertNotNull(clinics);
 			assertNotNull(patients);
 			assertFalse(readings.isEmpty());
 			assertFalse(clinics.isEmpty());
 			assertFalse(patients.isEmpty());
-			assertEquals(4, readings.size());
-			assertEquals(3, clinics.size());
-			assertEquals(3, patients.size());
+			assertEquals(expectedReadings, readings.size());
+			assertEquals(expectedClinics, clinics.size());
+			assertEquals(expectedPatients, patients.size());
 			
 			System.out.println("Clinics");
 			for (Clinic clinic : clinics) {

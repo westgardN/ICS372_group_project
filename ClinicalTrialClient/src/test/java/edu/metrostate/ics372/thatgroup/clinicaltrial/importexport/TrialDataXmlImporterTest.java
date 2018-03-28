@@ -27,9 +27,9 @@ public class TrialDataXmlImporterTest {
 
 	@Test
 	public void testXmlRead() {
-		System.out.println("testXmlRead");
+		System.out.println("Import / Export XML Test: Importing...");
 		
-		String testFile = "./data/sample.xml";
+		String testFile = "./data/test_sample.xml";
 		
 		try (InputStream is = new FileInputStream(Paths.get(testFile).toFile());){
 			Trial trial = new Trial();
@@ -41,6 +41,9 @@ public class TrialDataXmlImporterTest {
 			List<Reading> readings = importer.getReadings();
 			List<Clinic> clinics = importer.getClinics();
 			List<Patient> patients = importer.getPatients();
+			int expectedReadings = 5;
+			int expectedClinics = 1;
+			int expectedPatients = 4;
 			
 			assertNotNull(readings);
 			assertNotNull(clinics);
@@ -48,9 +51,9 @@ public class TrialDataXmlImporterTest {
 			assertFalse(readings.isEmpty());
 			assertFalse(clinics.isEmpty());
 			assertFalse(patients.isEmpty());
-			assertEquals(4, readings.size());
-			assertEquals(1, clinics.size());
-			assertEquals(3, patients.size());
+			assertEquals(expectedReadings, readings.size());
+			assertEquals(expectedClinics, clinics.size());
+			assertEquals(expectedPatients, patients.size());
 			
 			System.out.println("Clinics");
 			for (Clinic clinic : clinics) {

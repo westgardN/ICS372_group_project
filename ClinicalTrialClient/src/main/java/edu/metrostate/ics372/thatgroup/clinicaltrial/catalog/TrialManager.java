@@ -3,6 +3,9 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
@@ -17,10 +20,10 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
  * @author That Group
  */
 public class TrialManager {
-	private TrialCatalog catalog;
+	private Map<Trial, TrialCatalog> catalogs;
 
 	private TrialManager() {
-		catalog = new ClinicalTrialCatalog();
+		catalogs = new HashMap<Trial, TrialCatalog>();
 	}
 
 	/**
@@ -39,7 +42,9 @@ public class TrialManager {
 
 	/**
 	 * Gets the instance of the <code>TrialCatalog</code> that is associated with
-	 * this <code>TrialManager</code> instance.
+	 * this <code>TrialManager</code> instance. If a catalog hasn't been initialized
+	 * it will be initialized. If a catalog is already initialized an exception is
+	 * thrown.
 	 * 
 	 * @param trial the trial to get an instance of.
 	 * @return the <code>TrialCatalog</code> that is associated with
@@ -47,6 +52,24 @@ public class TrialManager {
 	 * @throws TrialCatalogException indicates the catalog is already initialized.
 	 */
 	public TrialCatalog getTrialCatalog(Trial trial) throws TrialCatalogException {
+		if (trial == null) {
+			throw new TrialCatalogException(Strings.ERR_CATALOG_TRIAL_INVALID);
+		}
+		
+		TrialCatalog catalog = null;
+		
+		if (catalogs.containsKey(trial)) {
+			catalog = catalogs.get(trial);
+		} else {
+			catalog = new ClinicalTrialCatalog();
+		}
+		
+		initCatalog(catalog, trial);
+		
+		return catalog;
+	}
+
+	private void initCatalog(TrialCatalog catalog, Trial trial) throws TrialCatalogException {
 		if (!catalog.isInit()) {
 			if (!catalog.init(trial)) {
 				throw new TrialCatalogException(Strings.ERR_CATALOG_INIT);
@@ -54,7 +77,5 @@ public class TrialManager {
 		} else {
 			throw new TrialCatalogException(Strings.ERR_CATALOG_ALREADY_INIT);
 		}
-
-		return catalog;
 	}
 }
