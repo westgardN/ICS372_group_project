@@ -222,6 +222,9 @@ public class ReadingView extends VBox implements Initializable {
 		}
 	}
 
+	private static final String PERDIOD = ".";
+	private static final String ADD_FLOATING_POINT = ".0";
+
 	private ClinicalTrialModel model;
 	@FXML
 	private ChoiceBox<Clinic> clinicChoice;
@@ -441,8 +444,8 @@ public class ReadingView extends VBox implements Initializable {
 				case ReadingFactory.PRETTY_TEMPERATURE:
 					String strVal = multiValueA.getText();
 					
-					if (!strVal.contains(".")) {
-						strVal = strVal + ".0";
+					if (!strVal.contains(PERDIOD)) {
+						strVal = strVal + ADD_FLOATING_POINT;
 					}
 					
 					reading.setValue(String.format(UnitValue.VALUE_FORMAT, strVal, UnitValue.DELIM, multiValueB.getText()));
