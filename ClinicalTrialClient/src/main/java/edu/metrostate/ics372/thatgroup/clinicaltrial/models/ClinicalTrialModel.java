@@ -46,52 +46,65 @@ import javafx.collections.ObservableList;
  */
 public class ClinicalTrialModel {
 	/**
-	 * The readings property.
+	 * The readings property PROP_READINGS is fired whenever a reading
+	 * has been added to the model.
 	 */
 	public static final String PROP_READINGS = "readings";
 	
 	/**
-	 * The patients property.
+	 * The patients property PROP_PATIENTS is fired whenever a patient
+	 * has been added to the model.
 	 */
 	public static final String PROP_PATIENTS = "patients";
 	
 	/**
-	 * The patients property.
+	 * The clinics property PROP_CLINICS is fired whenever a clinic
+	 * has been added to the model.
 	 */
 	public static final String PROP_CLINICS = "clinics";
 	
 	/**
-	 * The journal property.
+	 * The journal property PROP_JOURNAL is fired whenever the journal
+	 * changes to a new journal.
 	 */
 	public static final String PROP_JOURNAL = "journal";
 	
 	/**
-	 * The selectedReading property.
+	 * The PROP_SELECTED_READING property is fired whenever the selected
+	 * reading changes. This typically happens in response to a UI event.
 	 */
 	public static final String PROP_SELECTED_READING = "selectedReading";
 	
 	/**
-	 * The selectedPatient property.
+	 * The PROP_SELECTED_PATIENT property is fired whenever the selected
+	 * patient changes. This typically happens in response to a UI event.
 	 */
 	public static final String PROP_SELECTED_PATIENT = "selectedPatient";
 	
 	/**
-	 * The selectedPatient property.
+	 * The PROP_SELECTED_CLINIC property is fired whenever the selected
+	 * patient changes. This typically happens in response to a UI event.
 	 */
 	public static final String PROP_SELECTED_CLINIC = "selectedClinic";
 	
 	/**
-	 * The updatePatient property.
+	 * The PROP_UPDATE_PATIENT property is fired whenever the selected
+	 * patient's properties have changed. This typically happens in
+	 * response to a UI event.
 	 */
 	public static final String PROP_UPDATE_PATIENT = "updatePatient";
 	
 	/**
-	 * The updatePatient property.
+	 * The PROP_UPDATE_READING property is fired whenever the selected
+	 * reading's properties have changed. This typically happens in
+	 * response to a UI event.
 	 */
 	public static final String PROP_UPDATE_READING = "updateReading";
 	
 	/**
-	 * The updatePatient property.
+	 * The PROP_UPDATE_CLINIC property is fired whenever the selected
+	 * clinic's properties have changed. This typically happens in
+	 * response to a UI event.
 	 */
 	public static final String PROP_UPDATE_CLINIC = "updateClinic";
 	
@@ -109,6 +122,7 @@ public class ClinicalTrialModel {
 	private ObservableList<String> readingTypes;
 
 	private TrialCatalog catalog;
+	
 	/**
 	 * Initializes a new empty view model with the id of the trial set to the default trial name of ""
 	 * @throws TrialCatalogException 
@@ -200,7 +214,9 @@ public class ClinicalTrialModel {
 			Clinic oldValue = this.selectedClinic;
 			this.selectedClinic = selectedClinic;
 			if (notify) {
-				pcs.firePropertyChange(PROP_SELECTED_CLINIC, oldValue, this.selectedClinic);
+				Platform.runLater(() -> {
+					pcs.firePropertyChange(PROP_SELECTED_CLINIC, oldValue, this.selectedClinic);
+				});
 			}
 			
 			setJournal(this.selectedClinic, notify);
@@ -237,7 +253,9 @@ public class ClinicalTrialModel {
 			Patient oldValue = this.selectedPatient;
 			this.selectedPatient = selectedPatient;
 			if (notify) {
-				pcs.firePropertyChange(PROP_SELECTED_PATIENT, oldValue, this.selectedPatient);
+				Platform.runLater(() -> {
+					pcs.firePropertyChange(PROP_SELECTED_PATIENT, oldValue, this.selectedPatient);
+				});
 			}
 			
 			setJournal(this.selectedPatient, notify);
@@ -270,7 +288,9 @@ public class ClinicalTrialModel {
 			Reading oldValue = this.selectedReading;
 			this.selectedReading = selectedReading;
 			if (notify) {
-				pcs.firePropertyChange(PROP_SELECTED_READING, oldValue, this.selectedReading);
+				Platform.runLater(() -> {
+					pcs.firePropertyChange(PROP_SELECTED_READING, oldValue, this.selectedReading);
+				});
 			}
 		}
 	}
@@ -310,6 +330,7 @@ public class ClinicalTrialModel {
 	/**
 	 * 
 	 * @return A new list of all the readings in the catalog
+	 * @throws TrialCatalogException 
 	 */
 	public ObservableList<Reading> getReadings() throws TrialCatalogException {
 		return FXCollections.observableArrayList(catalog.getReadings());
@@ -367,12 +388,16 @@ public class ClinicalTrialModel {
 	 * @throws TrialCatalogException 
 	 */
 	public void setJournal(Clinic clinic, boolean notify) throws TrialCatalogException {
-		ObservableList<Reading> oldValue = journal;
-		journal = clinic != null ? FXCollections.observableArrayList(catalog.getReadings(clinic)) : null;
-		
-		if (notify) {
-			pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
-		}
+		Platform.runLater(() -> {
+			ObservableList<Reading> oldValue = journal;
+			try {
+				journal = clinic != null ? FXCollections.observableArrayList(catalog.getReadings(clinic)) : null;
+				if (notify) {
+					pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
+				}
+			} catch (TrialCatalogException e) {
+			}
+		});
 	}
 
 	/**
@@ -394,12 +419,17 @@ public class ClinicalTrialModel {
 	 * @throws TrialCatalogException 
 	 */
 	public void setJournal(Patient patient, boolean notify) throws TrialCatalogException {
-		ObservableList<Reading> oldValue = journal;
-		journal = patient != null ? FXCollections.observableArrayList(catalog.getReadings(patient)) : null;
-		
-		if (notify) {
-			pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
-		}
+		Platform.runLater(() -> {
+			ObservableList<Reading> oldValue = journal;
+			try {
+				journal = patient != null ? FXCollections.observableArrayList(catalog.getReadings(patient)) : null;
+				
+				if (notify) {
+					pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
+				}
+			} catch (TrialCatalogException e) {
+			}
+		});
 	}
 
 	/**
@@ -450,20 +480,7 @@ public class ClinicalTrialModel {
 	 * @throws TrialCatalogException 
 	 */
 	public boolean addPatient(String patientId, LocalDate startDate) throws TrialCatalogException {
-		Patient patient = new Patient(patientId, getTrialId(), startDate, null);
-		boolean answer = false;
-		
-		if (!catalog.exists(patient)) {
-			answer = catalog.insert(patient);
-			if (answer) {
-				Platform.runLater(() -> {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
-					patients.add(patient);
-				});
-			}
-		}
-		return answer;
+		return addPatient(patientId, startDate, null);
 	}
 	
 	/**
@@ -562,10 +579,12 @@ public class ClinicalTrialModel {
 				if (answer) {
 					Platform.runLater(() -> {
 						pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
-						int index = journal.indexOf(reading);
-						
-						if (index >= 0) {
-							journal.set(index, reading);
+						if (journal != null) {
+							int index = journal.indexOf(reading);
+							
+							if (index >= 0) {
+								journal.set(index, reading);
+							}
 						}
 					});
 				}
@@ -575,7 +594,9 @@ public class ClinicalTrialModel {
 					Platform.runLater(() -> {
 						int oldValue = patients.size();
 						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-						journal.add(reading);
+						if (journal != null) {
+							journal.add(reading);
+						}
 					});
 				}
 			}
@@ -586,7 +607,7 @@ public class ClinicalTrialModel {
 	
 	/**
 	 * Imports the specified reading. The currently selected patient and currently selected clinic
-	 * must be a valid patient and clinic reference. Importing differs from adding in that a patient
+	 * are ignored. Importing differs from adding in that a patient
 	 * simply has to be in the trial's list in order to import a reading for it whereas to add a reading, the
 	 * patient must be currently active in the trial or the reading date must be within the active dates
 	 * that the patient was in the trial.
@@ -806,6 +827,35 @@ public class ClinicalTrialModel {
 			
 		}
 		
+		return answer;
+	}
+
+	/**
+	 * Adds the specified patient to this model's trial with the specified start and end dates.
+	 * Returns true if the patient was added and false if the patient was not added. A patient
+	 * can only be added to a trial once. Fires a PROP_PATIENTS change notification
+	 * 
+	 * @param patientId the id of the patient to add 
+	 * @param startDate the date the patient started the trial, which may be null if the patient
+	 * hasn't actually started the trial yet.
+	 * @param endDate the date the patient ended the trial, which may be null.
+	 * @return true if the patient was added and false if the patient was not added.
+	 * @throws TrialCatalogException 
+	 */
+	public boolean addPatient(String patientId, LocalDate startDate, LocalDate endDate) throws TrialCatalogException {
+		Patient patient = new Patient(patientId, getTrialId(), startDate, endDate);
+		boolean answer = false;
+		
+		if (!catalog.exists(patient)) {
+			answer = catalog.insert(patient);
+			if (answer) {
+				Platform.runLater(() -> {
+					int oldValue = patients.size();
+					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
+					patients.add(patient);
+				});
+			}
+		}
 		return answer;
 	}
 }
