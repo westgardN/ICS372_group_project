@@ -129,6 +129,10 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * currently selected patient and their respective readings
 	 */
 	private void fillTable() {
-		readingTable.setItems(model.getJournal());
+		if (model.getJournal() != null) {
+			readingTable.setItems(model.getJournal());
+		} else if (model.getSelectedClinic() == null && model.getSelectedPatient() == null) {
+			readingTable.getItems().clear();
+		}
 	}
 }

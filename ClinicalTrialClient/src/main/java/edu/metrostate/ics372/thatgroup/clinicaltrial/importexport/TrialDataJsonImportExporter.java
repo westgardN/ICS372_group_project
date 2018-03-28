@@ -233,7 +233,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 		}
 		
 		if (patient.getTrialEndDate() != null) {
-			date = patient.getTrialStartDate().toEpochDay();
+			date = patient.getTrialEndDate().toEpochDay();
 			jsonWriter.name(JSON_PATIENT_TRIAL_END_DATE).value(date);
 			date = 0;
 		}		
@@ -332,7 +332,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					} else if (name.equalsIgnoreCase(JSON_CLINIC_NAME)) {
 						clinic_name = jsonReader.nextString();
 					} else if (name.equalsIgnoreCase(JSON_TRIAL_ID)) {
-						trial_id = jsonReader.nextString();
+						jsonReader.nextString(); // ignore for now and just swallow the prop
 					} else {
 						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, MSG_CLINIC_ID + clinic_id + MSG_UNKNOWN_CLINIC_PROPERTY + name + MSG_WITH_VALUE + jsonReader.nextString());
 					}
@@ -383,7 +383,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					} else if (name.equalsIgnoreCase(JSON_PATIENT_TRIAL_END_DATE)) {
 						lEndDate = jsonReader.nextLong();
 					} else if (name.equalsIgnoreCase(JSON_TRIAL_ID)) {
-						trial_id = jsonReader.nextString();
+						jsonReader.nextString(); // ignore for now and just swallow the prop
 					} else {
 						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, MSG_PATIENT_ID + patient_id + MSG_UNKNOWN_PATIENT_PROPERTY + name + MSG_WITH_VALUE + jsonReader.nextString());
 					}

@@ -42,7 +42,7 @@ import javafx.scene.layout.VBox;
  */
 public class ReadingView extends VBox implements Initializable {
 	private enum ErrCause {
-		DATE, TIME, DATE_TIME, ID, BP, TEMP, WEIGHT, VALUE;
+		DATE, TIME, DATE_TIME, ID, BP, TEMP, WEIGHT, VALUE, TYPE_CLINIC_PATIENT;
 	}
 
 	/*
@@ -50,6 +50,8 @@ public class ReadingView extends VBox implements Initializable {
 	 * entered are of the correct format for their respective fields
 	 */
 	private class ReadingFormValidator {
+		private final int MAX_INPUT_LENGTH = 32;
+		private final int MAX_VAL_LENGTH = 15;
 		private final String ALPHA_NUMERIC = "^[a-zA-Z0-9_]+$";
 		private final String ALPHA_NUMERIC_SPACE = "^[a-zA-Z0-9_\\s]+$";
 		private final String INT_INPUT = "^[0-9]*$"; 
@@ -63,6 +65,7 @@ public class ReadingView extends VBox implements Initializable {
 			Patient patient = patientChoice.getSelectionModel().getSelectedItem();
 			
 			if (readingType == null || clinic == null || patient == null) {
+				generateErrorMessage(ErrCause.TYPE_CLINIC_PATIENT);
 				return false;
 			}
 			
@@ -78,7 +81,7 @@ public class ReadingView extends VBox implements Initializable {
 				generateErrorMessage(ErrCause.DATE_TIME);
 				return false;
 			}
-			if (!isFilled(id) || !id.getText().matches(ALPHA_NUMERIC)) {
+			if (!isFilled(id) || !id.getText().matches(ALPHA_NUMERIC) || id.getText().trim().length() > MAX_INPUT_LENGTH) {
 				generateErrorMessage(ErrCause.ID);
 				return false;
 			}
@@ -91,7 +94,7 @@ public class ReadingView extends VBox implements Initializable {
 			} else if (readingType.equals(ReadingFactory.PRETTY_WEIGHT) && !validateWeight()) {
 				generateErrorMessage(ErrCause.WEIGHT);
 				return false;
-			} else if (!isFilled(value) || isFilled(value) && !value.getText().matches(INT_INPUT)) {
+			} else if (!isFilled(value) || !value.getText().matches(INT_INPUT) || value.getText().trim().length() > MAX_VAL_LENGTH) {
 				if (!readingType.equals(ReadingFactory.PRETTY_BLOOD_PRESSURE) && !readingType.equals(ReadingFactory.PRETTY_TEMPERATURE)
 						&& !readingType.equals(ReadingFactory.PRETTY_WEIGHT)) {
 					generateErrorMessage(ErrCause.VALUE);
@@ -102,18 +105,21 @@ public class ReadingView extends VBox implements Initializable {
 		}
 
 		private boolean isFilled(TextField textField) {
-			return textField.getText() != null && !textField.getText().isEmpty();
+			return textField.getText() != null && !textField.getText().isEmpty() && textField.getText().trim().length() <= MAX_INPUT_LENGTH;
 		}
 
 		private boolean validateBloodPressure() {
 			return isFilled(multiValueA) && multiValueA.getText().matches(INT_INPUT)
-					&& isFilled(multiValueB) && multiValueA.getText().matches(INT_INPUT);
+					&& multiValueA.getText().trim().length() <= MAX_VAL_LENGTH
+					&& isFilled(multiValueB) && multiValueA.getText().matches(INT_INPUT)
+					&& multiValueB.getText().trim().length() <= MAX_VAL_LENGTH;
 		}
 
 		private boolean validateTemp() {
 			boolean answer = false;
-			if ((isFilled(multiValueA) && (multiValueA.getText().matches(INT_INPUT) || multiValueA.getText().matches(DECIMAL_INPUT)))
-					&& (!isFilled(multiValueB) || (multiValueB.getText().matches(ALPHA_NUMERIC_SPACE)))) {
+			if ((isFilled(multiValueA) && (multiValueA.getText().matches(INT_INPUT) || multiValueA.getText().matches(DECIMAL_INPUT) && multiValueA.getText().trim().length() <= MAX_VAL_LENGTH))
+					&& (!isFilled(multiValueB) 
+						|| ((multiValueB.getText().matches(ALPHA_NUMERIC_SPACE) && multiValueB.getText().trim().length() <= MAX_VAL_LENGTH)))) {
 				answer = true;
 			}
 			return answer; 
@@ -121,8 +127,8 @@ public class ReadingView extends VBox implements Initializable {
 
 		private boolean validateWeight() {
 			boolean answer = false;
-			if ((isFilled(multiValueA) && multiValueA.getText().matches(INT_INPUT))
-					&& (!isFilled(multiValueB) || (multiValueB.getText().matches(ALPHA_NUMERIC_SPACE)))) {
+			if ((isFilled(multiValueA) && multiValueA.getText().matches(INT_INPUT) && multiValueA.getText().trim().length() <= MAX_VAL_LENGTH)
+					&& (!isFilled(multiValueB) || (multiValueB.getText().matches(ALPHA_NUMERIC_SPACE) && multiValueA.getText().trim().length() <= MAX_VAL_LENGTH))) {
 				answer = true;
 			}
 			return answer; 
@@ -206,6 +212,10 @@ public class ReadingView extends VBox implements Initializable {
 				break;
 			case VALUE:
 				PopupNotification.showPopupMessage(Strings.ERR_VALUE_MSG, getScene());
+				break;
+			case TYPE_CLINIC_PATIENT:
+				PopupNotification.showPopupMessage(Strings.ERR_TYPE_CLINIC_PATIENT_MSG, getScene());
+				break;
 			default:
 				break;
 			}
@@ -242,6 +252,7 @@ public class ReadingView extends VBox implements Initializable {
 	
 	private ReadingFormValidator validator;
 	private boolean selected;
+	
 	/**
 	 * Constructs a new ReadingView instance
 	 */
@@ -421,7 +432,6 @@ public class ReadingView extends VBox implements Initializable {
 		reading.setPatientId(pid);
 		reading.setId(rId);
 		reading.setDate(rDateTime);
-		reading.setValue(rVal);
 		
 		try {
 			switch (rType) {
@@ -432,9 +442,11 @@ public class ReadingView extends VBox implements Initializable {
 				case ReadingFactory.PRETTY_WEIGHT:
 					reading.setValue(String.format(UnitValue.VALUE_FORMAT, multiValueA.getText(), UnitValue.DELIM, multiValueB.getText()));
 					break;
+				default:
+					reading.setValue(rVal);
 			}
 			answer = model.updateOrAdd(reading);
-		} catch (TrialCatalogException e) {
+		} catch (TrialCatalogException | NumberFormatException e) {
 			PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
 		}
 		

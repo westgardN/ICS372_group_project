@@ -4,7 +4,7 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.resources;
 
 /**
- * Holds string literals used in the implementation of the user interface
+ * Holds string literals used in the implementation 
  *
  * @author That Group
  */
@@ -41,7 +41,7 @@ public class Strings {
 	public static final String ERR_DATE_MSG = "Date can not be empty and must be on or after this patient's start date up to today's date.";
 	public static final String ERR_TIME_MSG = "Invalid time detected.  Please check the time input fields for errors.";
 	public static final String ERR_DATE_TIME_MSG = "Please check the date and time fields to ensure that it falls between this patient's start date and now.";
-	public static final String ERR_ID_MSG = "Invalid reading id detected.  Please check the reading id input fields for errors.";
+	public static final String ERR_ID_MSG = "Invalid reading id detected. Please check the reading id input fields for errors and that there is less then 32 characters.";
 	public static final String ERR_BLOOD_PRESSURE_MSG = "Invalid blood pressure detected.  Please check the blood pressure input fields for errors.";
 	public static final String ERR_TEMP_MSG = "Invalid temperature or unit detected. Please check the value and unit fields for errors.";
 	public static final String ERR_WEIGHT_MSG = "Invalid weight or unit detected. Please check the value and unit fields for errors.";
@@ -58,7 +58,7 @@ public class Strings {
 	public static final String CLINIC_NOT_UPDATED_MSG = "Unable to update the clinic.";
 	public static final String CLINIC_ADDED_MSG = "Clinic has been added.";
 	public static final String CLINIC_UPDATED_MSG = "Clinic has been updated.";
-	public static final String SPECIAL_CHAR_MSG = "No special characters allowed.";
+	public static final String SPECIAL_CHAR_MSG = "No special characters allowed or maximum text length exceeded.";
 	public static final String SELECT_PATIENT_TRIAL_DATE_TITLE_FMT = "Select Trial %s Date for Patient %s";
 	public static final String SELECT_PATIENT_TRIAL_DATE_LABEL_FMT = "Please select the date patient %s %s the trial";
 	public static final String ERR_TRIAL_DATA_EXPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";
@@ -71,4 +71,16 @@ public class Strings {
 	public static final String ERR_TRIAL_DATA_IMPORTER_PARSING_STREAM = "An error was encountered while parsing the import stream:\n ";
 	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_TRIAL_AND_IS = "trial cannot be null and must have a valid id. is must be a valid InputSteam";
 	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_XML = "Unable to process import file as it does not appear to be a valid XML import file.";
+	public static final String ERR_FILE_NOT_IMPORTED = "The file was not imported.";
+	public static final String SUCCESS_FILE_IMPORTED_EXPORTED = "%S %s clinic(s), %d patient(s), and %d reading(s).";
+	public static final String PROMPT_SELECT_EXPORT_FILE = "Select Export File";
+	public static final String ERR_CATALOG_INIT = "Unable to initialize the catalog";
+	public static final String ERR_CATALOG_ALREADY_INIT = "Catalog already initialized.";
+	public static final String ERR_CATALOG_TRIAL_INVALID = "trial cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_CLINIC_INVALID = "clinic cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_PATIENT_INVALID = "patient cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_READING_INVALID = "reading cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_NO_ACTIVE_TRIAL = "There is no active trial. Please call init with a valid Trial.";
+	public static final String ERR_CATALOG_HAS_BEEN_DELETED = "The database for the active trial has been deleted.";
+	public static final String ERR_TYPE_CLINIC_PATIENT_MSG = "Please select a valid clinic, patient, and type for the reading.";
 }
