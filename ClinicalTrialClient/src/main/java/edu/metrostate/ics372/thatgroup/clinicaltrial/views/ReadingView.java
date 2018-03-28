@@ -439,6 +439,14 @@ public class ReadingView extends VBox implements Initializable {
 					reading.setValue(String.format(BloodPressureValue.VALUE_FORMAT, multiValueA.getText(), BloodPressureValue.DELIM, multiValueB.getText()));
 					break;
 				case ReadingFactory.PRETTY_TEMPERATURE:
+					String strVal = multiValueA.getText();
+					
+					if (!strVal.contains(".")) {
+						strVal = strVal + ".0";
+					}
+					
+					reading.setValue(String.format(UnitValue.VALUE_FORMAT, strVal, UnitValue.DELIM, multiValueB.getText()));
+					break;
 				case ReadingFactory.PRETTY_WEIGHT:
 					reading.setValue(String.format(UnitValue.VALUE_FORMAT, multiValueA.getText(), UnitValue.DELIM, multiValueB.getText()));
 					break;
