@@ -481,8 +481,8 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 				if (reading_type != null && !reading_type.trim().isEmpty()) {
 					Reading reading = ReadingFactory.getReading(reading_type);
 					reading.setId(reading_id != null ? reading_id.trim() : null);
-					reading.setClinicId(clinic_id != null ? clinic_id.trim() : null);
-					reading.setPatientId(patient_id != null ? patient_id.trim() : null);
+					reading.setClinicId(clinic_id != null ? clinic_id.trim() : Clinic.DEFAULT_ID);
+					reading.setPatientId(patient_id != null ? patient_id.trim() : Patient.DEFAULT_ID);
 					reading_value = reading_value_unit != null ? reading_value + UnitValue.DELIM + reading_value_unit : reading_value;
 					reading.setValue(reading_value);
 					reading.setDate(Instant.ofEpochMilli(reading_date).atZone(ZoneId.systemDefault()).toLocalDateTime());
