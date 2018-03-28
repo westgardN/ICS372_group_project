@@ -73,7 +73,6 @@ public class Strings {
 	public static final String ERR_TRIAL_DATA_IMPORTER_BAD_XML = "Unable to process import file as it does not appear to be a valid XML import file.";
 	public static final String ERR_FILE_NOT_IMPORTED = "The file was not imported.";
 	public static final String SUCCESS_FILE_IMPORTED_EXPORTED = "%S %s clinic(s), %d patient(s), and %d reading(s).";
-	public static final String PROMPT_SELECT_EXPORT_FILE = "Select Export File";
 	public static final String ERR_CATALOG_INIT = "Unable to initialize the catalog";
 	public static final String ERR_CATALOG_ALREADY_INIT = "Catalog already initialized.";
 	public static final String ERR_CATALOG_TRIAL_INVALID = "trial cannot be null and must have a valid id.";
@@ -83,4 +82,21 @@ public class Strings {
 	public static final String ERR_CATALOG_NO_ACTIVE_TRIAL = "There is no active trial. Please call init with a valid Trial.";
 	public static final String ERR_CATALOG_HAS_BEEN_DELETED = "The database for the active trial has been deleted.";
 	public static final String ERR_TYPE_CLINIC_PATIENT_MSG = "Please select a valid clinic, patient, and type for the reading.";
+	public static final String PROMPT_SELECT_IMPORT_FILE = "Select Import File";
+	public static final String PROMPT_SELECT_EXPORT_FILE = "Select Export File";
+	public static final String PROMPT_EXTENSION_ALL = "*.*";
+	public static final String PROMPT_ALL_FILES = "All Files";
+	public static final String PROMPT_JSON_FILES = "JSON Files";
+	public static final String PROMPT_XML_FILES = "XML Files";
+	public static final String PROMPT_EXTENSION_JSON = "*.json";
+	public static final String PROMPT_EXTENSION_IMPORT_FILE = "*.json;*.xml";
+	public static final String PROMPT_EXPORT_FILES = "Export Files";
+	public static final String PROMPT_IMPORT_FILES = "Import Files";
+	public static final String PROMPT_EXTENSION_XML = "*.xml";
+	public static final String MSG_EXPORTED = "Exported";
+	public static final String MSG_IMPORTED = "Imported";
+	public static final String MSG_START_EXPORTING = "Exporting...";
+	public static final String MSG_START_IMPORTING = "Importing...";
+	public static final String SYS_PROP_USER_DIR = "user.dir";
+	
 }
