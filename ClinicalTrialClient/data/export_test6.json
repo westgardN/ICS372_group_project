@@ -35,7 +35,6 @@
         {
             "patient_id": "15566",
             "patient_trial_start_date": 14263,
-            "patient_trial_end_date": 14763,
             "trial_id": "default"
         },
         {
@@ -144,6 +143,15 @@
             "reading_id": "1234567",
             "reading_value": 123245,
             "reading_date": 1522116627293
+        },
+        {
+            "patient_id": "15566",
+            "clinic_id": "2345",
+            "reading_type": "temp",
+            "reading_id": "2342345",
+            "reading_value": 123.0,
+            "reading_value_unit": "F",
+            "reading_date": 1522207836514
         }
     ]
 }

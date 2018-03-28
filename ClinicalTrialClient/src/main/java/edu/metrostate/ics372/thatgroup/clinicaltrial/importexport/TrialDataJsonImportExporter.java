@@ -255,7 +255,22 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			{
 				boolean hasValue = reading.getValue() instanceof UnitValue;
 				UnitValue unitValue = (UnitValue) reading.getValue();
-				Double value = hasValue ? (Double) unitValue.getNumberValue() : 0.0;
+				Double value = 0.0;
+				
+				if (hasValue) {
+					Number numVal = unitValue.getNumberValue();
+					
+					if (numVal instanceof Double) {
+						value = (Double)numVal;
+					} else if (numVal instanceof Long) {
+						long lVal = (Long)numVal;
+						value = (double)lVal;
+					} else if (numVal instanceof Integer) {
+						int lVal = (Integer)numVal;
+						value = (double)lVal;
+					}
+				}
+				
 				jsonWriter.name(JSON_READING_VALUE).value(value);
 				String unit = hasValue ? unitValue.getUnit() : Strings.EMPTY;
 				
@@ -269,7 +284,22 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			{
 				boolean hasValue = reading.getValue() instanceof UnitValue;
 				UnitValue unitValue = (UnitValue) reading.getValue();
-				Long value = hasValue ? (Long) unitValue.getNumberValue() : 0L;
+				Long value = 0L;
+				
+				if (hasValue) {
+					Number numVal = unitValue.getNumberValue();
+					
+					if (numVal instanceof Long) {
+						value = (Long)numVal;
+					} else if (numVal instanceof Double) {
+						double dVal = (Double)numVal;
+						value = (long)dVal;
+					} else if (numVal instanceof Integer) {
+						int lVal = (Integer)numVal;
+						value = (long)lVal;
+					}
+				}
+				
 				jsonWriter.name(JSON_READING_VALUE).value(value);
 				String unit = hasValue ? unitValue.getUnit() : Strings.EMPTY;
 				
@@ -292,7 +322,6 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 				jsonWriter.name(JSON_READING_VALUE).value(value);
 				break;
 		}
-		
 	}
 
 	private void prepareRead() throws TrialException {
