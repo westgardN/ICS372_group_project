@@ -125,7 +125,8 @@ public class ClinicalTrialModel {
 	
 	/**
 	 * Initializes a new empty view model with the id of the trial set to the default trial name of ""
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public ClinicalTrialModel() throws TrialCatalogException {
 		this(DEFAULT_TRIAL_NAME);
@@ -134,7 +135,8 @@ public class ClinicalTrialModel {
 	/**
 	 * Initializes a new empty view model with the id of the trial set to the specified name.
 	 * @param name the id of this trial
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public ClinicalTrialModel(String name) throws TrialCatalogException {
 		trial = new Trial(name);
@@ -192,7 +194,8 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param selectedClinic the clinic that is now considered to be the "selected"
 	 * clinic. 
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setSelectedClinic(Clinic selectedClinic) throws TrialCatalogException {
 		setSelectedClinic(selectedClinic, true);
@@ -207,7 +210,8 @@ public class ClinicalTrialModel {
 	 * @param selectedClinic the clinic that is now considered to be the "selected"
 	 * clinic.
 	 * @param notify is set to true any listeners are notified of this change. 
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setSelectedClinic(Clinic selectedClinic, boolean notify) throws TrialCatalogException {
 		if (!Objects.equals(this.selectedClinic, selectedClinic)) {
@@ -231,7 +235,8 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param selectedPatient the patient that is now considered to be the "selected"
 	 * patient. 
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setSelectedPatient(Patient selectedPatient) throws TrialCatalogException {
 		setSelectedPatient(selectedPatient, true);
@@ -246,7 +251,8 @@ public class ClinicalTrialModel {
 	 * @param selectedPatient the patient that is now considered to be the "selected"
 	 * patient.
 	 * @param notify is set to true any listeners are notified of this change. 
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setSelectedPatient(Patient selectedPatient, boolean notify) throws TrialCatalogException {
 		if (!Objects.equals(this.selectedPatient, selectedPatient)) {
@@ -269,6 +275,8 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param selectedReading the reading that is now considered to be the "selected"
 	 * selectedReading. 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setSelectedReading(Reading selectedReading) throws TrialCatalogException {
 		setSelectedReading(selectedReading, true);
@@ -282,6 +290,8 @@ public class ClinicalTrialModel {
 	 * @param selectedReading the reading that is now considered to be the "selected"
 	 * selectedReading. 
 	 * @param notify if set to true then a PROP_SELECTED_READING notification is fired.
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setSelectedReading(Reading selectedReading, boolean notify) throws TrialCatalogException {
 		if (!Objects.equals(this.selectedReading, selectedReading)) {
@@ -330,7 +340,8 @@ public class ClinicalTrialModel {
 	/**
 	 * 
 	 * @return A new list of all the readings in the catalog
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public ObservableList<Reading> getReadings() throws TrialCatalogException {
 		return FXCollections.observableArrayList(catalog.getReadings());
@@ -352,18 +363,22 @@ public class ClinicalTrialModel {
 	}
 
 	/**
+	 * @param patient the patient to retrieve the journal for.
 	 * @return A list of readings for the specified patient
 	 * 
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public List<Reading> getJournal(Patient patient) throws TrialCatalogException {
 		return catalog.getReadings(patient);
 	}
 
 	/**
+	 * @param clinic the clinic to retrieve the journal for.
 	 * @return A list of readings for the specified clinic
 	 * 
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public List<Reading> getJournal(Clinic clinic) throws TrialCatalogException {
 		return catalog.getReadings(clinic);
@@ -373,7 +388,8 @@ public class ClinicalTrialModel {
 	 * Sets the observable journal to be that of the specified clinic.
 	 * 
 	 * @param clinic the clinic's whose journal we are observing.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setJournal(Clinic clinic) throws TrialCatalogException {
 		setJournal(clinic, true);
@@ -385,7 +401,8 @@ public class ClinicalTrialModel {
 	 * @param clinic the clinic's whose journal we are observing.
 	 * @param notify if set to true then any registered listeners are notified
 	 * via a PROP_JOURNAL change notification.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setJournal(Clinic clinic, boolean notify) throws TrialCatalogException {
 		Platform.runLater(() -> {
@@ -404,7 +421,8 @@ public class ClinicalTrialModel {
 	 * Sets the observable journal to be that of the specified patient.
 	 * 
 	 * @param patient the patient's whose journal we are observing.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setJournal(Patient patient) throws TrialCatalogException {
 		setJournal(patient, true);
@@ -416,7 +434,8 @@ public class ClinicalTrialModel {
 	 * @param patient the patient's whose journal we are observing.
 	 * @param notify if set to true then any registered listeners are notified
 	 * via a PROP_JOURNAL change notification.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public void setJournal(Patient patient, boolean notify) throws TrialCatalogException {
 		Platform.runLater(() -> {
@@ -449,7 +468,8 @@ public class ClinicalTrialModel {
 	 * @param name the name of the clinic, which may be null if the clinic doesn't
 	 * have a name.
 	 * @return true if the clinic was added and false if the clinic was not added.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean addClinic(String clinicId, String name) throws TrialCatalogException {
 		Clinic clinic = new Clinic(clinicId, getTrialId(), name);
@@ -477,7 +497,8 @@ public class ClinicalTrialModel {
 	 * @param startDate the date the patient started the trial, which may be null if the patient
 	 * hasn't actually started the trial yet.
 	 * @return true if the patient was added and false if the patient was not added.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean addPatient(String patientId, LocalDate startDate) throws TrialCatalogException {
 		return addPatient(patientId, startDate, null);
@@ -491,7 +512,8 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param patient the patient to update 
 	 * @return true if the patient was update and false if the patient was not.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean updateOrAdd(Patient patient) throws TrialCatalogException {
 		boolean answer = false;
@@ -527,7 +549,8 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param clinic the clinic to update 
 	 * @return true if the clinic was update and false if the clinic was not.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean updateOrAdd(Clinic clinic) throws TrialCatalogException {
 		boolean answer = false;
@@ -568,7 +591,8 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param reading the patient to update 
 	 * @return true if the patient was update and false if the patient was not.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean updateOrAdd(Reading reading) throws TrialCatalogException {
 		boolean answer = false;
@@ -615,7 +639,8 @@ public class ClinicalTrialModel {
 	 * @param reading the reading to import.
 	 * 
 	 * @return true if the reading was imported; otherwise false.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean importReading(Reading reading) throws TrialCatalogException {
 		boolean answer = false;
@@ -648,7 +673,8 @@ public class ClinicalTrialModel {
 	 * @param value the value of the reading being added
 	 * @param date the date the reading was taken
 	 * @return true if the reading was imported; otherwise false.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean importReading(String type, String id, Object value, LocalDateTime date) throws TrialCatalogException {
 		Reading reading = ReadingFactory.getReading(type);
@@ -669,7 +695,8 @@ public class ClinicalTrialModel {
 	 * @param reading the reading to add.
 	 * 
 	 * @return true if the reading was imported; otherwise false.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean addReading(Reading reading) throws TrialCatalogException {
 		boolean answer = false;
@@ -697,10 +724,13 @@ public class ClinicalTrialModel {
 	 * 
 	 * @param type the type of reading that is being added
 	 * @param id the id of the reading being added
+	 * @param patientId the id of the associated patient
+	 * @param clinicId the id of the associated clinic
 	 * @param value the value of the reading being added
 	 * @param date the date the reading was taken
 	 * @return true if the reading was imported; otherwise false.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean addReading(String type, String id, String patientId, String clinicId, Object value, LocalDateTime date) throws TrialCatalogException {
 		Reading reading = ReadingFactory.getReading(type);
@@ -720,7 +750,8 @@ public class ClinicalTrialModel {
 	 * @param patientId the patient id whose reference we are to retrieve. Cannot be null.
 	 * 
 	 * @return the requested patient reference or null if the patient could not be found in this trial.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public Patient getPatient(String patientId) throws TrialCatalogException {
 		Patient patient = new Patient(patientId, getTrialId(), null, null);
@@ -740,7 +771,8 @@ public class ClinicalTrialModel {
 	 * @param clinicId the clinic id whose reference we are to retrieve. Cannot be null.
 	 * 
 	 * @return the requested clinic reference or null if the clinic could not be found in this trial.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public Clinic getClinic(String clinicId) throws TrialCatalogException {
 		Clinic clinic = new Clinic(clinicId, getTrialId(), null);
@@ -796,7 +828,8 @@ public class ClinicalTrialModel {
 	 * @param patientId The id of the patient to add. Cannot be null
 	 * 
 	 * @return answer true if the specified patient was added to this trial; otherwise false.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean addPatient(String patientId) throws TrialCatalogException {
 		return addPatient(patientId, null);
@@ -809,7 +842,8 @@ public class ClinicalTrialModel {
 	 * @param failIfExists if true and the reading already exists in the catalog,
 	 * then false is returned.
 	 * @return true if the specified reading can be added to the selected patient.
-	 * @throws TrialCatalogException
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean canAddReading(Reading reading, boolean failIfExists) throws TrialCatalogException {
 		boolean answer = false;
@@ -840,7 +874,8 @@ public class ClinicalTrialModel {
 	 * hasn't actually started the trial yet.
 	 * @param endDate the date the patient ended the trial, which may be null.
 	 * @return true if the patient was added and false if the patient was not added.
-	 * @throws TrialCatalogException 
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
 	 */
 	public boolean addPatient(String patientId, LocalDate startDate, LocalDate endDate) throws TrialCatalogException {
 		Patient patient = new Patient(patientId, getTrialId(), startDate, endDate);
