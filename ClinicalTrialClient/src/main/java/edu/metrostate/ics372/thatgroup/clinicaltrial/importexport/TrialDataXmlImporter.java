@@ -175,6 +175,20 @@ public class TrialDataXmlImporter extends DefaultHandler implements TrialDataImp
 			if (reading.getDate() == null) {
 				reading.setDate(LocalDateTime.now());
 			}
+			if (reading.getPatientId() == null) {
+				reading.setPatientId(Patient.DEFAULT_ID);
+				Patient p = new Patient(Patient.DEFAULT_ID, trial != null ? trial.getId() : null, null, null);
+				if (!patients.contains(p)) {
+					patients.add(p);
+				}
+			}
+			if (reading.getClinicId() == null) {
+				reading.setClinicId(Clinic.DEFAULT_ID);
+				Clinic c = new Clinic(Clinic.DEFAULT_ID, trial != null ? trial.getId() : null, null);
+				if (!clinics.contains(c)) {
+					clinics.add(c);
+				}
+			}
 			if (!readings.contains(reading)) {
 				readings.add(reading);
 			}

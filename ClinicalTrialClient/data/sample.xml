@@ -12,6 +12,9 @@
 		<Value>3664</Value>
 		<Patient>6</Patient>
 	</Reading>
+	<Reading type="Temperature" id="1e5dde">
+		<Value unit="C">3664</Value>
+	</Reading>
 	<Reading type="Weight" id="ern222">
 		<Value unit="lbs">150</Value>
 		<Patient>85545</Patient>
