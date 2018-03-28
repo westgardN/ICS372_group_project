@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+
+<fx:root minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" xmlns:fx="http://javafx.com/fxml/1" type="AnchorPane">
+	<children>
+		<Label layoutX="287.0" layoutY="6.0" text="Readings" />
+		<TableView fx:id="readingTable" layoutX="164.0" layoutY="28.0" prefHeight="548.0" prefWidth="528.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+			<columns>
+				<TableColumn fx:id="readingIDCol" editable="false" prefWidth="100.0" text="Reading ID" />
+				<TableColumn fx:id="clinicIDCol" editable="false" prefWidth="100.0" text="Clinic ID" />
+				<TableColumn fx:id="patientIDCol" editable="false" prefWidth="100.0" text="Patient ID" />
+				<TableColumn fx:id="dateTimeCol" editable="false" prefWidth="100.0" text="Date/Time" />
+				<TableColumn fx:id="readingTypeCol" editable="false" prefWidth="100.0" text="Reading Type" />
+				<TableColumn fx:id="valueCol" editable="false" prefWidth="100.0" text="Value" />
+			</columns>
+		</TableView>
+	</children>
+</fx:root>
+

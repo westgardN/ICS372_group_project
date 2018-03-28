@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Tooltip?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<HBox VBox.vgrow="ALWAYS">
+			<children>
+				<GridPane hgap="5.0" vgap="5.0" HBox.hgrow="ALWAYS">
+					<children>
+						<TextField fx:id="clinicId" prefHeight="25.0" prefWidth="50.0" promptText="ID" GridPane.columnIndex="0" GridPane.rowIndex="0">
+						</TextField>
+						<TextField fx:id="clinicName" promptText="Clinic Name" GridPane.columnIndex="1" GridPane.rowIndex="0">
+						</TextField>
+						<Button fx:id="addButton" alignment="CENTER" defaultButton="true" onAction="#addClinic" prefWidth="75.0" text="Add" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+						<Button fx:id="clearButton" alignment="CENTER" defaultButton="false" onAction="#clearForm" prefWidth="50.0" text="Clear" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="0" >
+							<tooltip>
+								<Tooltip text="Clear the form and current selection" />
+							</tooltip>
+						</Button>
+						<ListView fx:id="listView" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+					</children>
+					<columnConstraints>
+						<ColumnConstraints fillWidth="true" hgrow="SOMETIMES" />
+						<ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+						<ColumnConstraints fillWidth="true" hgrow="SOMETIMES" />
+						<ColumnConstraints fillWidth="true" hgrow="SOMETIMES" />
+					</columnConstraints>
+					<rowConstraints>
+					   <RowConstraints fillHeight="true" vgrow="ALWAYS" />
+					   <RowConstraints fillHeight="true" vgrow="ALWAYS" />
+					</rowConstraints>
+				</GridPane>
+			</children>
+		</HBox>
+	</children>
+</fx:root>

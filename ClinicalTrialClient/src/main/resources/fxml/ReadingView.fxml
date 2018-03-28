@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.geometry.Insets?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+      <HBox>
+         <children>
+      	<Label alignment="CENTER" text="Reading" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+		<GridPane alignment="TOP_CENTER" hgap="5.0" vgap="5.0">
+			<children>
+				<Label text="Clinic:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+			    <ChoiceBox fx:id="clinicChoice" prefWidth="148.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+				<Label text="Patient:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+		      	<ChoiceBox fx:id="patientChoice" prefWidth="148.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+		      	<Label text="Type:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+				<ChoiceBox fx:id="type" prefWidth="148.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+				<TextField fx:id="id" prefWidth="148.0" promptText="Reading ID..." GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="3">
+					<tooltip>
+						<Tooltip text="Required" />
+					</tooltip>
+				</TextField>
+				<StackPane prefWidth="148.0" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="4">
+					<children>
+						<StackPane fx:id="multiValue">
+							<children>
+								<HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0" spacing="5.0">
+									<children>
+										<TextField fx:id="multiValueA" prefHeight="25.0" prefWidth="80.0" promptText="sys" />
+										<TextField fx:id="multiValueB" prefHeight="25.0" prefWidth="80.0" promptText="dia" />
+									</children>
+								</HBox>
+							</children>
+						</StackPane>
+						<TextField fx:id="value" prefWidth="148.0" promptText="Reading Value....">
+							<tooltip>
+								<Tooltip text="Required" />
+							</tooltip>
+						</TextField>
+					</children>
+				</StackPane>
+				<DatePicker fx:id="date" prefWidth="148.0" promptText="Reading Date..." GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="5">
+					<tooltip>
+						<Tooltip text="Required" />
+					</tooltip>
+				</DatePicker>
+				<HBox alignment="TOP_CENTER" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="6">
+					<children>
+						<TextField fx:id="hour" prefHeight="25.0" prefWidth="46.0" promptText="HH">
+							<tooltip>
+								<Tooltip text="0-23" />
+							</tooltip>
+						</TextField>
+						<TextField fx:id="minutes" prefHeight="25.0" prefWidth="46.0" promptText="MM">
+							<tooltip>
+								<Tooltip text="0-59" />
+							</tooltip>
+						</TextField>
+						<TextField fx:id="seconds" prefWidth="46.0" promptText="SS">
+							<tooltip>
+								<Tooltip text="0-59" />
+							</tooltip>
+						</TextField>
+					</children>
+				</HBox>
+				<HBox alignment="TOP_CENTER" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="7">
+					<children>		 
+						<Button fx:id="okBtn" defaultButton="false" text="Add">
+	                     <HBox.margin>
+	                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+	                     </HBox.margin>
+	                     </Button>
+						<Button defaultButton="false" onAction="#clearForm" text="Clear">
+		                    <HBox.margin>
+		                    	<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+		                    </HBox.margin>
+	                    </Button>
+					</children>
+				</HBox>
+			</children>
+			<padding>
+			   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+			</padding>
+			<columnConstraints>
+				<ColumnConstraints fillWidth="true" hgrow="NEVER" />
+				<ColumnConstraints fillWidth="true" hgrow="NEVER" />
+				<ColumnConstraints fillWidth="true" hgrow="NEVER" />
+			</columnConstraints>
+			<rowConstraints>
+			   <RowConstraints />
+			   <RowConstraints />
+			   <RowConstraints />
+			   <RowConstraints />
+			   <RowConstraints />
+			   <RowConstraints />
+			   <RowConstraints />
+			   <RowConstraints />
+			</rowConstraints>
+		</GridPane>
+	</children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</fx:root>

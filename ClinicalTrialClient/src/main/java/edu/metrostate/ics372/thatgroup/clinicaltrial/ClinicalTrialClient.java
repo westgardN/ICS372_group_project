@@ -3,10 +3,11 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.views.ClinicalTrialView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
  * 
  * Nurses will use the software to record data that patients have entered into their journals.
  * 
- * The software can import readings from a file in JSON format containing patient readings.
+ * The software can import readings from a file in JSON or XML format containing clinics and patient readings.
  * The software supports 4 different types of items in the input file: weight reading, temp reading, blood pressure reading, and number of steps.
  * The software stores the item ID for each entry and associates it with the specified patient ID.
  * The software reads and stores the associated metadata for each item.
@@ -40,14 +41,18 @@ public class ClinicalTrialClient extends Application {
 	ClinicalTrialView view;
 
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) {
 		stage.setTitle("Patient Trial Client");
-		Image applicationIcon = new Image(getClass().getResourceAsStream("." + File.separator + "resources" + File.separator + "logov2_256x256.png"));
-		stage.getIcons().add(applicationIcon);
-		Pane pane = loadMainPane();
-		stage.setScene(createScene(pane));
-		stage.show();
 		
+		try (InputStream is = getClass().getResourceAsStream(Strings.LOGO_PATH);) {
+			Image applicationIcon = new Image(is);
+			stage.getIcons().add(applicationIcon);
+			Pane pane = loadMainPane();
+			stage.setScene(createScene(pane));
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if (view != null) {
 			view.setStage(stage);
 		}
@@ -63,12 +68,13 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Pane loadMainPane() throws IOException {
 		Pane mainPane = null;
-		try (InputStream stream = getClass().getResourceAsStream("." + File.separator + "views" + File.separator + "ClinicalTrialView.fxml")) {
+		try {
+			URL url = getClass().getResource(Strings.CLINICAL_TRIAL_VIEW_FXML);
 			FXMLLoader loader = new FXMLLoader();
-			mainPane = (Pane) loader.load(stream);
+			mainPane = (Pane) loader.load(url.openStream());
 			view = loader.<ClinicalTrialView>getController();
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
+		} catch (IOException | IllegalStateException ex) {
+			ex.printStackTrace();
 		}
 		return mainPane;
 	}
@@ -83,11 +89,7 @@ public class ClinicalTrialClient extends Application {
 	 */
 	private Scene createScene(Pane mainPane) {
 		Scene scene = new Scene(mainPane);
-		scene.getStylesheets()
-				.setAll(getClass()
-						.getResource(
-								"." + File.separator + "views" + File.separator + "styling.css")
-						.toExternalForm());
+		scene.getStylesheets().setAll(getClass().getResource(Strings.CSS_PATH).toExternalForm());
 		return scene;
 	}
 

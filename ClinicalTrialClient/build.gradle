@@ -6,22 +6,66 @@
  * user guide available at https://docs.gradle.org/3.5/userguide/java_library_plugin.html
  */
 
+import org.gradle.plugins.ide.eclipse.model.AccessRule
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java-library'
+apply plugin: 'java'
+apply plugin: 'eclipse'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
 }
 
-dependencies {
-
-	// Use the GSON library
-    compile 'com.google.code.gson:gson:2.8.2'
-	
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+eclipse {
+    classpath {
+        file {
+            whenMerged {
+                def jre = entries.find { it.path.contains 'org.eclipse.jdt.launching.JRE_CONTAINER' }
+                jre.accessRules.add(new AccessRule('0', 'javafx/**'))
+            }
+        }
+    }
 }
 
+dependencies {
+
+	// GSON
+    compile 'com.google.code.gson:gson:2.8.2'
+    
+    // SQLite
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.21.0.1'
+
+    // JUnit
+    testImplementation 'junit:junit:4.12'
+    
+    // Mockito
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    
+    // JUnitParams
+    testCompile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.1.1'
+    
+    // Cucumber
+    testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Clinical Trial Client',  
+        	'Implementation-Version': '1.2.0.0',
+        	'Main-Class': 'edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+jar {
+	manifest {
+        attributes 'Implementation-Title': 'Clinical Trial Client',  
+        	'Implementation-Version': '1.2.0.0',
+        	'Main-Class': 'edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient'
+	}
+}

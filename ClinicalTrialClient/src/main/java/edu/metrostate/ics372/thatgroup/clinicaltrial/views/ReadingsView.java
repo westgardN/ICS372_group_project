@@ -10,8 +10,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.Reading;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.reading.ReadingFactory;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +31,7 @@ import javafx.scene.layout.AnchorPane;
  *
  */
 public class ReadingsView extends AnchorPane implements Initializable {
-	private ClinicalTrialViewModel model;
+	private ClinicalTrialModel model;
 
 	@FXML
 	private TableView<Reading> readingTable;
@@ -41,6 +44,10 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	private TableColumn<Reading, String> valueCol;
 	@FXML
 	private TableColumn<Reading, String> readingIDCol;
+	@FXML
+	private TableColumn<Reading, String> clinicIDCol;
+	@FXML
+	private TableColumn<Reading, String> patientIDCol;
 
 	/**
 	 * Constructs a new ReadingsView instance
@@ -48,13 +55,13 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	public ReadingsView() {
 		model = null;
 
-		try (InputStream stream = getClass().getResourceAsStream("ReadingsView.fxml")) {
+		try (InputStream stream = getClass().getResourceAsStream(Strings.READINGS_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
 			fxmlLoader.setController(this);
 			fxmlLoader.load(stream);
-		} catch (IOException | IllegalStateException exception) {
-			throw new RuntimeException(exception);
+		} catch (IOException | IllegalStateException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -63,7 +70,7 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * 
 	 * @return the model
 	 */
-	public ClinicalTrialViewModel getModel() {
+	public ClinicalTrialModel getModel() {
 		return model;
 	}
 
@@ -73,14 +80,21 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * @param model
 	 *            the model to set
 	 */
-	public void setModel(ClinicalTrialViewModel model) {
+	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals(ClinicalTrialViewModel.PROP_JOURNAL)
-					|| prop.equals(ClinicalTrialViewModel.PROP_UPDATE_PATIENT)) {
+			if (prop.equals(ClinicalTrialModel.PROP_JOURNAL)
+					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)
+					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_CLINIC)
+					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_READING)) {
 				fillTable();
+				try {
+					this.model.setSelectedReading(null);
+				} catch (TrialCatalogException e) {
+					PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
+				}
 			}
 		});
 	}
@@ -92,6 +106,8 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		readingIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
+		clinicIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getClinicId().toString()));
+		patientIDCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPatientId().toString()));
 		readingTypeCol.setCellValueFactory(
 				cellData -> new ReadOnlyStringWrapper(ReadingFactory.getPrettyReadingType(cellData.getValue())));
 		valueCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getValue().toString()));
@@ -100,7 +116,11 @@ public class ReadingsView extends AnchorPane implements Initializable {
 				cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDate().format(formatter)));
 
 		readingTable.getSelectionModel().selectedIndexProperty().addListener((event) -> {
-			this.model.setSelectedReading(readingTable.getSelectionModel().getSelectedItem());
+			try {
+				this.model.setSelectedReading(readingTable.getSelectionModel().getSelectedItem());
+			} catch (TrialCatalogException e) {
+				PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
+			}
 		});
 	}
 
@@ -109,6 +129,10 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * currently selected patient and their respective readings
 	 */
 	private void fillTable() {
-		readingTable.setItems(model.getJournal());
+		if (model.getJournal() != null) {
+			readingTable.setItems(model.getJournal());
+		} else if (model.getSelectedClinic() == null && model.getSelectedPatient() == null) {
+			readingTable.getItems().clear();
+		}
 	}
 }
