@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.ClinicalTrialClient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.ClinicalTrialCatalog;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.entities.ClinicEntity;
 
 public class ClinicViewModel extends AndroidViewModel {
@@ -50,12 +49,7 @@ public class ClinicViewModel extends AndroidViewModel {
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
-            try {
-                return (T) new ClinicViewModel(application, catalog, trialEntity);
-            } catch (TrialCatalogException e) {
-                e.printStackTrace();
-            }
-            return null;
+            return (T) new ClinicViewModel(application, catalog, trialEntity);
         }
     }
 }
