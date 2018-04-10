@@ -1,0 +1,71 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="25dp"
+    tools:context="edu.metrostate.ics372.thatgroup.clinicaltrial.ui.MainActivity">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/add_trial_id_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="45dp"
+            android:text="@string/add_trial_id_lbl" />
+
+        <EditText
+            android:id="@+id/add_trial_trial_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/add_trial_startdate_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_trial_startdate_lbl" />
+
+        <EditText
+            android:id="@+id/add_trial_startdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:ems="10"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/add_trial_enddate_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_trial_enddate_lbl" />
+
+        <EditText
+            android:id="@+id/add_trial_enddate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:ems="10"
+            android:focusable="false" />
+
+        <Button
+            android:id="@+id/add_trial_clr_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_trial_clr_btn_txt" />
+
+        <Button
+            android:id="@+id/add_trial_submit_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+</FrameLayout>

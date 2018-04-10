@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Clinical Trial Client</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="no_trials">No trials</string>
+    <string name="loading_comments">Loading comments...</string>
+    <string name="loading_trials">Loading trials...</string>
+    <string name="trials_list">Trials list</string>
+
+
+    <string name="trial_list_lbl">Trials List</string>
+    <string name="clinic_list_lbl">Clinics List</string>
+    <string name="trial_detail_lbl">Trial Details</string>
+    <string name="clinic_detail_lbl">Clinic Details</string>
+
+    <string name="add_trial_id_lbl">Trial ID:</string>
+    <string name="add_trial_startdate_lbl">Trial Start Date:</string>
+    <string name="add_trial_enddate_lbl">Trial End Date:</string>
+    <string name="add_trial_clr_btn_txt">Clear</string>
+    <string name="add_trial_submit_btn_txt">Submit</string>
+    <string name="add_trial_date_placeholder">%1$d/%2$d/%3$d</string>
+</resources>

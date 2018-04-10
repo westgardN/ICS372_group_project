@@ -1,0 +1,12 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.metrostate.ics372.thatgroup.clinicaltrial.ui.fragments.DatePickerPopup">
+
+    <!-- TODO: Update blank fragment layout -->
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></DatePicker>
+
+</FrameLayout>
