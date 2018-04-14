@@ -19,8 +19,5 @@ public class ClinicalTrialDatabaseTest {
 		if (catalog.init(trial)) {
 		}
 		
-		for (String catalogName : catalog.getAllTrialCatalogNamesInDirectory()) {
-			System.out.println(catalogName);
-		}
 	}
 }
