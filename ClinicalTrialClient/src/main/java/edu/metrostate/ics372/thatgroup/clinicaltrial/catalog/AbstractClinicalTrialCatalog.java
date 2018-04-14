@@ -37,6 +37,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 	protected static final String CLINIC_ID = "clinic_id";
 	protected static final String DATE = "date";
 	protected static final String VALUE = "value";
+	protected static final String STATUS_ID = "status_id";
 	protected Trial trial;
 
 	abstract protected Connection getConnection() throws SQLException;
@@ -173,6 +174,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		}
 
 		answer.setString(4, getActiveId());
+		answer.setString(5, patient.getStatusId());
 
 		return answer;
 	}
@@ -216,7 +218,9 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		} else {
 			answer.setDate(3, null);
 		}
-		answer.setString(4, patient.getId());
+		answer.setString(4, patient.getStatusId());
+		
+		answer.setString(5, patient.getId());
 		return answer;
 	}
 
@@ -297,6 +301,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		if (rs.getDate(END_DATE) != null) {
 			answer.setTrialEndDate(rs.getDate(END_DATE).toLocalDate());
 		}
+		answer.setStatusId(rs.getString(STATUS_ID));
 
 		return answer;
 	}
@@ -508,7 +513,8 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		validateParam(patient);
 		boolean answer = false;
 
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedInsert(conn, patient);) {
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedInsert(conn, patient);) {
 			if (pstmt.executeUpdate() == 1) {
 				answer = true;
 			}
@@ -572,7 +578,8 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		validateParam(patient);
 		boolean answer = false;
 
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedUpdate(conn, patient);) {
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedUpdate(conn, patient);) {
 			if (pstmt.executeUpdate() == 1) {
 				answer = true;
 			}

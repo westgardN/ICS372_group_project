@@ -72,7 +72,7 @@ public class Patient implements Serializable {
 	 */
 	public void setStatusId(String statusId) {
 		if (!Objects.equals(this.statusId, statusId)) {
-			String oldValue = this.statusId;
+			String oldValue = this.id;
 			this.statusId = statusId;
 			getPcs().firePropertyChange(PROP_STATUS_ID, oldValue, this.statusId);
 		}
