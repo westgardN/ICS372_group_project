@@ -30,6 +30,43 @@ public class ClinicalStatement {
             + "	FOREIGN KEY (clinic_id) REFERENCES clinics(id)\n"
             + ");";
 
+	public static final String MIGRATION_PROJECT_3_00 = "SELECT status from patients;";
+	
+	public static final String MIGRATION_PROJECT_3_01 = "CREATE TABLE IF NOT EXISTS patient_status (\n"
+			+ " id varchar(32) NOT NULL PRIMARY KEY,\n"
+			+ " display_status varchar(32) NOT NULL,\n"
+			+ ");";
+	
+	public static final String MIGRATION_PROJECT_3_02 = "INSERT INTO patient_status (id, display_status)\n"
+			+ " VALUES (INACTIVE, Inactive), (ACTIVE, Active), (WITHDRAWN, Withdrawn), (FAILED, Failed),\n"
+			+ "(COMPLETED, Completed);";
+	
+	public static final String MIGRATION_PROJECT_3_03 = "ALTER TABLE patients ADD status varchar(32);";
+	
+	public static final String MIGRATION_PROJECT_3_04 = "UPDATE patients SET status = 'INACTIVE'\n"
+			+ " WHERE start_date IS NULL OR end_date IS NOT NULL;";
+	
+	public static final String MIGRATION_PROJECT_3_05 = "UPDATE patients SET status = 'ACTIVE'\n"
+			+ " WHERE start_date IS NOT NULL AND end_date IS NULL;";
+	
+	public static final String MIGRATION_PROJECT_3_06 = "ALTER TABLE patients RENAME temp_patients;";
+	
+	public static final String MIGRATION_PROJECT_3_07 = "CREATE TABLE IF NOT EXISTS patients (\n"
+            + "	id varchar(32) NOT NULL PRIMARY KEY,\n"
+            + "	trial_id varchar(32),\n"
+            + "	start_date date,\n"
+            + "	end_date date,\n"
+            + "	status varchar(32),\n"
+            + " FOREIGN KEY (trial_id) REFERENCES trials(id)\n"
+            + " FOREIGN KEY (status) REFERENCES patient_status(id)\n"
+            + ");";
+	
+	public static final String MIGRATION_PROJECT_3_08 = "INSERT INTO patients (id, trial_id, start_date, end_date, status)\n"
+			+ " SELECT id, trial_id, start_date, end_date, status FROM temp_patients;";
+	
+	public static final String MIGRATION_PROJECT_3_09 = "DROP TABLE temp_patients;";
+	
+	
 	// Trials
 	public static final String INSERT_TRIAL = "INSERT INTO trials (id, start_date, end_date) VALUES(?,?,?)";
 	public static final String GET_TRIAL = "SELECT id, start_date, end_date FROM trials WHERE id = ?";
