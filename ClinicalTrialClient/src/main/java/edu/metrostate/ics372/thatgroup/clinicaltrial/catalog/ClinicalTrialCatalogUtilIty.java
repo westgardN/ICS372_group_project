@@ -53,7 +53,7 @@ public class ClinicalTrialCatalogUtilIty {
 	private static final String MAC = "mac";
 	private static final String LINUX = "nux";
 	private static final String PRAGMA_NAME_COLUMN = "name";
-	private static final String MIGRATION_00_COLUMN_NAME = "status";
+	private static final String MIGRATION_00_COLUMN_NAME = "status_id";
 	private static String catalogStoragePath;
 	public static final String ANDROID_CATALOG_EXTENSION = ".db3";
 	public static final String CATALOG_EXTENSION = ".db";
