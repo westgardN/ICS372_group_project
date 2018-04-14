@@ -1,5 +1,6 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class PatientStatus implements Serializable {
 	public PatientStatus(String id, String displayStatus) {
 		this.id = id;
 		this.displayStatus = displayStatus;
+		pcs = new PropertyChangeSupport(this);
 	}
 	
 	/**
@@ -73,6 +75,10 @@ public class PatientStatus implements Serializable {
 		}
 		return pcs;
 	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().addPropertyChangeListener(listener);
+    }
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
