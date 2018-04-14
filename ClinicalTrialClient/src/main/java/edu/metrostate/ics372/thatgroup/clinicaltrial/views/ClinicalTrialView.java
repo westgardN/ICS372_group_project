@@ -111,7 +111,7 @@ public class ClinicalTrialView implements Initializable {
 							
 							for (Patient patient : patients) {
 								if (model.getPatient(patient.getId()) == null) {
-									model.addPatient(patient.getId(), patient.getTrialStartDate(), patient.getTrialEndDate());
+									model.addPatient(patient);
 									patientCount++;
 								}
 							}

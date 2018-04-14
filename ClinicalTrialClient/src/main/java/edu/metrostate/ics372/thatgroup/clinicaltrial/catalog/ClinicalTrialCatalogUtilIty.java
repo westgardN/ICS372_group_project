@@ -204,9 +204,6 @@ public class ClinicalTrialCatalogUtilIty {
 		try {
 			if (catalogFile.createNewFile() ) {
 				answer = executeSQLStatements(trialName, initializationStatements);
-				if (answer) {
-					answer = firstMigrationCatalogFile(trialName);
-				}
 			}
 		} catch (IOException e) {
 			throw new TrialCatalogException(e.getMessage(), e);

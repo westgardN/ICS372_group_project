@@ -44,7 +44,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 	
 	abstract protected boolean databaseExists(Trial trial);
 	
-	abstract protected boolean createTrialCatalog(Trial trial, String path) throws TrialCatalogException;
+	abstract protected boolean createTrialCatalog(Trial trial) throws TrialCatalogException;
 	
 	protected void validateParam(Trial trial) throws TrialCatalogException {
 		if (!isValidTrial(trial)) {

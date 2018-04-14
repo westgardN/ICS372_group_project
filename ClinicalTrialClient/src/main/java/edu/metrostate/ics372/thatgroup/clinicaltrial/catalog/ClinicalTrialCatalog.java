@@ -32,13 +32,13 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogExce
  *
  */
 public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
-	protected boolean createTrialCatalog(Trial trial, String catalogStoragePath) throws TrialCatalogException {
+	protected boolean createTrialCatalog(Trial trial) throws TrialCatalogException {
 		boolean answer = false;
-
+		String catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
 		String trialName = trial.getId();
 		String catalogFilePath = catalogStoragePath + trialName.concat(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION);
 
-		if (!Files.exists(Paths.get(catalogFilePath))) {
+		if (!databaseExists(trial)) {
 			if (ClinicalTrialCatalogUtilIty.writeAndInitializeCatalogFile(Paths.get(catalogFilePath).toFile(),
 					trialName)) {
 				answer = true;
@@ -77,17 +77,27 @@ public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
 		boolean answer = true;
 
 		String catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
+
+		// Create directory structure?
 		if (!Files.exists(Paths.get(catalogStoragePath))) {
 			if (!Paths.get(catalogStoragePath).toFile().mkdirs()) {
 				answer = false;
 			}
-		} else if (ClinicalTrialCatalogUtilIty.databaseNeedsUpgrade(trial.getId())) {
-			answer = ClinicalTrialCatalogUtilIty.firstMigrationCatalogFile(trial.getId());
-		}
-		if (answer) {
-			answer = createTrialCatalog(trial, catalogStoragePath);
+		} 
+		
+		// Directory structure in place?
+		if (answer) {			
+			// Create the database?
+			if (!databaseExists(trial)) {
+				answer = createTrialCatalog(trial);
+			} 
+			
+			if (answer && ClinicalTrialCatalogUtilIty.databaseNeedsUpgrade(trial.getId())) {
+				answer = ClinicalTrialCatalogUtilIty.firstMigrationCatalogFile(trial.getId());
+			}
+			
 			if (answer) {
-				this.trial = trial;
+				this.trial = trial.clone();
 
 				Trial temp = get(trial);
 
@@ -98,7 +108,7 @@ public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
 				}
 
 				answer = this.trial != null;
-			}
+			}			
 		}
 		
 		return answer;
