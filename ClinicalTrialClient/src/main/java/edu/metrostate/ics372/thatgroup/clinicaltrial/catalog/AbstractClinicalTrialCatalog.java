@@ -45,7 +45,9 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 
 	abstract protected Connection getConnection() throws SQLException;
 	
-	abstract protected boolean databaseExists(Trial trial);
+	abstract public boolean catalogExists(Trial trial);
+	
+	abstract public boolean removeCatalog(Trial trial);
 	
 	abstract protected boolean createTrialCatalog(Trial trial) throws TrialCatalogException;
 	
@@ -84,7 +86,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 			throw new TrialCatalogException(Strings.ERR_CATALOG_NO_ACTIVE_TRIAL);
 		}
 
-		if (!databaseExists(trial)) {
+		if (!catalogExists(trial)) {
 			throw new TrialCatalogException(Strings.ERR_CATALOG_HAS_BEEN_DELETED);
 		}
 	}
@@ -413,7 +415,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 
 	@Override
 	public boolean isInit() {
-		return isValidTrial(trial) && databaseExists(trial);
+		return isValidTrial(trial) && catalogExists(trial);
 	}
 
 	@Override

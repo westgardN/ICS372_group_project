@@ -1,6 +1,8 @@
 package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,7 +40,7 @@ public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
 		String trialName = trial.getId();
 		String catalogFilePath = catalogStoragePath + trialName.concat(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION);
 
-		if (!databaseExists(trial)) {
+		if (!catalogExists(trial)) {
 			if (ClinicalTrialCatalogUtilIty.writeAndInitializeCatalogFile(Paths.get(catalogFilePath).toFile(),
 					trialName)) {
 				answer = true;
@@ -50,7 +52,7 @@ public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
 		return answer;
 	}
 
-	protected boolean databaseExists(Trial trial) {
+	public boolean catalogExists(Trial trial) {
 		boolean answer = false;
 
 		String trialName = trial.getId();
@@ -59,6 +61,26 @@ public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
 
 		if (Files.exists(Paths.get(catalogFilePath))) {
 			answer = true;
+		}
+		
+		return answer;
+	}
+	
+	public boolean removeCatalog(Trial trial) {
+		boolean answer = false;
+
+		String trialName = trial.getId();
+		String catalogStoragePath = ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath();
+		String catalogFilePath = catalogStoragePath + trialName.concat(ClinicalTrialCatalogUtilIty.CATALOG_EXTENSION);
+
+		Path path = Paths.get(catalogFilePath);
+		
+		if (Files.exists(path) && !Files.isDirectory(path)) {
+			try {
+				Files.delete(path);
+				answer = true;
+			} catch (IOException e) {
+			}			
 		}
 		
 		return answer;
@@ -88,7 +110,7 @@ public class ClinicalTrialCatalog extends AbstractClinicalTrialCatalog {
 		// Directory structure in place?
 		if (answer) {			
 			// Create the database?
-			if (!databaseExists(trial)) {
+			if (!catalogExists(trial)) {
 				answer = createTrialCatalog(trial);
 			} 
 			

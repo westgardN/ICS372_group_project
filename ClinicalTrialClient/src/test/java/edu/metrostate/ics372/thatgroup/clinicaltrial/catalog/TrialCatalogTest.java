@@ -2,8 +2,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,43 +12,72 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 
 public class TrialCatalogTest {
-	Trial trial = new Trial();
-	Patient patient = new Patient();
-	Clinic clinic = new Clinic();
-	List<Patient> patients;
-	ClinicalTrialCatalog catalog = new ClinicalTrialCatalog();
+	private static final String TEST_TRIAL_ID = "test";
+	Trial trial;
+	TrialCatalog catalog;
 	
 	
-	
-
-	@Test
-	public void test() throws TrialCatalogException {
-		ClinicalTrialCatalog catalog = new ClinicalTrialCatalog();
-		Trial trial = new Trial("test");
-		Clinic clinic = new Clinic("Clinic", "test","testing" );
-		assertNotNull(clinic);
-		if (catalog.isInit()) {
+	@Before
+	public void setupTestHarness() {
+		trial = new Trial(TEST_TRIAL_ID);
+		
+		try {
+			TrialManager tm = TrialManager.getInstance();
+			if (tm.exists(trial)) {
+				boolean expected = true;
+				boolean actual = tm.remove(trial);
+				
+				assertEquals(expected, actual);
+			}
+			
+			catalog = tm.getTrialCatalog(trial);
+		} catch (TrialCatalogException e) {
+			teardownTestHarness();
+			e.printStackTrace();
 		}
+		
+		assertNotNull(trial);
+		assertNotNull(catalog);
+	}
+
+	@After
+	public void teardownTestHarness() {
+		TrialManager.getInstance().uninitialize();
+		catalog = null;
+		trial = null;
+	}
+	
+	@Test
+	public void testInsertClinic() throws TrialCatalogException {
+		Clinic clinic = new Clinic("test", TEST_TRIAL_ID,"testing" );
+		
+		boolean expected = true;
+		boolean actual = catalog.insert(clinic);
+		
+		assertEquals(expected, actual);
 		
 	}
 	
-	@Test
-	public void testPatient() throws TrialCatalogException{
-		ClinicalTrialCatalog catalog = new ClinicalTrialCatalog();
-		Trial trial = new Trial("test");
+	@Test(expected = TrialCatalogException.class)
+	public void testInsertInvalidPatientShouldThrowException() throws TrialCatalogException {
 		Patient patient = new Patient();
-		assertNotNull(patient);
-		if(catalog.getPatients().contains(patient));
+		
+		if(!catalog.exists(patient)) {
+			catalog.insert(patient);
+		}
 	}
 	
-	@Test
-	
-	public void testRemove() throws TrialCatalogException{
-		assertFalse(catalog.exists(clinic));
-		if(catalog.remove(clinic));{
+	@Test	
+	public void testRemove() throws TrialCatalogException {
+		Clinic clinic = new Clinic("test", TEST_TRIAL_ID,"testing");
+		
+		testInsertClinic();
+		boolean expected = true;
+		boolean actual = catalog.exists(clinic);
+		assertEquals(expected, actual);
+		
+		actual = catalog.remove(clinic);
+		assertEquals(expected, actual);
 	}
-		assertFalse(catalog.exists(this.patient));
-		if(catalog.remove(this.patient));
-	}
-	}
+}
 
