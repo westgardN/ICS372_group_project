@@ -39,10 +39,17 @@ public class TrialCatalogTest {
 		Trial trial = new Trial("test");
 		Patient patient = new Patient();
 		assertNotNull(patient);
-		if(catalog.exists(patient));
+		if(catalog.getPatients().contains(patient));
 	}
 	
-
-		
+	@Test
+	
+	public void testRemove() throws TrialCatalogException{
+		assertFalse(catalog.exists(clinic));
+		if(catalog.remove(clinic));{
+	}
+		assertFalse(catalog.exists(this.patient));
+		if(catalog.remove(this.patient));
+	}
 	}
 
