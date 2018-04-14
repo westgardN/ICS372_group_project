@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -51,6 +52,8 @@ public class ClinicalTrialCatalogUtilIty {
 	private static final String WINDOWS = "win";
 	private static final String MAC = "mac";
 	private static final String LINUX = "nux";
+	private static final String PRAGMA_NAME_COLUMN = "name";
+	private static final String MIGRATION_00_COLUMN_NAME = "status";
 	private static String catalogStoragePath;
 	public static final String ANDROID_CATALOG_EXTENSION = ".db3";
 	public static final String CATALOG_EXTENSION = ".db";
@@ -213,19 +216,48 @@ public class ClinicalTrialCatalogUtilIty {
 
 	static boolean databaseNeedsUpgrade(String trialName) {
 		boolean answer = false;
-		String[] initializationStatements = new String[] { ClinicalStatement.MIGRATION_PROJECT_3_00};
 		
 		try {
-			answer = !executeSQLStatements(trialName, initializationStatements);
-		} catch (TrialCatalogException ex) {
-			answer = true;
-			ex.printStackTrace();
+			answer = !patientsTableConstainsStatusField(trialName);
+		} catch (TrialCatalogException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return answer;
 
 	}
 	
+	private static boolean patientsTableConstainsStatusField(String trialName) throws TrialCatalogException {
+		boolean answer = false;
+		try (Connection conn = getConnection(trialName); Statement stmt = conn.createStatement();) {
+			boolean results = stmt.execute(ClinicalStatement.MIGRATION_PROJECT_3_00);
+			
+			if (results) {
+				ResultSet rSet = stmt.getResultSet();
+				
+				while(rSet.next()) {
+					int index = rSet.findColumn(PRAGMA_NAME_COLUMN);
+					
+					String name = rSet.getString(index);
+					
+					if (name != null && name.toLowerCase().equals(MIGRATION_00_COLUMN_NAME)) {
+						answer = true;
+						break;
+					}
+				}
+				
+				if (!rSet.isClosed()) {
+					rSet.close();
+				}
+			}
+		} catch (SQLException e) {
+			answer = false;
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+		return answer;
+	}
+
 	/**
 	 * @param catalogFile
 	 * @param trialName
@@ -241,7 +273,6 @@ public class ClinicalTrialCatalogUtilIty {
 		answer = true;
 		for (String statement : initializationStatements) {
 			try (Connection conn = getConnection(trialName); Statement stmt = conn.createStatement();) {
-				System.out.println(statement);
 				stmt.execute(statement);
 			} catch (SQLException e) {
 				answer = false;
@@ -257,7 +288,8 @@ public class ClinicalTrialCatalogUtilIty {
 				ClinicalStatement.MIGRATION_PROJECT_3_02, ClinicalStatement.MIGRATION_PROJECT_3_03,
 				ClinicalStatement.MIGRATION_PROJECT_3_04, ClinicalStatement.MIGRATION_PROJECT_3_05,
 				ClinicalStatement.MIGRATION_PROJECT_3_06, ClinicalStatement.MIGRATION_PROJECT_3_07,
-				ClinicalStatement.MIGRATION_PROJECT_3_08, ClinicalStatement.MIGRATION_PROJECT_3_09};
+				ClinicalStatement.MIGRATION_PROJECT_3_08, ClinicalStatement.MIGRATION_PROJECT_3_09,
+				ClinicalStatement.MIGRATION_PROJECT_3_10};
 		answer = executeSQLStatements(trialName, initializationStatements);
 		
 		return answer;
