@@ -185,7 +185,7 @@ public class PatientTest {
 	@Test
 	public final void testToStringNonEmptyActivePatient() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, null);
+		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, null, STATUS_ACTIVE);
 		String result = patient.toString();
 		String expected = ID + ": active " + patient.getTrialStartDate().format(formatter);
 		assertEquals(expected, result);
@@ -198,9 +198,9 @@ public class PatientTest {
 	@Test
 	public final void testToStringNonEmptyInactivePatient() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
+		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, END_DATE, STATUS_INACTIVE);
 		String result = patient.toString();
-		String expected = ID + ": inactive (" + patient.getTrialStartDate().format(formatter) + " - "
+		String expected = ID + ": inactive  (" + patient.getTrialStartDate().format(formatter) + " - "
 				+ patient.getTrialEndDate().format(formatter) + ")";
 		assertEquals(expected, result);
 	}
