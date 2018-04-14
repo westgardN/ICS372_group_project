@@ -877,7 +877,7 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#getAllPatientStatus()
 	 */
 	@Override
-	public List<PatientStatus> getAllPatientStatus() throws TrialCatalogException {
+	public List<PatientStatus> getPatientStatuses() throws TrialCatalogException {
 		validateIsInit();
 		List<PatientStatus> answer = new LinkedList<>();
 

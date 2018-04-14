@@ -389,7 +389,7 @@ public interface TrialCatalog {
 	 * @throws TrialCatalogException indicates there is no active trial or
 	 * an error was encountered.
 	 */
-	public List<PatientStatus> getAllPatientStatus() throws TrialCatalogException;
+	public List<PatientStatus> getPatientStatuses() throws TrialCatalogException;
 	
 	/**
 	 * Returns a List&lt;Patient&gt; of all the patients that are currently
