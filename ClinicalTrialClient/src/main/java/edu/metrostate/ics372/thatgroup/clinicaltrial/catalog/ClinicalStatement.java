@@ -86,6 +86,12 @@ public class ClinicalStatement {
 	public static final String UPDATE_PATIENT = "UPDATE patients SET trial_id = ?, start_date = ?, end_date = ?, status_id = ? WHERE id = ?";
 	public static final String DELETE_PATIENT = "DELETE FROM patients WHERE id = ? AND trial_id = ?";
 	
+	// PatientStatus
+	public static final String INSERT_PATIENT_STATUS = "INSERT INTO patient_status (id, display_status) VALUES(?,?)";
+	public static final String GET_PATIENT_STATUS = "SELECT id, display_status FROM patient_status WHERE id = ?";
+	public static final String UPDATE_PATIENT_STATUS = "UPDATE patient_status SET display_status = ? WHERE id = ?";
+	public static final String DELETE_PATIENT_STATUS = "DELETE FROM patient_status WHERE id = ?";
+	
 	// Readings
 	public static final String INSERT_READING = "INSERT INTO readings(id, patient_id, clinic_id, type, value, date) VALUES(?,?,?,?,?,?)";
 	public static final String GET_READING = "SELECT id, patient_id, clinic_id, type, date, value FROM readings WHERE id = ?";
@@ -95,7 +101,7 @@ public class ClinicalStatement {
 	// Get All
 	public static final String GET_ALL_CLINICS = "SELECT id, name, trial_id FROM clinics WHERE trial_id = ?";
 	public static final String GET_ALL_PATIENTS = "SELECT id, trial_id, start_date, end_date, status_id FROM patients WHERE trial_id = ?";
-	public static final String GET_ALL_PATIENT_STATUS = "SELECT id, display_status FROM patient_status;";
+	public static final String GET_ALL_PATIENT_STATUSES = "SELECT id, display_status FROM patient_status;";
 	public static final String GET_ALL_ACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ? AND status_id = 'ACTIVE'";
 	public static final String GET_ALL_INACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ? AND status_id = 'INACTIVE'";
 	public static final String GET_ALL_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings";

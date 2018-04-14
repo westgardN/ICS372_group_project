@@ -16,6 +16,7 @@ import java.util.List;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
@@ -38,6 +39,8 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 	protected static final String DATE = "date";
 	protected static final String VALUE = "value";
 	protected static final String STATUS_ID = "status_id";
+	protected static final String DISPLAY_STATUS = "display_status";
+	protected static final String DEFAULT_PATIENT_STATUS_ID  = "INACTIVE";
 	protected Trial trial;
 
 	abstract protected Connection getConnection() throws SQLException;
@@ -55,6 +58,12 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 	protected void validateParam(Clinic clinic) throws TrialCatalogException {
 		if (clinic == null || clinic.getId() == null || clinic.getId().trim().isEmpty()) {
 			throw new TrialCatalogException(Strings.ERR_CATALOG_CLINIC_INVALID);
+		}
+	}
+
+	protected void validateParam(PatientStatus patientStatus) throws TrialCatalogException {
+		if (patientStatus == null || patientStatus.getId() == null || patientStatus.getId().trim().isEmpty()) {
+			throw new TrialCatalogException(Strings.ERR_CATALOG_PATIENT_STATUS_INVALID);
 		}
 	}
 
@@ -106,6 +115,12 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		PreparedStatement answer = conn.prepareStatement(sql);
 		answer.setString(1, id);
 		answer.setString(2, getActiveId());
+		return answer;
+	}
+
+	protected PreparedStatement getPreparedSelect(final Connection conn, PatientStatus patientStatus) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_PATIENT_STATUS);
+		answer.setString(1, patientStatus.getId());
 		return answer;
 	}
 
@@ -179,6 +194,15 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	protected PreparedStatement getPreparedInsert(final Connection conn, PatientStatus patientStatus) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_PATIENT_STATUS);
+		answer.setString(1, patientStatus.getId());
+
+		answer.setString(2, patientStatus.getDisplayStatus());
+
+		return answer;
+	}
+
 	protected PreparedStatement getPreparedInsert(final Connection conn, Reading reading) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_READING);
 		answer.setString(1, reading.getId());
@@ -224,6 +248,15 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	protected PreparedStatement getPreparedUpdate(final Connection conn, PatientStatus patientStatus) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_PATIENT_STATUS);
+
+		answer.setString(1, patientStatus.getDisplayStatus());
+		answer.setString(2, patientStatus.getId());
+		
+		return answer;
+	}
+
 	protected PreparedStatement getPreparedUpdate(final Connection conn, Reading reading) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_READING);
 		answer.setString(1, reading.getPatientId());
@@ -253,6 +286,12 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.DELETE_PATIENT);
 		answer.setString(1, patient.getId());
 		answer.setString(2, patient.getTrialId());
+		return answer;
+	}
+
+	protected PreparedStatement getPreparedDelete(final Connection conn, PatientStatus patientStatus) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.DELETE_PATIENT_STATUS);
+		answer.setString(1, patientStatus.getId());
 		return answer;
 	}
 
@@ -302,6 +341,15 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 			answer.setTrialEndDate(rs.getDate(END_DATE).toLocalDate());
 		}
 		answer.setStatusId(rs.getString(STATUS_ID));
+
+		return answer;
+	}
+
+	protected PatientStatus loadPatientStatus(ResultSet rs) throws SQLException {
+		PatientStatus answer = new PatientStatus();
+
+		answer.setId(rs.getString(ID));
+		answer.setDisplayStatus(rs.getString(DISPLAY_STATUS));
 
 		return answer;
 	}
@@ -395,6 +443,25 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 
 		try (Connection conn = getConnection();
 				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
+				ResultSet rs = pstmt.executeQuery()) {
+			if (rs.next()) {
+				answer = true;
+			}
+		} catch (SQLException ex) {
+			throw new TrialCatalogException(ex.getMessage(), ex);
+		}
+
+		return answer;
+	}
+
+	@Override
+	public boolean exists(PatientStatus patientStatus) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patientStatus);
+		boolean answer = false;
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelect(conn, patientStatus);
 				ResultSet rs = pstmt.executeQuery()) {
 			if (rs.next()) {
 				answer = true;
@@ -607,6 +674,98 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#insert(edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus)
+	 */
+	@Override
+	public boolean insert(PatientStatus patientStatus) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patientStatus);
+		boolean answer = false;
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedInsert(conn, patientStatus);) {
+			if (pstmt.executeUpdate() == 1) {
+				answer = true;
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#get(edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus)
+	 */
+	@Override
+	public PatientStatus get(PatientStatus patientStatus) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patientStatus);
+		PatientStatus answer = null;
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelect(conn, patientStatus);
+				ResultSet rs = pstmt.executeQuery()) {
+			if (rs.next()) {
+				answer = loadPatientStatus(rs);
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#getDefaultPatientStatusId()
+	 */
+	@Override
+	public String getDefaultPatientStatusId() throws TrialCatalogException {
+		return DEFAULT_PATIENT_STATUS_ID;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#update(edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus)
+	 */
+	@Override
+	public boolean update(PatientStatus patientStatus) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patientStatus);
+		boolean answer = false;
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedUpdate(conn, patientStatus);) {
+			if (pstmt.executeUpdate() == 1) {
+				answer = true;
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#remove(edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus)
+	 */
+	@Override
+	public boolean remove(PatientStatus patientStatus) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patientStatus);
+		boolean answer = false;
+
+		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedDelete(conn, patientStatus);) {
+			if (pstmt.executeUpdate() == 1) {
+				answer = true;
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
 	@Override
 	public boolean insert(Reading reading) throws TrialCatalogException {
 		validateIsInit();
@@ -713,6 +872,28 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#getAllPatientStatus()
+	 */
+	@Override
+	public List<PatientStatus> getAllPatientStatus() throws TrialCatalogException {
+		validateIsInit();
+		List<PatientStatus> answer = new LinkedList<>();
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelectAll(conn, ClinicalStatement.GET_ALL_PATIENT_STATUSES);
+				ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				answer.add(loadPatientStatus(rs));
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
 	@Override
 	public List<Patient> getActivePatients() throws TrialCatalogException {
 		validateIsInit();
@@ -808,6 +989,6 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 
 		return answer;
 	}
-
+	
 	//////////////////////// End of Interface /////////////////////////////////////
 }

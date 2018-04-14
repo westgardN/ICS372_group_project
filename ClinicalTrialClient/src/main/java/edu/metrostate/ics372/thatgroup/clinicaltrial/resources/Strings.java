@@ -78,6 +78,7 @@ public class Strings {
 	public static final String ERR_CATALOG_TRIAL_INVALID = "trial cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_CLINIC_INVALID = "clinic cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_PATIENT_INVALID = "patient cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_PATIENT_STATUS_INVALID = "patient status cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_READING_INVALID = "reading cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_NO_ACTIVE_TRIAL = "There is no active trial. Please call init with a valid Trial.";
 	public static final String ERR_CATALOG_HAS_BEEN_DELETED = "The database for the active trial has been deleted.";
