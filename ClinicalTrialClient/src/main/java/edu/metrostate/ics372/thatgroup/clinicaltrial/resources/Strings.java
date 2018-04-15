@@ -80,6 +80,7 @@ public class Strings {
 	public static final String ERR_CATALOG_PATIENT_INVALID = "patient cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_PATIENT_STATUS_INVALID = "patient status cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_READING_INVALID = "reading cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_STORAGE_PATH = "the catalog storage path is invalid.";
 	public static final String ERR_CATALOG_NO_ACTIVE_TRIAL = "There is no active trial. Please call init with a valid Trial.";
 	public static final String ERR_CATALOG_HAS_BEEN_DELETED = "The database for the active trial has been deleted.";
 	public static final String ERR_TYPE_CLINIC_PATIENT_MSG = "Please select a valid clinic, patient, and type for the reading.";

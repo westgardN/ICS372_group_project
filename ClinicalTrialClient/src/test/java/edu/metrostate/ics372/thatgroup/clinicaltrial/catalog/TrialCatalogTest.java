@@ -58,7 +58,7 @@ public class TrialCatalogTest {
 		
 	}
 	
-	@Test(expected = TrialCatalogException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testInsertInvalidPatientShouldThrowException() throws TrialCatalogException {
 		Patient patient = new Patient();
 		

@@ -2,7 +2,6 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import java.util.List;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus;
@@ -33,7 +32,7 @@ public interface TrialCatalog {
 	 * @throws TrialCatalogException indicates that trial is null or that an error
 	 * occurred during the initialization process. 
 	 */
-	public boolean init(Trial trial) throws TrialCatalogException;
+	public boolean init() throws TrialCatalogException;
 
 	/**
 	 * Returns true if the catalog has been initialized; otherwise false is returned.
