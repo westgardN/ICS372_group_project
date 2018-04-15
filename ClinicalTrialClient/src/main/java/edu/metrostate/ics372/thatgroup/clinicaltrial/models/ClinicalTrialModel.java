@@ -932,4 +932,30 @@ public class ClinicalTrialModel {
 		}
 		return answer;
 	}
+	
+	/**
+	 * Adds the specified patient to this model's trial.
+	 * Returns true if the patient was added and false if the patient was not added. A patient
+	 * can only be added to a trial once. Fires a PROP_PATIENTS change notification
+	 * 
+	 * @param patient the patient record to add to the system. 
+	 * @return true if the patient was added and false if the patient was not added.
+	 * @throws TrialCatalogException indicates an error occurred while accessing the
+	 * catalog.
+	 */
+	public boolean addPatient(Patient patient)  throws TrialCatalogException {
+		boolean answer = false;
+		
+		if (!catalog.exists(patient)) {
+			answer = catalog.insert(patient);
+			if (answer && !isImporting()) {
+				Platform.runLater(() -> {
+					int oldValue = patients.size();
+					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
+					patients.add(patient);
+				});
+			}
+		}
+		return answer;
+	}
 }

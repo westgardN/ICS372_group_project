@@ -2,9 +2,9 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.catalog;
 
 import java.util.List;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
-import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 
 /**
@@ -32,7 +32,7 @@ public interface TrialCatalog {
 	 * @throws TrialCatalogException indicates that trial is null or that an error
 	 * occurred during the initialization process. 
 	 */
-	public boolean init(Trial trial) throws TrialCatalogException;
+	public boolean init() throws TrialCatalogException;
 
 	/**
 	 * Returns true if the catalog has been initialized; otherwise false is returned.
@@ -209,6 +209,85 @@ public interface TrialCatalog {
 	 */
 	public boolean remove(Patient patient) throws TrialCatalogException;
 
+	/**
+	 * Returns true if the specified patient status exists within this catalog;
+	 * otherwise false is returned.
+	 * 
+	 * @param patientStatus
+	 *            the id of the <code>PatientStatus</code> to be checked must be
+	 *            set. If the id field identifies a valid patient status then the
+	 *            method returns true; otherwise false is returned. 
+	 * @return true if the id field identifies a valid patient status; otherwise
+	 * false is returned.
+	 * @throws TrialCatalogException indicates that patient is null or
+	 * another type of error occurred. 
+	 */
+	public boolean exists(PatientStatus patientStatus) throws TrialCatalogException;
+	
+	/**
+	 * Inserts the specified <code>PatientStatus</code> into the catalog. If the specified
+	 * patient status already exists, a TrialCatalogException will be thrown. Returns true
+	 * if the specified patient status was inserted in to the catalog; otherwise an exception
+	 * is thrown.
+	 * 
+	 * @param patientStatus
+	 *            the <code>PatientStatus</code> to be insert in to the catalog.
+	 * @return true if the specified patient status was inserted in to the catalog;
+	 * otherwise an exception is returned.
+	 * @throws TrialCatalogException indicates that patient status is null, the specified
+	 * patient status id already exists, or another type of error occurred. 
+	 */
+	public boolean insert(PatientStatus patientStatus) throws TrialCatalogException;
+
+	/**
+	 * If the specified patient status id specifies a valid patient status, then a new PatientStatus is
+	 * created and populated with the retrieved data and returned; otherwise null is returned.
+	 * 
+	 * @param patientStatus
+	 *            the id of the <code>PatientStatus</code> to be retrieved must be
+	 *            set. If the id field identifies a valid patient status, a new PatientStatus
+	 *            is created and its fields are populated with the
+	 *            retrieved data and the method returns a reference to it; otherwise
+	 *            null is returned. 
+	 * @return true if the specified patient status was retrieved; otherwise false.
+	 * @throws TrialCatalogException indicates that patient status is null or an error
+	 * was encountered.
+	 */
+	public PatientStatus get(PatientStatus patientStatus) throws TrialCatalogException;
+
+	/**
+	 * Returns the default patient status id for a patient.
+	 * 
+	 * @return the default patient status id for a patient. 
+	 * @throws TrialCatalogException indicates that an error
+	 * was encountered.
+	 */
+	public String getDefaultPatientStatusId() throws TrialCatalogException;
+	
+	/**
+	 * Updates the existing patient status record. Returns true if the update was successful; otherwise fals.
+	 * 
+	 * @param patientStatus
+	 *            the patient status must not be null and the id of the specified patient status
+	 *            must be a valid id for a patient status within this catalog. 
+	 * @return true if the updated information was saved; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that patient status is null or an error
+	 * was encountered.
+	 */
+	public boolean update(PatientStatus patientStatus) throws TrialCatalogException;
+
+	/**
+	 * Removes the specified patient status from the catalog. A patient status can only be removed
+	 * from the catalog if it does not have any associated patients.
+	 * 
+	 * @param patientStatus 
+	 *            the patientStatus must not be null and the id of the specified patient status
+	 *            must be a valid id for a patient status within this catalog. 
+	 * @return true if the patient status was removed from the catalog; otherwise false is returned.
+	 * @throws TrialCatalogException indicates that patient status is null or an error
+	 * was encountered such as the patient status having associated patients.
+	 */
+	public boolean remove(PatientStatus patientStatus) throws TrialCatalogException;
 
 	/**
 	 * Returns true if the specified reading exists within this catalog;
@@ -301,6 +380,16 @@ public interface TrialCatalog {
 	 */
 	public List<Patient> getPatients() throws TrialCatalogException;
 
+	/**
+	 * Returns a List&lt;PatientStatus&gt; of all the patient statuses.
+	 *  
+	 * @return a List&lt;PatientStatus&gt; of all the patient statuses.
+	 * 
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
+	 */
+	public List<PatientStatus> getPatientStatuses() throws TrialCatalogException;
+	
 	/**
 	 * Returns a List&lt;Patient&gt; of all the patients that are currently
 	 * active in the active trial.

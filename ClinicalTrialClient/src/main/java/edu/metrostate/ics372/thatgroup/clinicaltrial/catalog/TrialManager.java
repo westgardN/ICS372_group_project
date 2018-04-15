@@ -20,10 +20,12 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
  * @author That Group
  */
 public class TrialManager {
-	private Map<Trial, TrialCatalog> catalogs;
+	protected Map<Trial, TrialCatalog> catalogs;
+	protected String storagePath;
 
 	private TrialManager() {
 		catalogs = new HashMap<Trial, TrialCatalog>();
+		storagePath = null;
 	}
 
 	/**
@@ -32,7 +34,22 @@ public class TrialManager {
 	 * @return a new instance of <code>TrialManager</code>
 	 */
 	public static TrialManager getInstance() {
-		return TrialManagerHolder.INSTANCE;
+		return getInstance(ClinicalTrialCatalogUtilIty.getEnvironmentSpecificStoragePath());
+	}
+	
+	/**
+	 * Returns a new Singleton instance of <code>TrialManager</code>.
+	 * 
+	 * @return a new instance of <code>TrialManager</code>
+	 */
+	public static TrialManager getInstance(String storagePath) {
+		TrialManager tm = TrialManagerHolder.INSTANCE;
+		
+		if (storagePath != null) {
+			tm.storagePath = storagePath;
+		}
+		
+		return tm;
 	}
 
 	private static class TrialManagerHolder {
@@ -52,7 +69,7 @@ public class TrialManager {
 	 * @throws TrialCatalogException indicates the catalog is already initialized.
 	 */
 	public TrialCatalog getTrialCatalog(Trial trial) throws TrialCatalogException {
-		if (trial == null) {
+		if (trial == null || trial.getId() == null || trial.getId().trim().isEmpty()) {
 			throw new TrialCatalogException(Strings.ERR_CATALOG_TRIAL_INVALID);
 		}
 		
@@ -61,18 +78,48 @@ public class TrialManager {
 		if (catalogs.containsKey(trial)) {
 			catalog = catalogs.get(trial);
 		} else {
-			catalog = new ClinicalTrialCatalog();
+			catalog = new ClinicalTrialCatalog(trial, storagePath);
 			catalogs.put(trial, catalog);
 		}
 		
-		initCatalog(catalog, trial);
+		initCatalog(catalog);
 		
 		return catalog;
 	}
 
-	private void initCatalog(TrialCatalog catalog, Trial trial) throws TrialCatalogException {
+	public boolean exists(Trial trial) throws TrialCatalogException {
+		if (trial == null || trial.getId() == null || trial.getId().trim().isEmpty()) {
+			throw new TrialCatalogException(Strings.ERR_CATALOG_TRIAL_INVALID);
+		}
+		
+		ClinicalTrialCatalog catalog = new ClinicalTrialCatalog(trial, storagePath);
+		
+		return catalog.catalogExists();
+	}
+	
+	public boolean remove(Trial trial) throws TrialCatalogException {
+		if (trial == null || trial.getId() == null || trial.getId().trim().isEmpty()) {
+			throw new TrialCatalogException(Strings.ERR_CATALOG_TRIAL_INVALID);
+		}
+		
+		boolean answer = true;
+		
+		if (exists(trial)) {
+			ClinicalTrialCatalog catalog = new ClinicalTrialCatalog(trial, storagePath);
+			
+			answer = catalog.removeCatalog();
+		}
+		
+		return answer;
+	}
+	
+	public void uninitialize() {
+		catalogs.clear();
+	}
+	
+	private void initCatalog(TrialCatalog catalog) throws TrialCatalogException {
 		if (!catalog.isInit()) {
-			if (!catalog.init(trial)) {
+			if (!catalog.init()) {
 				throw new TrialCatalogException(Strings.ERR_CATALOG_INIT);
 			}
 		} else {
