@@ -44,30 +44,6 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 	abstract protected boolean databaseExists(Trial trial);
 	
 	abstract protected boolean createTrialCatalog(Trial trial, String path) throws TrialCatalogException;
-	
-	protected void validateParam(Trial trial) throws TrialCatalogException {
-		if (!isValidTrial(trial)) {
-			throw new TrialCatalogException(Strings.ERR_CATALOG_TRIAL_INVALID);
-		}
-	}
-
-	protected void validateParam(Clinic clinic) throws TrialCatalogException {
-		if (clinic == null || clinic.getId() == null || clinic.getId().trim().isEmpty()) {
-			throw new TrialCatalogException(Strings.ERR_CATALOG_CLINIC_INVALID);
-		}
-	}
-
-	protected void validateParam(Patient patient) throws TrialCatalogException {
-		if (patient == null || patient.getId() == null || patient.getId().trim().isEmpty()) {
-			throw new TrialCatalogException(Strings.ERR_CATALOG_PATIENT_INVALID);
-		}
-	}
-
-	protected void validateParam(Reading reading) throws TrialCatalogException {
-		if (reading == null || reading.getId() == null || reading.getId().trim().isEmpty()) {
-			throw new TrialCatalogException(Strings.ERR_CATALOG_READING_INVALID);
-		}
-	}
 
 	protected void validateIsInit() throws TrialCatalogException {
 		if (!isValidTrial(trial)) {
@@ -95,269 +71,6 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		return trial != null ? trial.getEndDate() : null;
 	}
 
-	protected PreparedStatement getPreparedSelect(final Connection conn, Trial trial) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_TRIAL);
-		answer.setString(1, getActiveId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedSelect(final Connection conn, String id, String sql) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(sql);
-		answer.setString(1, id);
-		answer.setString(2, getActiveId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedSelect(final Connection conn, Reading reading) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_READING);
-		answer.setString(1, reading.getId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedSelectAll(final Connection conn, String sql) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(sql);
-		answer.setString(1, getActiveId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_READINGS);
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn, String id, String sql)
-			throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(sql);
-		answer.setString(1, id);
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedInsert(final Connection conn, Trial trial) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_TRIAL);
-		answer.setString(1, trial.getId());
-		if (trial.getStartDate() != null) {
-			answer.setDate(2, Date.valueOf(trial.getStartDate()));
-		} else {
-			answer.setDate(2, null);
-		}
-		if (trial.getEndDate() != null) {
-			answer.setDate(3, Date.valueOf(trial.getEndDate()));
-		} else {
-			answer.setDate(3, null);
-		}
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedInsert(final Connection conn, Clinic clinic) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_CLINIC);
-		answer.setString(1, clinic.getId());
-		answer.setString(2, clinic.getName());
-		answer.setString(3, getActiveId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedInsert(final Connection conn, Patient patient) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_PATIENT);
-		answer.setString(1, patient.getId());
-
-		if (patient.getTrialStartDate() != null) {
-			answer.setDate(2, Date.valueOf(patient.getTrialStartDate()));
-		} else {
-			answer.setDate(2, null);
-		}
-
-		if (patient.getTrialEndDate() != null) {
-			answer.setDate(3, Date.valueOf(patient.getTrialEndDate()));
-		} else {
-			answer.setDate(3, null);
-		}
-
-		answer.setString(4, getActiveId());
-
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedInsert(final Connection conn, Reading reading) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_READING);
-		answer.setString(1, reading.getId());
-		answer.setString(2, reading.getPatientId());
-		answer.setString(3, reading.getClinicId());
-		answer.setString(4, ReadingFactory.getReadingType(reading));
-		answer.setString(5, reading.getValue() != null ? reading.getValue().toString() : null);
-
-		if (reading.getDate() != null) {
-			answer.setTimestamp(6, Timestamp.valueOf(reading.getDate()));
-		} else {
-			answer.setTimestamp(6, null);
-		}
-
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedUpdate(final Connection conn, Clinic clinic) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_CLINIC);
-		answer.setString(1, clinic.getTrialId());
-		answer.setString(2, clinic.getName());
-		answer.setString(3, clinic.getId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedUpdate(final Connection conn, Patient patient) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_PATIENT);
-		answer.setString(1, patient.getTrialId());
-		if (patient.getTrialStartDate() != null) {
-			answer.setDate(2, Date.valueOf(patient.getTrialStartDate()));
-		} else {
-			answer.setDate(2, null);
-		}
-
-		if (patient.getTrialEndDate() != null) {
-			answer.setDate(3, Date.valueOf(patient.getTrialEndDate()));
-		} else {
-			answer.setDate(3, null);
-		}
-		answer.setString(4, patient.getId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedUpdate(final Connection conn, Reading reading) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_READING);
-		answer.setString(1, reading.getPatientId());
-		answer.setString(2, reading.getClinicId());
-		answer.setString(3, ReadingFactory.getReadingType(reading));
-		answer.setString(4, reading.getValue() != null ? reading.getValue().toString() : null);
-
-		if (reading.getDate() != null) {
-			answer.setTimestamp(5, Timestamp.valueOf(reading.getDate()));
-		} else {
-			answer.setTimestamp(5, null);
-		}
-
-		answer.setString(6, reading.getId());
-
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedDelete(final Connection conn, Clinic clinic) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.DELETE_CLINIC);
-		answer.setString(1, clinic.getId());
-		answer.setString(2, clinic.getTrialId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedDelete(final Connection conn, Patient patient) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.DELETE_PATIENT);
-		answer.setString(1, patient.getId());
-		answer.setString(2, patient.getTrialId());
-		return answer;
-	}
-
-	protected PreparedStatement getPreparedDelete(final Connection conn, Reading reading) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.DELETE_READING);
-		answer.setString(1, reading.getId());
-		answer.setString(2, reading.getPatientId());
-		answer.setString(3, reading.getClinicId());
-		return answer;
-	}
-
-	protected Trial loadTrial(ResultSet rs) throws SQLException {
-		Trial answer = new Trial();
-
-		answer.setId(rs.getString(ID));
-
-		if (rs.getDate(START_DATE) != null) {
-			answer.setStartDate(rs.getDate(START_DATE).toLocalDate());
-		}
-		if (rs.getDate(END_DATE) != null) {
-			answer.setEndDate(rs.getDate(END_DATE).toLocalDate());
-		}
-
-		return answer;
-	}
-
-	protected Clinic loadClinic(ResultSet rs) throws SQLException {
-		Clinic answer = new Clinic();
-
-		answer.setId(rs.getString(ID));
-		answer.setName(rs.getString(NAME));
-		answer.setTrialId(rs.getString(TRIAL_ID));
-
-		return answer;
-	}
-
-	protected Patient loadPatient(ResultSet rs) throws SQLException {
-		Patient answer = new Patient();
-
-		answer.setId(rs.getString(ID));
-		answer.setTrialId(rs.getString(TRIAL_ID));
-
-		if (rs.getDate(START_DATE) != null) {
-			answer.setTrialStartDate(rs.getDate(START_DATE).toLocalDate());
-		}
-		if (rs.getDate(END_DATE) != null) {
-			answer.setTrialEndDate(rs.getDate(END_DATE).toLocalDate());
-		}
-
-		return answer;
-	}
-
-	protected Reading loadReading(ResultSet rs) throws SQLException {
-		String type = rs.getString(TYPE);
-		Reading answer = ReadingFactory.getReading(type);
-
-		answer.setId(rs.getString(ID));
-		answer.setPatientId(rs.getString(PATIENT_ID));
-		answer.setClinicId(rs.getString(CLINIC_ID));
-
-		if (rs.getDate(DATE) != null) {
-			Timestamp date = rs.getTimestamp(DATE);
-			LocalDateTime ld = null;
-			if (date != null) {
-				ld = date.toLocalDateTime();
-			}
-			if (ld != null) {
-				answer.setDate(ld);
-			}
-		}
-		answer.setValue(rs.getString(VALUE));
-
-		return answer;
-	}
-
-	protected Trial get(Trial trial) throws TrialCatalogException {
-		validateParam(trial);
-		Trial answer = null;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, trial);
-				ResultSet rs = pstmt.executeQuery();) {
-
-			if (rs.next()) {
-				answer = loadTrial(rs);
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
-	}
-
-	protected boolean insert(Trial trial) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(trial);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedInsert(conn, trial);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
-	}
-
 	@Override
 	public boolean isInit() {
 		return isValidTrial(trial) && databaseExists(trial);
@@ -365,185 +78,71 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 
 	@Override
 	public boolean exists(Clinic clinic) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(clinic);
-		boolean answer = false;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, clinic.getId(), ClinicalStatement.GET_CLINIC);
-				ResultSet rs = pstmt.executeQuery()) {
-			if (rs.next()) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
+		return existsForBean(clinic);
 	}
 
 	@Override
 	public boolean exists(Patient patient) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(patient);
-		boolean answer = false;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
-				ResultSet rs = pstmt.executeQuery()) {
-			if (rs.next()) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
+		return existsForBean(patient);
 	}
 
 	@Override
 	public boolean exists(Reading reading) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(reading);
-		boolean answer = false;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, reading);
-				ResultSet rs = pstmt.executeQuery()) {
-			if (rs.next()) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
+		return existsForBean(reading);
+	}
+	
+	private boolean existsForBean(Object bean) throws TrialCatalogException {
+		return new CatalogTransaction(getActiveId()).exists(bean);
 	}
 
 	@Override
 	public boolean insert(Clinic clinic) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(clinic);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedInsert(conn, clinic);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).insert(clinic);
 	}
 
 	@Override
 	public Clinic get(Clinic clinic) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(clinic);
-		Clinic answer = null;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, clinic.getId(), ClinicalStatement.GET_CLINIC);
-				ResultSet rs = pstmt.executeQuery();) {
-
-			if (rs.next()) {
-				answer = loadClinic(rs);
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
+		return (Clinic) new CatalogTransaction(getActiveId()).get(clinic);
 	}
 
 	@Override
 	public Clinic getDefaultClinic() throws TrialCatalogException {
 		Clinic clinic = new Clinic(Clinic.DEFAULT_ID, getActiveId(), Clinic.DEFAULT_ID);
 
-		if (!exists(clinic)) {
-			insert(clinic);
+		CatalogTransaction transaction = new CatalogTransaction(getActiveId());
+		if (!transaction.exists(clinic)) {
+			transaction.insert(clinic);
 		}
-
-		return get(clinic);
+		return (Clinic) transaction.get(clinic);
 	}
 
 	@Override
 	public boolean update(Clinic clinic) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(clinic);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedUpdate(conn, clinic);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException ex) {
-			throw new TrialCatalogException(ex.getMessage(), ex);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).update(clinic);
 	}
 
 	@Override
 	public boolean remove(Clinic clinic) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(clinic);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedDelete(conn, clinic);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).remove(clinic);
 	}
 
 	@Override
 	public boolean insert(Patient patient) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(patient);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedInsert(conn, patient);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).insert(patient);
 	}
 
 	@Override
 	public Patient get(Patient patient) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(patient);
-		Patient answer = null;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.GET_PATIENT);
-				ResultSet rs = pstmt.executeQuery()) {
-			if (rs.next()) {
-				answer = loadPatient(rs);
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return (Patient) new CatalogTransaction(getActiveId()).get(patient);
 	}
 
 	@Override
 	public Patient getDefaultPatient() throws TrialCatalogException {
 		Patient patient = new Patient(Patient.DEFAULT_ID, getActiveId(), getStartDate(), getEndDate());
-
-		if (!exists(patient)) {
-			insert(patient);
+		CatalogTransaction transaction = new CatalogTransaction(getActiveId());
+		
+		if (!transaction.exists(patient)) {
+			transaction.insert(patient);
 		}
 
 		Patient pt = get(patient);
@@ -560,114 +159,40 @@ public abstract class AbstractClinicalTrialCatalog implements TrialCatalog {
 		}
 
 		if (update) {
-			update(pt);
+			transaction.update(pt);
 		}
 
-		return get(patient);
+		return (Patient) transaction.get(patient);
 	}
 
 	@Override
 	public boolean update(Patient patient) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(patient);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedUpdate(conn, patient);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).update(patient);
 	}
 
 	@Override
 	public boolean remove(Patient patient) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(patient);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedDelete(conn, patient);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).remove(patient);
 	}
 
 	@Override
 	public boolean insert(Reading reading) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(reading);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedInsert(conn, reading);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).insert(reading);
 	}
 
 	@Override
 	public Reading get(Reading reading) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(reading);
-		Reading answer = null;
-
-		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelect(conn, reading);
-				ResultSet rs = pstmt.executeQuery()) {
-			if (rs.next()) {
-				answer = loadReading(rs);
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return (Reading) new CatalogTransaction(getActiveId()).get(reading);
 	}
 
 	@Override
 	public boolean update(Reading reading) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(reading);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedUpdate(conn, reading);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).update(reading);
 	}
 
 	@Override
 	public boolean remove(Reading reading) throws TrialCatalogException {
-		validateIsInit();
-		validateParam(reading);
-		boolean answer = false;
-
-		try (Connection conn = getConnection(); PreparedStatement pstmt = getPreparedDelete(conn, reading);) {
-			if (pstmt.executeUpdate() == 1) {
-				answer = true;
-			}
-		} catch (SQLException e) {
-			throw new TrialCatalogException(e.getMessage(), e);
-		}
-
-		return answer;
+		return new CatalogTransaction(getActiveId()).remove(reading);
 	}
 
 	@Override
