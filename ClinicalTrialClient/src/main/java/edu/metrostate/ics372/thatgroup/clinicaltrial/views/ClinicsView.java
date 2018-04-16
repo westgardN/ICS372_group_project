@@ -15,6 +15,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -86,7 +87,7 @@ public class ClinicsView extends VBox implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
-		clinicsProperty.set(model.getClinics());
+		clinicsProperty.set(FXCollections.observableArrayList(model.getClinics()));
 
 		listView.itemsProperty().bind(clinicsProperty);
 
@@ -132,6 +133,29 @@ public class ClinicsView extends VBox implements Initializable {
 					clinicId.setDisable(true);
 				}
 				break;
+			case ClinicalTrialModel.PROP_CLINICS:
+				clinic = null;
+				
+				if (evt.getNewValue() instanceof Clinic) {
+					clinic = (Clinic) evt.getNewValue();
+					if (clinic != null) {
+						updateClinic(clinic);
+						clear();
+					}
+				}
+				break;
+			case ClinicalTrialModel.PROP_UPDATE_CLINIC:
+				clinic = null;
+				
+				if (evt.getNewValue() instanceof Clinic) {
+					clinic = (Clinic) evt.getNewValue();
+					if (clinic != null) {
+						updateClinic(clinic);
+						clear();
+						load(clinic);
+					}
+				}
+				break;
 			}
 		});
 	}
@@ -147,6 +171,10 @@ public class ClinicsView extends VBox implements Initializable {
 		clinicName.setText(Strings.EMPTY);
 		addButton.setText(Strings.ADD);
 
+	}
+	
+	public void reloadData() {
+		clinicsProperty.set(FXCollections.observableArrayList(model.getClinics()));
 	}
 	
 	@FXML
@@ -169,6 +197,23 @@ public class ClinicsView extends VBox implements Initializable {
 			sb.append(Strings.ERR_RECEIVED_MSG);
 			sb.append(e.getMessage());
 			PopupNotification.showPopupMessage(sb.toString(), getScene());
+		}
+	}
+
+	private void updateClinic(Clinic clinic) {
+		int index = clinicsProperty.indexOf(clinic);
+
+		if (index >= 0) {
+			int selected = listView.getSelectionModel().getSelectedIndex();
+			clinicsProperty.set(index, null);
+			try {
+				clinic = model.getClinic(clinic.getId());
+			} catch (TrialCatalogException e) {
+			};
+			clinicsProperty.set(index, clinic);
+			listView.getSelectionModel().select(selected);
+		} else {
+			clinicsProperty.add(clinic);
 		}
 	}
 

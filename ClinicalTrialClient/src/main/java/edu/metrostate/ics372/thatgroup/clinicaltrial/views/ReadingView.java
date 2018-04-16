@@ -22,6 +22,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -291,9 +292,9 @@ public class ReadingView extends VBox implements Initializable {
 	 */
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
-		type.setItems(model.getReadingTypes());
-		clinicChoice.setItems(model.getClinics());
-		patientChoice.setItems(model.getPatients());
+		type.setItems(FXCollections.observableArrayList(model.getReadingTypes()));
+		clinicChoice.setItems(FXCollections.observableArrayList(model.getClinics()));
+		patientChoice.setItems(FXCollections.observableArrayList(model.getPatients()));
 		
 		model.addPropertyChangeListener((evt) -> {
 			switch (evt.getPropertyName()) {

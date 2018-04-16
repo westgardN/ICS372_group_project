@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -296,6 +295,11 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 
+	protected PreparedStatement getPreparedSelectAllPatientStatuses(final Connection conn, String sql) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(sql);
+		return answer;
+	}
+	
 	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_READINGS);
 		return answer;
@@ -583,7 +587,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	@Override
 	public boolean isInit() {
-		return isValidTrial(trial) && init;
+		return isValidTrial(trial) && init && catalogExists();
 	}
 
 	@Override
@@ -1052,7 +1056,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		List<PatientStatus> answer = new LinkedList<>();
 
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAll(conn, ClinicalStatement.GET_ALL_PATIENT_STATUSES);
+				PreparedStatement pstmt = getPreparedSelectAllPatientStatuses(conn, ClinicalStatement.GET_ALL_PATIENT_STATUSES);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadPatientStatus(rs));

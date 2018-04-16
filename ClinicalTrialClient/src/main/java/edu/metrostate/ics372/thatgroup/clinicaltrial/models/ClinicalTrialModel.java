@@ -13,15 +13,13 @@ import java.util.Objects;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialManager;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * The ClinicalTrialModel is a class that provides a central means of access to
@@ -117,10 +115,12 @@ public class ClinicalTrialModel {
 	private Reading selectedReading;
 	private boolean importing;
 	
-	private ObservableList<Patient> patients;
-	private ObservableList<Clinic> clinics;
-	private ObservableList<Reading> journal;
-	private ObservableList<String> readingTypes;
+	private List<Patient> patients;
+	private List<Clinic> clinics;
+	private List<Reading> journal;
+	private List<String> readingTypes;
+	private List<PatientStatus> patientStatuses;
+	private String defaultPatientStatusId;
 
 	private TrialCatalog catalog;
 	
@@ -142,13 +142,15 @@ public class ClinicalTrialModel {
 	public ClinicalTrialModel(String name) throws TrialCatalogException {
 		trial = new Trial(name);
 		catalog = TrialManager.getInstance().getTrialCatalog(trial);
-		patients = FXCollections.observableArrayList(catalog.getPatients());
-		clinics = FXCollections.observableArrayList(catalog.getClinics());
+		patients = catalog.getPatients();
+		patientStatuses = catalog.getPatientStatuses();
+		clinics = catalog.getClinics();
 		defaultClinic = catalog.getDefaultClinic();
+		defaultPatientStatusId = catalog.getDefaultPatientStatusId();
 		if (!clinics.contains(defaultClinic)) {
 			clinics.add(defaultClinic);
 		}
-		readingTypes = FXCollections.observableArrayList(ReadingFactory.getPrettyReadingTypes());
+		readingTypes = ReadingFactory.getPrettyReadingTypes();
 		selectedPatient = null;
 		selectedClinic = null;
 		selectedReading = null;
@@ -180,6 +182,14 @@ public class ClinicalTrialModel {
 		return defaultClinic;
 	}
 
+	public String getDefaultPatientStatusId() {
+		return defaultPatientStatusId;
+	}
+	
+	public List<PatientStatus> getPatientStatuses() {
+		return patientStatuses;
+	}
+	
 	/**
 	 * @return the reading that is currently selected, which may be null. 
 	 * 
@@ -219,13 +229,13 @@ public class ClinicalTrialModel {
 		if (!Objects.equals(this.selectedClinic, selectedClinic)) {
 			Clinic oldValue = this.selectedClinic;
 			this.selectedClinic = selectedClinic;
-			if (notify && !isImporting()) {
-				Platform.runLater(() -> {
+			if (!isImporting()) {
+				if (notify) {
 					pcs.firePropertyChange(PROP_SELECTED_CLINIC, oldValue, this.selectedClinic);
-				});
+				}
+				
+				setJournal(this.selectedClinic, notify);
 			}
-			
-			setJournal(this.selectedClinic, notify);
 		}
 	}
 
@@ -260,13 +270,13 @@ public class ClinicalTrialModel {
 		if (!Objects.equals(this.selectedPatient, selectedPatient)) {
 			Patient oldValue = this.selectedPatient;
 			this.selectedPatient = selectedPatient;
-			if (notify && !isImporting()) {
-				Platform.runLater(() -> {
+			if (!isImporting()) {
+				if (notify) {
 					pcs.firePropertyChange(PROP_SELECTED_PATIENT, oldValue, this.selectedPatient);
-				});
+				}
+				
+				setJournal(this.selectedPatient, notify);
 			}
-			
-			setJournal(this.selectedPatient, notify);
 		}
 	}
 
@@ -299,10 +309,10 @@ public class ClinicalTrialModel {
 		if (!Objects.equals(this.selectedReading, selectedReading)) {
 			Reading oldValue = this.selectedReading;
 			this.selectedReading = selectedReading;
-			if (notify && !isImporting()) {
-				Platform.runLater(() -> {
+			if (!isImporting()) {
+				if (notify) {
 					pcs.firePropertyChange(PROP_SELECTED_READING, oldValue, this.selectedReading);
-				});
+				}
 			}
 		}
 	}
@@ -320,6 +330,10 @@ public class ClinicalTrialModel {
         pcs.addPropertyChangeListener(listener);
     }
 	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		pcs.removePropertyChangeListener(listener);
+	}
+	
 	/**
 	 * @return a reference to the actual trial associated with this view model. Changes made
 	 * to the trial will affect this model's trial instance.
@@ -335,7 +349,7 @@ public class ClinicalTrialModel {
 	/**
 	 * @return the reference to the observable list of patients that can directly be listened to for changes.
 	 */
-	public ObservableList<Patient> getPatients() {
+	public List<Patient> getPatients() {
 		return patients;
 	}
 
@@ -345,14 +359,14 @@ public class ClinicalTrialModel {
 	 * @throws TrialCatalogException indicates an error occurred while accessing the
 	 * catalog.
 	 */
-	public ObservableList<Reading> getReadings() throws TrialCatalogException {
-		return FXCollections.observableArrayList(catalog.getReadings());
+	public List<Reading> getReadings() throws TrialCatalogException {
+		return catalog.getReadings();
 	}
 	
 	/**
 	 * @return the reference to the observable list of clinics that can directly be listened to for changes.
 	 */
-	public ObservableList<Clinic> getClinics() {
+	public List<Clinic> getClinics() {
 		return clinics;
 	}
 
@@ -360,7 +374,7 @@ public class ClinicalTrialModel {
 	 * @return the reference to the observable list of readings known as a journal, that can directly be
 	 * listened to for changes.
 	 */
-	public ObservableList<Reading> getJournal() {
+	public List<Reading> getJournal() {
 		return journal;
 	}
 
@@ -379,24 +393,32 @@ public class ClinicalTrialModel {
 	 * @return the importing
 	 */
 	public boolean isImporting() {
-		return importing;
+		boolean answer = false;
+		
+		synchronized(trial) {
+			answer = importing;
+		}
+		
+		return answer;
 	}
 
 	/**
 	 * @param importing the importing to set
 	 */
 	public void setImporting(boolean importing) {
-		this.importing = importing;
-		
-		if (!isImporting()) {
-			try {
-				refreshObservables();
-			} catch (TrialCatalogException e) {
+		synchronized(trial) {
+			this.importing = importing;
+			
+			if (!isImporting()) {
+				try {
+					refreshLists();
+				} catch (TrialCatalogException e) {
+				}
 			}
 		}
 	}
 
-	private void refreshObservables() throws TrialCatalogException {
+	private void refreshLists() throws TrialCatalogException {
 		if (patients != null) {
 			patients.clear();
 			patients.addAll(catalog.getPatients());
@@ -441,16 +463,16 @@ public class ClinicalTrialModel {
 	 */
 	public void setJournal(Clinic clinic, boolean notify) throws TrialCatalogException {
 		if (!isImporting()) {
-			Platform.runLater(() -> {
-				ObservableList<Reading> oldValue = journal;
-				try {
-					journal = clinic != null ? FXCollections.observableArrayList(catalog.getReadings(clinic)) : null;
+			List<Reading> oldValue = journal;
+			try {
+				if (!isImporting()) {
+					journal = clinic != null ? catalog.getReadings(clinic) : null;
 					if (notify) {
 						pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
 					}
-				} catch (TrialCatalogException e) {
 				}
-			});
+			} catch (TrialCatalogException e) {
+			}
 		}
 	}
 
@@ -476,17 +498,16 @@ public class ClinicalTrialModel {
 	 */
 	public void setJournal(Patient patient, boolean notify) throws TrialCatalogException {
 		if (!isImporting() ) {
-			Platform.runLater(() -> {
-				ObservableList<Reading> oldValue = journal;
-				try {
-					journal = patient != null ? FXCollections.observableArrayList(catalog.getReadings(patient)) : null;
-					
+			List<Reading> oldValue = journal;
+			try {
+				if (!isImporting()) {
+					journal = patient != null ? catalog.getReadings(patient) : null;
 					if (notify) {
 						pcs.firePropertyChange(PROP_JOURNAL, oldValue, journal);
 					}
-				} catch (TrialCatalogException e) {
 				}
-			});
+			} catch (TrialCatalogException e) {
+			}
 		}
 	}
 
@@ -494,7 +515,7 @@ public class ClinicalTrialModel {
 	 * @return the reference to the observable list of reading types that can directly be
 	 * listened to for changes.
 	 */
-	public ObservableList<String> getReadingTypes() {
+	public List<String> getReadingTypes() {
 		return readingTypes;
 	}
 
@@ -517,11 +538,8 @@ public class ClinicalTrialModel {
 		if (!catalog.exists(clinic)) {
 			answer = catalog.insert(clinic);
 			if (answer && !isImporting()) {
-				Platform.runLater(() -> {
-					int oldValue = clinics.size();
-					pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
-					clinics.add(clinic);
-				});
+				clinics.add(clinic);
+				pcs.firePropertyChange(PROP_CLINICS, null, clinic);
 			}
 		}
 		return answer;
@@ -561,18 +579,19 @@ public class ClinicalTrialModel {
 			if (catalog.exists(patient)) {
 				answer = catalog.update(patient);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						pcs.firePropertyChange(PROP_UPDATE_PATIENT, null, patient);
-					});
+					int index = patients.indexOf(patient);
+					
+					if (index >= 0) {
+						patients.set(index, patient);
+					}
+					
+					pcs.firePropertyChange(PROP_UPDATE_PATIENT, null, patient);
 				}
 			} else {
 				answer = catalog.insert(patient);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						int oldValue = patients.size();
-						pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
-						patients.add(patient);
-					});
+					patients.add(patient);
+					pcs.firePropertyChange(PROP_PATIENTS, null, patient);
 				}
 			}
 		}
@@ -598,23 +617,19 @@ public class ClinicalTrialModel {
 			if (catalog.exists(clinic)) {
 				answer = catalog.update(clinic);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						pcs.firePropertyChange(PROP_UPDATE_CLINIC, null, clinic);
-						int index = clinics.indexOf(clinic);
-						
-						if (index >= 0) {
-							clinics.set(index, clinic);
-						}
-					});
+					int index = clinics.indexOf(clinic);
+					
+					if (index >= 0) {
+						clinics.set(index, clinic);
+					}
+					
+					pcs.firePropertyChange(PROP_UPDATE_CLINIC, null, clinic);
 				}
 			} else {
 				answer = catalog.insert(clinic);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						int oldValue = patients.size();
-						pcs.firePropertyChange(PROP_CLINICS, oldValue, oldValue + 1);
-						clinics.add(clinic);
-					});
+					clinics.add(clinic);
+					pcs.firePropertyChange(PROP_CLINICS, null, clinic);
 				}
 			}
 		}
@@ -640,27 +655,22 @@ public class ClinicalTrialModel {
 			if (catalog.exists(reading)) {
 				answer = catalog.update(reading);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
-						if (journal != null) {
-							int index = journal.indexOf(reading);
-							
-							if (index >= 0) {
-								journal.set(index, reading);
-							}
+					if (journal != null) {
+						int index = journal.indexOf(reading);
+						
+						if (index >= 0) {
+							journal.set(index, reading);
 						}
-					});
+					}
+					pcs.firePropertyChange(PROP_UPDATE_READING, null, reading);
 				}
 			} else {
 				answer = catalog.insert(reading);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						int oldValue = patients.size();
-						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-						if (journal != null) {
-							journal.add(reading);
-						}
-					});
+					if (journal != null) {
+						journal.add(reading);
+					}
+					pcs.firePropertyChange(PROP_READINGS, null, reading);
 				}
 			}
 		}
@@ -688,13 +698,10 @@ public class ClinicalTrialModel {
 			if (!catalog.exists(reading)) {
 				answer = catalog.insert(reading);
 				if (answer && !isImporting()) {
-					Platform.runLater(() -> {
-						if (journal != null) {
-							int oldValue = journal.size();
-							pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-							journal.add(reading);
-						}
-					});
+					if (journal != null) {
+						journal.add(reading);
+						pcs.firePropertyChange(PROP_READINGS, null, reading);
+					}
 				}
 			}
 		}
@@ -743,13 +750,10 @@ public class ClinicalTrialModel {
 		if (canAddReading(reading, true)) {
 			answer = catalog.insert(reading);
 			if (answer && !isImporting()) {
-				Platform.runLater(() -> {
-					if (journal != null) {
-						int oldValue = journal.size();
-						pcs.firePropertyChange(PROP_READINGS, oldValue, oldValue + 1);
-						journal.add(reading);
-					}
-				});
+				if (journal != null) {
+					journal.add(reading);
+					pcs.firePropertyChange(PROP_READINGS, null, reading);
+				}
 			}
 		}
 		
@@ -923,11 +927,8 @@ public class ClinicalTrialModel {
 		if (!catalog.exists(patient)) {
 			answer = catalog.insert(patient);
 			if (answer && !isImporting()) {
-				Platform.runLater(() -> {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
-					patients.add(patient);
-				});
+				patients.add(patient);
+				pcs.firePropertyChange(PROP_PATIENTS, null, patient);
 			}
 		}
 		return answer;
@@ -949,11 +950,8 @@ public class ClinicalTrialModel {
 		if (!catalog.exists(patient)) {
 			answer = catalog.insert(patient);
 			if (answer && !isImporting()) {
-				Platform.runLater(() -> {
-					int oldValue = patients.size();
-					pcs.firePropertyChange(PROP_PATIENTS, oldValue, oldValue + 1);
-					patients.add(patient);
-				});
+				pcs.firePropertyChange(PROP_PATIENTS, null, patient);
+				patients.add(patient);
 			}
 		}
 		return answer;

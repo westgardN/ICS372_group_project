@@ -156,12 +156,14 @@ public class ClinicalTrialView implements Initializable {
 										String.format(Strings.SUCCESS_FILE_IMPORTED_EXPORTED, Strings.MSG_IMPORTED, cCount, pCount, rCount),
 										stage.getScene());
 								setDisable(false);
+								refreshViewData();
 							});
 						} else {
 							Platform.runLater(() -> {
 								model.setImporting(false);
 								PopupNotification.showPopupMessage(Strings.ERR_FILE_NOT_IMPORTED, stage.getScene());
 								setDisable(false);
+								refreshViewData();
 							});
 						}
 					}
@@ -170,12 +172,19 @@ public class ClinicalTrialView implements Initializable {
 						model.setImporting(false);
 						PopupNotification.showPopupMessage(e.getMessage(), stage.getScene());
 						setDisable(false);
+						refreshViewData();
 					});
 				}
 			});
+			executor.shutdown();
 		}
 	}
 
+	private void refreshViewData() {
+		clinicsView.reloadData();
+		patientsView.reloadData();
+	}
+	
 	private void setDisable(boolean value) {
 		menuFile.setDisable(value);
 		clinicsView.setDisable(value);
@@ -228,7 +237,8 @@ public class ClinicalTrialView implements Initializable {
 						setDisable(false);
 					});
 				}				
-			}); 
+			});
+			executor.shutdown();
 		}
 	}
 
