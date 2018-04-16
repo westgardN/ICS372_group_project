@@ -4,6 +4,7 @@
 
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Objects;
@@ -48,6 +49,23 @@ public class Clinic implements Serializable {
 		this(null, null, null);
 	}
 
+	/**
+	 * Add a PropertyChangeListener to the listener list. The listener is registered
+	 * for all properties. The same listener object may be added more than once, and
+	 * will be called as many times as it is added. If listener is null, no
+	 * exception is thrown and no action is taken.
+	 * 
+	 * @param listener
+	 *            - The PropertyChangeListener to be added
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().addPropertyChangeListener(listener);
+    }
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().removePropertyChangeListener(listener);
+    }
+	
 	/**
 	 * Initializes a clinic with the specified id, trial id, and name.
 	 * @param id

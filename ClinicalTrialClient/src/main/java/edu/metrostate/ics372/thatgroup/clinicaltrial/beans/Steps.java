@@ -58,10 +58,14 @@ public class Steps extends Reading {
 	 */
 	@Override
 	public void setValue(Object value) {
+		int oldValue = this.value;
+		
 		if (value != null) {
 			if (value instanceof Number == false && value instanceof String == false) {
 				throw new IllegalArgumentException(Strings.ERR_VALUE_NAN);
 			}
+			
+			int newValue = Integer.MIN_VALUE;
 			
 			if (value instanceof Number) {
 				Number num = (Number) value;
@@ -70,12 +74,20 @@ public class Steps extends Reading {
 					throw new IllegalArgumentException(Strings.ERR_VALUE_NEGATIVE);
 				}
 				
-				this.value = num.intValue();
+				newValue = num.intValue();
 			} else if (value instanceof String) {
-				this.value = Integer.parseInt((String)value);
+				newValue = Integer.parseInt((String)value);
+			}
+			
+			if (oldValue != newValue) {
+				this.value = newValue;
+				getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
 			}
 		} else {
-			this.value = Integer.MIN_VALUE;
+			if (oldValue != Integer.MIN_VALUE) {
+				this.value = Integer.MIN_VALUE; 
+				getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
+			}
 		}
 	}
 	

@@ -12,24 +12,29 @@ import java.io.InputStream;
 import java.net.URL;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
@@ -89,6 +94,14 @@ public class PatientsView extends VBox implements Initializable {
 		return model;
 	}
 
+	public void reloadData() {
+		try {
+			patientsProperty.get().clear();
+			patientsProperty.get().addAll(FXCollections.observableArrayList(model.getPatients()));
+		} catch (TrialCatalogException e) {
+		}
+	}
+	
 	/**
 	 * Sets the view model associated with this view and adds listeners for the list
 	 * of patients and the currently selected patient from the list of patients
@@ -99,7 +112,11 @@ public class PatientsView extends VBox implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
-		patientsProperty.set(model.getPatients());
+		try {
+			patientsProperty.set(FXCollections.observableArrayList(model.getPatients()));
+		} catch (TrialCatalogException e1) {
+			// TODO Auto-generated catch block
+		}
 
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
@@ -116,6 +133,11 @@ public class PatientsView extends VBox implements Initializable {
 			} else if (prop.equals(ClinicalTrialModel.PROP_UPDATE_PATIENT)) {
 				if (event.getNewValue() instanceof Patient) {
 					updatePatient((Patient) event.getNewValue());
+				}
+			} else if (prop.equals(ClinicalTrialModel.PROP_PATIENTS)) {
+				if (event.getNewValue() instanceof Patient) {
+					updatePatient((Patient) event.getNewValue());
+					clearForm(null);
 				}
 			}
 
@@ -162,8 +184,14 @@ public class PatientsView extends VBox implements Initializable {
 		if (index >= 0) {
 			int selected = listView.getSelectionModel().getSelectedIndex();
 			patientsProperty.set(index, null);
+			try {
+				patient = model.getPatient(patient.getId());
+			} catch (TrialCatalogException e) {
+			};
 			patientsProperty.set(index, patient);
 			listView.getSelectionModel().select(selected);
+		} else {
+			patientsProperty.add(patient);
 		}
 	}
 
@@ -175,13 +203,16 @@ public class PatientsView extends VBox implements Initializable {
 	 */
 	public void startPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
+
 		if (patient != null) {
 			LocalDate startDate = getTrialDate(patient, true);
 			if (startDate != null) {
 				patient.setTrialStartDate(startDate);
 				patient.setTrialEndDate(null);
+				patient.setStatusId(PatientStatus.ACTIVE_ID);
 				try {
-					model.updateOrAdd(patient);
+					if (model.updateOrAdd(patient)) {
+					}
 				} catch (TrialCatalogException ex) {
 					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 				}
@@ -205,6 +236,10 @@ public class PatientsView extends VBox implements Initializable {
 		action = start ? HEADER_STARTED : HEADER_ENDED;
 		String header = String.format(Strings.SELECT_PATIENT_TRIAL_DATE_LABEL_FMT, patient.getId(), action);
 		
+		if (!start) {
+			header = header + "\n" +  String.format(Strings.SELECT_PATIENT_TRIAL_DATE_STATUS_FMT, patient.getId());
+		}
+		
 		dialog.setHeaderText(header);
 		
 		URL url = getClass().getResource(Strings.LOGO_PATH);
@@ -217,17 +252,31 @@ public class PatientsView extends VBox implements Initializable {
 		
 		LocalDate ld = start ? patient.getTrialStartDate() : patient.getTrialEndDate();
 		DatePicker datePicker = new DatePicker(ld != null ? ld : LocalDate.now());
-		
-		datePicker.setMaxWidth(Double.MAX_VALUE);
-		datePicker.setMaxHeight(Double.MAX_VALUE);
-		
-		VBox expContent = new VBox(datePicker);
+		ChoiceBox<PatientStatus> statusPicker = new ChoiceBox<>();;
+		HBox expContent = new HBox();
+		expContent.setSpacing(5);
+		expContent.setPadding(new Insets(3, 6, 3, 6));
+
+		if (!start) {
+			try {
+				statusPicker.setItems(FXCollections.observableArrayList(model.getPatientStatuses()));
+				statusPicker.getSelectionModel().select(0);
+				expContent.getChildren().add(statusPicker);
+			} catch (TrialCatalogException e) {
+				// TODO Auto-generated catch block
+			}
+		}
+		expContent.getChildren().add(datePicker);
 		expContent.setMaxWidth(Double.MAX_VALUE);
 		
 		dialog.getDialogPane().setContent(expContent);
 		
 		dialog.setResultConverter(dialogButton -> {
 			if (dialogButton == okButtonType) {
+				if (!start) {
+					patient.setStatusId(statusPicker.getSelectionModel().getSelectedItem().getId());
+				}
+				
 				return datePicker.getValue();
 			} else {
 				return null;
@@ -250,12 +299,15 @@ public class PatientsView extends VBox implements Initializable {
 	 */
 	public void endPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
+		
 		if (patient != null) {
 			LocalDate endDate = getTrialDate(patient, false);
 			if (isDateOnOrAfter(endDate, patient.getTrialStartDate()) && isDateOnOrBefore(endDate, LocalDate.now())) {
 				patient.setTrialEndDate(endDate);
+				//patient.setStatusId(PatientStatus.COMPLETED_ID);
 				try {
-					model.updateOrAdd(patient);
+					if (model.updateOrAdd(patient)) {
+					}
 				} catch (TrialCatalogException ex) {
 					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
 				}
@@ -312,7 +364,9 @@ public class PatientsView extends VBox implements Initializable {
 	@FXML
 	public void addPatient(ActionEvent event) {
 		try {
-			if (model.addPatient(textField.getText().trim())) {
+			String id = textField.getText().trim();
+			
+			if (model.addPatient(id)) {
 				PopupNotification.showPopupMessage(Strings.PATIENT_ADDED_MSG, getScene());
 				textField.setText(Strings.EMPTY);
 			} else {

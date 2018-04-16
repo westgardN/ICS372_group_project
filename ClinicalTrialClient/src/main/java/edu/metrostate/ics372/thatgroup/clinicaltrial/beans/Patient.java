@@ -41,24 +41,48 @@ public class Patient implements Serializable {
 	 */
 	public static final String PROP_TRIAL_END_DATE = "trialEndDate";
 	
+	/**
+	 * The PROP_STATUS_ID event is fired whenever the status id of this patient is changed.
+	 */
+	public static final String PROP_STATUS_ID = "propStatus";
+	
+	private static final String DEFAULT_PATIENT_STATUS_ID = "INACTIVE";
 	private static final String MSG_PATIENT_HAS_NOT_STARTED_THE_TRIAL = " has not started the trial";
 	private static final String MSG_PATIENT_CLOSE_PAREN = ")";
 	private static final String MSG_PATIENT_DASH = " - ";
 	private static final String MSG_PATIENT_OPEN_PAREN = " (";
-	private static final String MSG_PATIENT_INACTIVE = ": inactive";
-	private static final String MSG_PATIENT_ACTIVE = ": active ";
+	private static final String MSG_PATIENT_STATUS = ": %s ";
 	private static final long serialVersionUID = 8450664877127813850L;
 	protected transient PropertyChangeSupport pcs;
 	protected String id;
 	protected String trialId;
 	protected LocalDate startDate;
 	protected LocalDate endDate;
+	protected String statusId;
+
+	/**
+	 * @return the statusId
+	 */
+	public String getStatusId() {
+		return statusId;
+	}
+
+	/**
+	 * @param statusId the statusId to set
+	 */
+	public void setStatusId(String statusId) {
+		if (!Objects.equals(this.statusId, statusId)) {
+			String oldValue = this.id;
+			this.statusId = statusId;
+			getPcs().firePropertyChange(PROP_STATUS_ID, oldValue, this.statusId);
+		}
+	}
 
 	/**
 	 * Initializes an empty patient.
 	 */
 	public Patient() {
-		this(null, null, null, null);
+		this(null, null, null, null, DEFAULT_PATIENT_STATUS_ID);
 	}
 
 	/**
@@ -70,11 +94,24 @@ public class Patient implements Serializable {
 	 * @param end the date the patient left the trial
 	 */
 	public Patient(String id, String trialId, LocalDate start, LocalDate end) {
+		this(id, trialId, start, end, DEFAULT_PATIENT_STATUS_ID);
+	}
+
+	/**
+	 * Initializes a patient with the specified values.
+	 * 
+	 * @param id the id of this patient
+	 * @param trialId the Trial this patient belongs to
+	 * @param start the date the patient started the trial
+	 * @param end the date the patient left the trial
+	 */
+	public Patient(String id, String trialId, LocalDate start, LocalDate end, String statusId) {
 		super();
 		this.id = id;
 		this.trialId = trialId;
 		this.startDate = start;
 		this.endDate = end;
+		this.statusId = statusId;
 		pcs = new PropertyChangeSupport(this);
 	}
 
@@ -97,6 +134,10 @@ public class Patient implements Serializable {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		getPcs().addPropertyChangeListener(listener);
+    }
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().removePropertyChangeListener(listener);
     }
 	
 	/**
@@ -208,10 +249,10 @@ public class Patient implements Serializable {
 		builder.append(id);
 		if (startDate != null) {
 			if (endDate == null) {
-				builder.append(MSG_PATIENT_ACTIVE);
+				builder.append(String.format(MSG_PATIENT_STATUS, this.getStatusId().toLowerCase()));
 				builder.append(startDate.format(formatter));
 			} else {
-				builder.append(MSG_PATIENT_INACTIVE);
+				builder.append(String.format(MSG_PATIENT_STATUS, this.getStatusId().toLowerCase()));
 				builder.append(MSG_PATIENT_OPEN_PAREN);
 				builder.append(startDate.format(formatter));
 				builder.append(MSG_PATIENT_DASH);

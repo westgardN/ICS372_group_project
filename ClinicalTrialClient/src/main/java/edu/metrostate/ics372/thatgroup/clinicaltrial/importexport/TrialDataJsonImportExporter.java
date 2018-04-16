@@ -55,6 +55,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 	private static final String JSON_PATIENT_READINGS = "patient_readings";
 	private static final String JSON_READING_ID = "reading_id";
 	private static final String JSON_PATIENT_ID = "patient_id";
+	private static final String JSON_PATIENT_STATUS_ID = "patient_status_id";
 	private static final String JSON_CLINIC_ID = "clinic_id";
 	private static final String JSON_CLINIC_NAME = "clinic_name";
 	private static final String JSON_READING_TYPE = "reading_type";
@@ -190,6 +191,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					jsonWriter.name(JSON_PATIENT_ID).value(patient.getId());
 					writeDates(jsonWriter, patient);
 					jsonWriter.name(JSON_TRIAL_ID).value(patient.getTrialId());
+					jsonWriter.name(JSON_PATIENT_STATUS_ID).value(patient.getStatusId());
 					jsonWriter.endObject();
 				}
 				jsonWriter.endArray();
@@ -397,6 +399,7 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 			
 			while (jsonReader.hasNext()) {
 				String patient_id = null;
+				String status_id = null;
 				long lStartDate = -1;
 				long lEndDate = -1;
 				String trial_id = trial.getId();
@@ -414,6 +417,8 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 						lEndDate = jsonReader.nextLong();
 					} else if (name.equalsIgnoreCase(JSON_TRIAL_ID)) {
 						jsonReader.nextString(); // ignore for now and just swallow the prop
+					} else if (name.equalsIgnoreCase(JSON_PATIENT_STATUS_ID)) {
+						status_id = jsonReader.nextString();
 					} else {
 						Logger.getLogger(TrialDataJsonImportExporter.class.getName()).log(Level.INFO, MSG_PATIENT_ID + patient_id + MSG_UNKNOWN_PATIENT_PROPERTY + name + MSG_WITH_VALUE + jsonReader.nextString());
 					}
@@ -423,7 +428,13 @@ public class TrialDataJsonImportExporter implements TrialDataImporter, TrialData
 					LocalDate startDate = lStartDate >= 0 ? LocalDate.ofEpochDay(lStartDate) : null;
 					LocalDate endDate = lEndDate >= 0 ? LocalDate.ofEpochDay(lEndDate) : null;
 					
-					Patient patient = new Patient(patient_id, trial_id, startDate, endDate);
+					Patient patient;
+					
+					if (status_id != null) {
+						patient = new Patient(patient_id, trial_id, startDate, endDate, status_id);
+					} else {
+						patient = new Patient(patient_id, trial_id, startDate, endDate);
+					}
 					
 					if (!patients.contains(patient)) {
 						patients.add(patient);

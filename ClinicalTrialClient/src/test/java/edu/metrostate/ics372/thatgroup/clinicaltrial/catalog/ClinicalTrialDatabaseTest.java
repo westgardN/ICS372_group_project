@@ -13,14 +13,9 @@ public class ClinicalTrialDatabaseTest {
 
 	@Test
 	public void test() throws TrialCatalogException {
-		ClinicalTrialCatalog catalog = new ClinicalTrialCatalog();
 		Trial trial = new Trial("test");
 		assertNotNull(trial);
-		if (catalog.init(trial)) {
-		}
-		
-		for (String catalogName : catalog.getAllTrialCatalogNamesInDirectory()) {
-			System.out.println(catalogName);
-		}
+		ClinicalTrialCatalog catalog = new ClinicalTrialCatalog(trial);
+		assertEquals(true, catalog.init());		
 	}
 }

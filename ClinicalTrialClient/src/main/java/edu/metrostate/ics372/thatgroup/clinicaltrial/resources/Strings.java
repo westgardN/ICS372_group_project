@@ -61,6 +61,7 @@ public class Strings {
 	public static final String SPECIAL_CHAR_MSG = "No special characters allowed or maximum text length exceeded.";
 	public static final String SELECT_PATIENT_TRIAL_DATE_TITLE_FMT = "Select Trial %s Date for Patient %s";
 	public static final String SELECT_PATIENT_TRIAL_DATE_LABEL_FMT = "Please select the date patient %s %s the trial";
+	public static final String SELECT_PATIENT_TRIAL_DATE_STATUS_FMT = "Please aldo select the reason patient %s is ending the trial";
 	public static final String ERR_TRIAL_DATA_EXPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";
 	public static final String ERR_TRIAL_DATA_IMPORTER_EXPORTER_NULL_FILE = "filename cannot be null.";
 	public static final String ERR_TRIAL_DATA_IMPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";
@@ -78,7 +79,9 @@ public class Strings {
 	public static final String ERR_CATALOG_TRIAL_INVALID = "trial cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_CLINIC_INVALID = "clinic cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_PATIENT_INVALID = "patient cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_PATIENT_STATUS_INVALID = "patient status cannot be null and must have a valid id.";
 	public static final String ERR_CATALOG_READING_INVALID = "reading cannot be null and must have a valid id.";
+	public static final String ERR_CATALOG_STORAGE_PATH = "the catalog storage path is invalid.";
 	public static final String ERR_CATALOG_NO_ACTIVE_TRIAL = "There is no active trial. Please call init with a valid Trial.";
 	public static final String ERR_CATALOG_HAS_BEEN_DELETED = "The database for the active trial has been deleted.";
 	public static final String ERR_TYPE_CLINIC_PATIENT_MSG = "Please select a valid clinic, patient, and type for the reading.";

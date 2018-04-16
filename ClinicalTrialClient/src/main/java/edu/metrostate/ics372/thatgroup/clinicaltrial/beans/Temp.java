@@ -6,6 +6,7 @@ package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Objects;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
@@ -66,20 +67,33 @@ public class Temp extends Reading {
 	 */
 	@Override
 	public void setValue(Object value) {
+		UnitValue oldValue = this.value;
+		
 		if (value != null) {
 			if (value instanceof UnitValue == false && value instanceof Number == false && value instanceof String == false) {
 				throw new IllegalArgumentException(Strings.ERR_VALUE_NAN);
 			}
 			
+			UnitValue newValue = null;
+			
 			if (value instanceof UnitValue) {
-				this.value = ((UnitValue)value).clone();
+				newValue = ((UnitValue)value).clone();
 			} else if (value instanceof String) {
-				this.value = new UnitValue((String) value);
+				newValue = new UnitValue((String) value);
 			} else if (value instanceof Number) {
-				this.value = new UnitValue((Number) value);
+				newValue = new UnitValue((Number) value);
+			}
+			
+			if (!Objects.equals(oldValue, newValue)) {
+				this.value = newValue;
+				getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
 			}
 		} else {
-			this.value = new UnitValue(Double.NEGATIVE_INFINITY);
+			UnitValue newValue = new UnitValue(Double.NEGATIVE_INFINITY);
+			if (!Objects.equals(oldValue, newValue)) {
+				this.value = newValue; 
+				getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
+			}
 		}
 	}
 	

@@ -3,10 +3,13 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Objects;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
@@ -65,20 +68,33 @@ public class BloodPressure extends Reading {
 	 */
 	@Override
 	public void setValue(Object value) {
+		
+		BloodPressureValue oldValue = this.value;
 		if (value != null) {
 			if (value instanceof BloodPressureValue == false && value instanceof String == false) {
 				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_INVALID_STRING_VALUE);
 			}
 			
+			BloodPressureValue newValue = null;
+			
 			if (value instanceof BloodPressureValue) {
-				this.value = ((BloodPressureValue)value).clone();
+				newValue = ((BloodPressureValue)value).clone();
 			} else if (value instanceof String) {
-				this.value = new BloodPressureValue((String) value);
+				newValue = new BloodPressureValue((String) value);
 			} else {
 				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_UNKNOWN_STRING_VALUE);
 			}
+			
+			if (!Objects.equals(oldValue, newValue)) {
+				this.value = newValue;
+				getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
+			}
+			
 		} else {
-			this.value = null;
+			if (this.value != null) {
+				this.value = null;
+				getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
+			}
 		}
 	}
 	
@@ -123,6 +139,10 @@ public class BloodPressure extends Reading {
 		private static final int INDEX_SYSTOLIC = 0;
 		private static final int INDEX_DIASTOLIC = 1;
 		private static final long serialVersionUID = -6450411049437598250L;
+
+		public static final String PROP_DIASTOLIC = "diastolic";
+		public static final String PROP_SYSTOLIC = "systolic";
+		private transient PropertyChangeSupport pcs;
 		
 		private int systolic;
 		private int diastolic;
@@ -185,6 +205,31 @@ public class BloodPressure extends Reading {
 		}
 		
 		/**
+		 * Add a PropertyChangeListener to the listener list. The listener is registered
+		 * for all properties. The same listener object may be added more than once, and
+		 * will be called as many times as it is added. If listener is null, no
+		 * exception is thrown and no action is taken.
+		 * 
+		 * @param listener
+		 *            - The PropertyChangeListener to be added
+		 */
+		public void addPropertyChangeListener(PropertyChangeListener listener) {
+			getPcs().addPropertyChangeListener(listener);
+	    }
+		
+		public void removePropertyChangeListener(PropertyChangeListener listener) {
+			getPcs().removePropertyChangeListener(listener);
+	    }
+		
+		protected PropertyChangeSupport getPcs() {
+			if (pcs == null) {
+				pcs = new PropertyChangeSupport(this);
+			}
+			
+			return pcs;
+		}
+
+		/**
 		 * @return the diastolic pressure for this value.
 		 */
 		public int getDiastolic() {
@@ -199,7 +244,11 @@ public class BloodPressure extends Reading {
 				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_ILLEGAL_DIASTOLIC_VALUE);
 			}
 			
-			this.diastolic = diastolic;
+			int oldValue = this.diastolic;
+			if (oldValue != diastolic) {
+				this.diastolic = diastolic;
+				getPcs().firePropertyChange(PROP_DIASTOLIC, oldValue, this.diastolic);
+			}
 		}
 		
 		/**
@@ -217,7 +266,11 @@ public class BloodPressure extends Reading {
 				throw new IllegalArgumentException(Strings.ERR_BLOOD_PRESSURE_ILLEGAL_SYSTOLIC_VALUE);
 			}
 			
-			this.systolic = systolic;
+			int oldValue = this.systolic;
+			if (oldValue != systolic) {
+				this.systolic = systolic;
+				getPcs().firePropertyChange(PROP_SYSTOLIC, oldValue, this.systolic);
+			}
 		}
 		
 		/* (non-Javadoc)

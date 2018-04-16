@@ -19,9 +19,12 @@ public class PatientTest {
 	private final String ID = "test";
 	private final String TRIAL_ID = "test";
 	private final String TRIAL_ID_B = "testB";
+	private final String STATUS_INACTIVE = "INACTIVE";
+	private final String STATUS_ACTIVE = "ACTIVE";
 	private final LocalDate START_DATE = LocalDate.of(2018, 1, 1);
+	private final LocalDate START_DATE_A = LocalDate.of(2018, 2, 2);
 	private final LocalDate END_DATE = LocalDate.of(2018, 2, 28);
-
+	private final LocalDate END_DATE_A = LocalDate.of(2018, 3, 29);
 	/**
 	 * Test method for
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#hashCode()}
@@ -30,8 +33,8 @@ public class PatientTest {
 	 */
 	@Test
 	public final void twoPatientsThatAreNotEqualShouldNotBeConsiderEqual() {
-		Patient patientA = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
-		Patient patientB = new Patient(ID, TRIAL_ID_B, START_DATE, END_DATE);
+		Patient patientA = new Patient(ID, TRIAL_ID, START_DATE, END_DATE, STATUS_INACTIVE);
+		Patient patientB = new Patient(ID, TRIAL_ID_B, START_DATE, END_DATE, STATUS_INACTIVE);
 
 		assertNotEquals(patientA, patientB);
 	}
@@ -44,8 +47,8 @@ public class PatientTest {
 	 */
 	@Test
 	public final void twoPatientsThatAreEqualNotHaveEqualHashCodes() {
-		Patient patientA = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
-		Patient patientB = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
+		Patient patientA = new Patient(ID, TRIAL_ID, START_DATE, END_DATE, STATUS_INACTIVE);
+		Patient patientB = new Patient(ID, TRIAL_ID, START_DATE, END_DATE, STATUS_INACTIVE);
 
 		assertEquals(patientA, patientB);
 		assertEquals(patientA.hashCode(), patientB.hashCode());
@@ -73,14 +76,14 @@ public class PatientTest {
 	@Test
 	public final void argConstructedShouldBeNotNullAndMembersShouldBeEquals() {
 
-		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
+		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, END_DATE, STATUS_INACTIVE);
 
 		assertNotNull(patient);
 		assertEquals(ID, patient.getId());
 		assertEquals(TRIAL_ID, patient.getTrialId());
 		assertEquals(START_DATE, patient.getTrialStartDate());
 		assertEquals(END_DATE, patient.getTrialEndDate());
-
+		assertEquals(STATUS_INACTIVE, patient.getStatusId());
 	}
 
 	/**
@@ -90,13 +93,33 @@ public class PatientTest {
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#setId(java.lang.String)}.
 	 */
 	@Test
-	public final void testPatienId() {
+	public final void testPatientId() {
 		Patient patient = new Patient();
 
 		patient.setId(ID);
 		assertEquals(ID, patient.getId());
+		
+		patient.setId(TRIAL_ID);
+		assertEquals(TRIAL_ID, patient.getId());
 	}
 
+	/**
+	 * Test method for
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#setStatusId()}
+	 * and
+	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#getStatusId(java.lang.String)}.
+	 */
+	@Test
+	public final void testPatientStatus() {
+		Patient patient = new Patient();
+
+		patient.setStatusId(STATUS_INACTIVE);
+		assertEquals(STATUS_INACTIVE, patient.getStatusId());
+		
+		patient.setStatusId(STATUS_ACTIVE);
+		assertEquals(STATUS_ACTIVE, patient.getStatusId());
+	}
+	
 	/**
 	 * Test method for
 	 * {@link edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient#getTrialStartDate()}
@@ -108,8 +131,10 @@ public class PatientTest {
 		Patient patient = new Patient();
 
 		patient.setTrialStartDate(START_DATE);
-
 		assertEquals(START_DATE, patient.getTrialStartDate());
+		
+		patient.setTrialStartDate(START_DATE_A);
+		assertEquals(START_DATE_A, patient.getTrialStartDate());
 	}
 
 	/**
@@ -123,8 +148,10 @@ public class PatientTest {
 		Patient patient = new Patient();
 
 		patient.setTrialEndDate(END_DATE);
-
 		assertEquals(END_DATE, patient.getTrialEndDate());
+	
+		patient.setTrialEndDate(END_DATE_A);
+		assertEquals(END_DATE_A, patient.getTrialEndDate());
 	}
 
 	/**
@@ -158,7 +185,7 @@ public class PatientTest {
 	@Test
 	public final void testToStringNonEmptyActivePatient() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, null);
+		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, null, STATUS_ACTIVE);
 		String result = patient.toString();
 		String expected = ID + ": active " + patient.getTrialStartDate().format(formatter);
 		assertEquals(expected, result);
@@ -171,9 +198,9 @@ public class PatientTest {
 	@Test
 	public final void testToStringNonEmptyInactivePatient() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, END_DATE);
+		Patient patient = new Patient(ID, TRIAL_ID, START_DATE, END_DATE, STATUS_INACTIVE);
 		String result = patient.toString();
-		String expected = ID + ": inactive (" + patient.getTrialStartDate().format(formatter) + " - "
+		String expected = ID + ": inactive  (" + patient.getTrialStartDate().format(formatter) + " - "
 				+ patient.getTrialEndDate().format(formatter) + ")";
 		assertEquals(expected, result);
 	}
