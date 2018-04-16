@@ -11,6 +11,8 @@ import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Clinic;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
@@ -35,7 +37,9 @@ import javafx.scene.layout.AnchorPane;
  */
 public class ReadingsView extends AnchorPane implements Initializable {
 	private ClinicalTrialModel model;
-
+	private Patient patient;
+	private Clinic clinic;
+	
 	@FXML
 	private TableView<Reading> readingTable;
 
@@ -57,7 +61,9 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 */
 	public ReadingsView() {
 		model = null;
-
+		patient = null;
+		clinic = null;
+		
 		try (InputStream stream = getClass().getResourceAsStream(Strings.READINGS_VIEW_FXML)) {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(this);
@@ -88,15 +94,54 @@ public class ReadingsView extends AnchorPane implements Initializable {
 
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();
-			if (prop.equals(ClinicalTrialModel.PROP_JOURNAL)
-					|| prop.equals(ClinicalTrialModel.PROP_UPDATE_READING)
-					|| prop.equals(ClinicalTrialModel.PROP_READINGS)) {
-				try {
-					this.model.setSelectedReading(null);
-					fillTable();
-				} catch (TrialCatalogException e) {
-					PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
-				}
+			Object newValue = event.getNewValue();
+			
+			switch(prop) {
+				case ClinicalTrialModel.PROP_UPDATE_READING:
+				case ClinicalTrialModel.PROP_READINGS:
+					try {
+						this.model.setSelectedReading(null);
+						fillTable();
+					} catch (TrialCatalogException e) {
+						PopupNotification.showPopupMessage(e.getMessage(), this.getScene());
+					}
+					break;
+				case ClinicalTrialModel.PROP_SELECTED_CLINIC:
+					if (newValue != null) {
+						clinic = (Clinic)newValue;
+						patient = null;
+						fillTable();
+					}
+					break;
+				case ClinicalTrialModel.PROP_JOURNAL_CLINIC:
+				case ClinicalTrialModel.PROP_UPDATE_CLINIC:
+					if (newValue != null && clinic != null) {
+						Clinic newClinic = (Clinic) newValue;
+						
+						if (clinic.equals(newClinic)) {
+							fillTable();
+						}
+					}
+					break;
+				case ClinicalTrialModel.PROP_SELECTED_PATIENT:
+					if (newValue != null) {
+						patient = (Patient)newValue;
+						clinic = null;
+						fillTable();
+					}
+					break;
+				case ClinicalTrialModel.PROP_JOURNAL_PATIENT:
+				case ClinicalTrialModel.PROP_UPDATE_PATIENT:
+					if (newValue != null && patient != null) {
+						Patient newPatient = (Patient) newValue;
+						
+						if (patient.equals(newPatient)) {
+							fillTable();
+						}
+					}
+					break;
+				default:
+					break;
 			}
 		});
 	}
@@ -131,7 +176,17 @@ public class ReadingsView extends AnchorPane implements Initializable {
 	 * currently selected patient and their respective readings
 	 */
 	private void fillTable() {
-		List<Reading> readings = model.getJournal();
+		List<Reading> readings = null;
+		
+		try {
+			if (clinic != null) {
+				readings = model.getJournal(clinic);
+			} else if (patient != null) {
+				readings = model.getJournal(patient);
+			}
+		} catch (TrialCatalogException e) {
+		}
+		
 		if (readings != null) {
 			ObservableList<Reading> journal = FXCollections.observableArrayList(readings);
 			readingTable.getItems().clear();

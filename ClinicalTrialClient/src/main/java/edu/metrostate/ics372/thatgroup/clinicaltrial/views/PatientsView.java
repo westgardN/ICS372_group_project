@@ -92,7 +92,11 @@ public class PatientsView extends VBox implements Initializable {
 	}
 
 	public void reloadData() {
-		patientsProperty.set(FXCollections.observableArrayList(model.getPatients()));
+		try {
+			patientsProperty.get().clear();
+			patientsProperty.get().addAll(FXCollections.observableArrayList(model.getPatients()));
+		} catch (TrialCatalogException e) {
+		}
 	}
 	
 	/**
@@ -105,7 +109,11 @@ public class PatientsView extends VBox implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
-		patientsProperty.set(FXCollections.observableArrayList(model.getPatients()));
+		try {
+			patientsProperty.set(FXCollections.observableArrayList(model.getPatients()));
+		} catch (TrialCatalogException e1) {
+			// TODO Auto-generated catch block
+		}
 
 		this.model.addPropertyChangeListener((event) -> {
 			String prop = event.getPropertyName();

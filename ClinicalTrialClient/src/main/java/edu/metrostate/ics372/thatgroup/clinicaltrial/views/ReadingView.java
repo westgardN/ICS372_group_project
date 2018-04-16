@@ -293,8 +293,11 @@ public class ReadingView extends VBox implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 		type.setItems(FXCollections.observableArrayList(model.getReadingTypes()));
-		clinicChoice.setItems(FXCollections.observableArrayList(model.getClinics()));
-		patientChoice.setItems(FXCollections.observableArrayList(model.getPatients()));
+		try {
+			clinicChoice.setItems(FXCollections.observableArrayList(model.getClinics()));
+			patientChoice.setItems(FXCollections.observableArrayList(model.getPatients()));
+		} catch (TrialCatalogException e) {
+		}
 		
 		model.addPropertyChangeListener((evt) -> {
 			switch (evt.getPropertyName()) {
@@ -318,6 +321,24 @@ public class ReadingView extends VBox implements Initializable {
 					selected = true;
 					okBtn.setText(Strings.UPDATE);
 					id.setDisable(true);
+				}
+				break;
+			case ClinicalTrialModel.PROP_CLINICS:
+			case ClinicalTrialModel.PROP_UPDATE_CLINIC:
+				try {
+					clinicChoice.getItems().clear();
+					clinicChoice.getItems().addAll(model.getClinics());
+				} catch (TrialCatalogException e) {
+					// TODO Auto-generated catch block
+				}
+				break;
+			case ClinicalTrialModel.PROP_PATIENTS:
+			case ClinicalTrialModel.PROP_UPDATE_PATIENT:
+				try {
+					patientChoice.getItems().clear();
+					patientChoice.getItems().addAll(model.getPatients());
+				} catch (TrialCatalogException e) {
+					// TODO Auto-generated catch block
 				}
 				break;
 			}

@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -340,18 +341,19 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	protected PreparedStatement getPreparedInsert(final Connection conn, Patient patient) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_PATIENT);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		answer.setString(1, patient.getId());
 
 		if (patient.getTrialStartDate() != null) {
-			long epochDays = patient.getTrialStartDate().toEpochDay();
-			answer.setDate(2, new java.sql.Date(epochDays));
+			String date = patient.getTrialStartDate().format(formatter);;
+			answer.setDate(2, java.sql.Date.valueOf(date));
 		} else {
 			answer.setDate(2, null);
 		}
 
 		if (patient.getTrialEndDate() != null) {
-			long epochDays = patient.getTrialEndDate().toEpochDay();
-			answer.setDate(3, new java.sql.Date(epochDays));
+			String date = patient.getTrialEndDate().format(formatter);
+			answer.setDate(3, java.sql.Date.valueOf(date));
 		} else {
 			answer.setDate(3, null);
 		}
@@ -400,17 +402,18 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	protected PreparedStatement getPreparedUpdate(final Connection conn, Patient patient) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_PATIENT);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		answer.setString(1, patient.getTrialId());
 		if (patient.getTrialStartDate() != null) {
-			long epochDays = patient.getTrialStartDate().toEpochDay();
-			answer.setDate(2, new java.sql.Date(epochDays));
+			String date = patient.getTrialStartDate().format(formatter);
+			answer.setDate(2, java.sql.Date.valueOf(date));
 		} else {
 			answer.setDate(2, null);
 		}
 
 		if (patient.getTrialEndDate() != null) {
-			long epochDays = patient.getTrialEndDate().toEpochDay();
-			answer.setDate(3, new java.sql.Date(epochDays));
+			String date = patient.getTrialEndDate().format(formatter);
+			answer.setDate(3, java.sql.Date.valueOf(date));
 		} else {
 			answer.setDate(3, null);
 		}

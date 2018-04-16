@@ -87,7 +87,11 @@ public class ClinicsView extends VBox implements Initializable {
 	public void setModel(ClinicalTrialModel model) {
 		this.model = model;
 
-		clinicsProperty.set(FXCollections.observableArrayList(model.getClinics()));
+		try {
+			clinicsProperty.set(FXCollections.observableArrayList(model.getClinics()));
+		} catch (TrialCatalogException e1) {
+			// TODO Auto-generated catch block
+		}
 
 		listView.itemsProperty().bind(clinicsProperty);
 
@@ -174,7 +178,12 @@ public class ClinicsView extends VBox implements Initializable {
 	}
 	
 	public void reloadData() {
-		clinicsProperty.set(FXCollections.observableArrayList(model.getClinics()));
+		try {
+			clinicsProperty.get().clear();
+			clinicsProperty.get().addAll(FXCollections.observableArrayList(model.getClinics()));
+		} catch (TrialCatalogException e) {
+			// TODO Auto-generated catch block
+		}
 	}
 	
 	@FXML
