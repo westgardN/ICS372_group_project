@@ -30,11 +30,6 @@ public class ClinicalTrialCatalogUtilIty {
 	private static final String OS_LIBRARY = "Library";
 	private static final String OS_APPDATA = "APPDATA";
 	private static final String SYS_PROP_OS_NAME = "os.name";
-	private static final String SYS_PROP_VENDOR_URL = "java.vendor.url";
-	private static final String SYS_PROP_VM_VENDOR = "java.vm.vendor";
-	private static final String SYS_PROP_VENDOR = "java.vendor";
-	private static final String ANDROID_PROP_VENDOR = "the android project";
-	private static final String ANDROID_PROP_VENDOR_URL = "android.com";
 	private static final String DB_FOLDER = "catalogs";
 	private static final String APP_TITLE = "Clinical Trial Client";
 	private static final String THAT_GROUP = "That Group";
@@ -92,31 +87,10 @@ public class ClinicalTrialCatalogUtilIty {
 		boolean answer = false;
 		
 		try {
-			String value = System.getProperty(SYS_PROP_VENDOR_URL);
-			if (value.toLowerCase().contains(ANDROID_PROP_VENDOR_URL)) {
-				answer = true;
-			}
-		} catch (SecurityException ex) {
-		}
-
-		if (!answer) {
-			try {
-				String value = System.getProperty(SYS_PROP_VM_VENDOR);
-				if (value.toLowerCase().contains(ANDROID_PROP_VENDOR)) {
-					answer = true;
-				}
-			} catch (SecurityException ex) {
-			}
-		}
-		
-		if (!answer) {
-			try {
-				String value = System.getProperty(SYS_PROP_VENDOR);
-				if (value.toLowerCase().contains(ANDROID_PROP_VENDOR)) {
-					answer = true;
-				}
-			} catch (SecurityException ex) {
-			}
+			Class.forName("android.R", false, Object.class.getClassLoader());
+			answer = true;			
+		} catch (LinkageError | ClassNotFoundException ex) {
+			answer = false;
 		}
 		
 		return answer;
