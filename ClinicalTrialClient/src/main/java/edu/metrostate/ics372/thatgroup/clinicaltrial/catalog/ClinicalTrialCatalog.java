@@ -1055,11 +1055,20 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	 */
 	@Override
 	public List<PatientStatus> getPatientStatuses() throws TrialCatalogException {
+		return getPatientStatuses(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog#getAllPatientStatus(boolean)
+	 */
+	@Override
+	public List<PatientStatus> getPatientStatuses(boolean endTrial) throws TrialCatalogException {
 		validateIsInit();
 		List<PatientStatus> answer = new LinkedList<>();
-
+		String stmt = endTrial ? ClinicalStatement.GET_ALL_END_TRIAL_PATIENT_STATUSES : ClinicalStatement.GET_ALL_PATIENT_STATUSES;
+		
 		try (Connection conn = getConnection();
-				PreparedStatement pstmt = getPreparedSelectAllPatientStatuses(conn, ClinicalStatement.GET_ALL_PATIENT_STATUSES);
+				PreparedStatement pstmt = getPreparedSelectAllPatientStatuses(conn, stmt);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadPatientStatus(rs));

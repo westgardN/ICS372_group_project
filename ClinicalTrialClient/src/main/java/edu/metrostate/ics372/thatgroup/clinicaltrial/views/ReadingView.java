@@ -60,10 +60,10 @@ public class ReadingView extends VBox implements Initializable {
 		private final String HOURS = "^0*([0-9]|1[0-9]|2[0-3])$"; 
 		private final String MIN_SEC = "^0*([0-9]|[1-4][0-9]|5[0-9])$";
 
-		private boolean validateInput() {
+		private boolean validateInput() throws TrialCatalogException {
 			String readingType = type.getSelectionModel().getSelectedItem();
 			Clinic clinic = clinicChoice.getSelectionModel().getSelectedItem();
-			Patient patient = patientChoice.getSelectionModel().getSelectedItem();
+			Patient patient = selected ? model.getPatient(reading.getPatientId()) : patientChoice.getSelectionModel().getSelectedItem();
 			
 			if (readingType == null || clinic == null || patient == null) {
 				generateErrorMessage(ErrCause.TYPE_CLINIC_PATIENT);
@@ -255,6 +255,7 @@ public class ReadingView extends VBox implements Initializable {
 	private TextField multiValueB;
 	
 	private ReadingFormValidator validator;
+	private Reading reading;
 	private boolean selected;
 	
 	/**
@@ -262,6 +263,7 @@ public class ReadingView extends VBox implements Initializable {
 	 */
 	public ReadingView() {
 		model = null;
+		reading = null;
 		validator = new ReadingFormValidator();
 		selected = false;
 		
@@ -285,6 +287,15 @@ public class ReadingView extends VBox implements Initializable {
 	}
 
 	/**
+	 * Returns the reading associated with this view
+	 * 
+	 * @return the model
+	 */
+	public Reading getReading() {
+		return reading;
+	}
+
+	/**
 	 * Sets the view model associated with this view
 	 * 
 	 * @param model
@@ -295,14 +306,14 @@ public class ReadingView extends VBox implements Initializable {
 		type.setItems(FXCollections.observableArrayList(model.getReadingTypes()));
 		try {
 			clinicChoice.setItems(FXCollections.observableArrayList(model.getClinics()));
-			patientChoice.setItems(FXCollections.observableArrayList(model.getPatients()));
+			patientChoice.setItems(FXCollections.observableArrayList(model.getActivePatients()));
 		} catch (TrialCatalogException e) {
 		}
 		
 		model.addPropertyChangeListener((evt) -> {
 			switch (evt.getPropertyName()) {
 			case ClinicalTrialModel.PROP_SELECTED_READING:
-				Reading reading = null;
+				reading = null;
 
 				if (evt.getNewValue() instanceof Reading) {
 					reading = (Reading) evt.getNewValue();
@@ -317,10 +328,12 @@ public class ReadingView extends VBox implements Initializable {
 					selected = false;
 					okBtn.setText(Strings.ADD);
 					id.setDisable(false);
+					patientChoice.setDisable(false);
 				} else {
 					selected = true;
 					okBtn.setText(Strings.UPDATE);
 					id.setDisable(true);
+					patientChoice.setDisable(true);
 				}
 				break;
 			case ClinicalTrialModel.PROP_CLINICS:
@@ -336,7 +349,7 @@ public class ReadingView extends VBox implements Initializable {
 			case ClinicalTrialModel.PROP_UPDATE_PATIENT:
 				try {
 					patientChoice.getItems().clear();
-					patientChoice.getItems().addAll(model.getPatients());
+					patientChoice.getItems().addAll(model.getActivePatients());
 				} catch (TrialCatalogException e) {
 					// TODO Auto-generated catch block
 				}
@@ -430,18 +443,22 @@ public class ReadingView extends VBox implements Initializable {
 		});
 
 		okBtn.setOnAction((event) -> {
-			if (validator.validateInput()) {
-				boolean wasSelected = selected;
-				String msgS = selected ? Strings.READING_UPDATED_MSG : Strings.READING_ADDED_MSG;
-				String msgF = selected ? Strings.READING_NOT_UPDATED_MSG : Strings.READING_NOT_ADDED_MSG;
-				if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), LocalDateTime.of(date.getValue(), getTime()))) {
-					if (!wasSelected) {
-						id.setText(Strings.EMPTY);
+			try {
+				if (validator.validateInput()) {
+					boolean wasSelected = selected;
+					String msgS = selected ? Strings.READING_UPDATED_MSG : Strings.READING_ADDED_MSG;
+					String msgF = selected ? Strings.READING_NOT_UPDATED_MSG : Strings.READING_NOT_ADDED_MSG;
+					if (addReading(type.getSelectionModel().getSelectedItem(), id.getText(), value.getText(), LocalDateTime.of(date.getValue(), getTime()))) {
+						if (!wasSelected) {
+							id.setText(Strings.EMPTY);
+						}
+						PopupNotification.showPopupMessage(msgS, getScene());
+					} else {
+						PopupNotification.showPopupMessage(msgF, getScene());
 					}
-					PopupNotification.showPopupMessage(msgS, getScene());
-				} else {
-					PopupNotification.showPopupMessage(msgF, getScene());
 				}
+			} catch (TrialCatalogException e) {
+				PopupNotification.showPopupMessage(e.getMessage(), getScene());
 			}
 		});
 	}

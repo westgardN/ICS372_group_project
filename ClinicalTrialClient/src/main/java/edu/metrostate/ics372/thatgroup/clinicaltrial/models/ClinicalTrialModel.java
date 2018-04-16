@@ -958,4 +958,8 @@ public class ClinicalTrialModel {
 		}
 		return answer;
 	}
+
+	public List<Patient> getActivePatients() throws TrialCatalogException {
+		return catalog.getActivePatients();
+	}
 }

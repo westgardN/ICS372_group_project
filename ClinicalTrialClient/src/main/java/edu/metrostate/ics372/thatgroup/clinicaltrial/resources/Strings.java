@@ -61,6 +61,7 @@ public class Strings {
 	public static final String SPECIAL_CHAR_MSG = "No special characters allowed or maximum text length exceeded.";
 	public static final String SELECT_PATIENT_TRIAL_DATE_TITLE_FMT = "Select Trial %s Date for Patient %s";
 	public static final String SELECT_PATIENT_TRIAL_DATE_LABEL_FMT = "Please select the date patient %s %s the trial";
+	public static final String SELECT_PATIENT_TRIAL_DATE_STATUS_FMT = "Please aldo select the reason patient %s is ending the trial";
 	public static final String ERR_TRIAL_DATA_EXPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";
 	public static final String ERR_TRIAL_DATA_IMPORTER_EXPORTER_NULL_FILE = "filename cannot be null.";
 	public static final String ERR_TRIAL_DATA_IMPORTER_UNSUPPORTED_MSG = "%s is not a supported export type.";

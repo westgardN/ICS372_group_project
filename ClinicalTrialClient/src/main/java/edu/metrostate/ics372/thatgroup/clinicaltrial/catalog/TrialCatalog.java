@@ -391,6 +391,20 @@ public interface TrialCatalog {
 	public List<PatientStatus> getPatientStatuses() throws TrialCatalogException;
 	
 	/**
+	 * Returns a List&lt;PatientStatus&gt; of all the patient statuses or just
+	 * the end trial statuses.
+	 * 
+	 * @param endTrial if set to true, then only the patient status values
+	 * that pertain to ending a trial are returned.
+	 * 
+	 * @return a List&lt;PatientStatus&gt; of all the patient statuses.
+	 * 
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
+	 */
+	public List<PatientStatus> getPatientStatuses(boolean endTrial) throws TrialCatalogException;
+	
+	/**
 	 * Returns a List&lt;Patient&gt; of all the patients that are currently
 	 * active in the active trial.
 	 * 

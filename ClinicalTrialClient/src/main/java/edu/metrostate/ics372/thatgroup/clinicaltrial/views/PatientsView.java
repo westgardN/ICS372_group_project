@@ -23,15 +23,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
@@ -233,6 +236,10 @@ public class PatientsView extends VBox implements Initializable {
 		action = start ? HEADER_STARTED : HEADER_ENDED;
 		String header = String.format(Strings.SELECT_PATIENT_TRIAL_DATE_LABEL_FMT, patient.getId(), action);
 		
+		if (!start) {
+			header = header + "\n" +  String.format(Strings.SELECT_PATIENT_TRIAL_DATE_STATUS_FMT, patient.getId());
+		}
+		
 		dialog.setHeaderText(header);
 		
 		URL url = getClass().getResource(Strings.LOGO_PATH);
@@ -245,17 +252,31 @@ public class PatientsView extends VBox implements Initializable {
 		
 		LocalDate ld = start ? patient.getTrialStartDate() : patient.getTrialEndDate();
 		DatePicker datePicker = new DatePicker(ld != null ? ld : LocalDate.now());
-		
-		datePicker.setMaxWidth(Double.MAX_VALUE);
-		datePicker.setMaxHeight(Double.MAX_VALUE);
-		
-		VBox expContent = new VBox(datePicker);
+		ChoiceBox<PatientStatus> statusPicker = new ChoiceBox<>();;
+		HBox expContent = new HBox();
+		expContent.setSpacing(5);
+		expContent.setPadding(new Insets(3, 6, 3, 6));
+
+		if (!start) {
+			try {
+				statusPicker.setItems(FXCollections.observableArrayList(model.getPatientStatuses()));
+				statusPicker.getSelectionModel().select(0);
+				expContent.getChildren().add(statusPicker);
+			} catch (TrialCatalogException e) {
+				// TODO Auto-generated catch block
+			}
+		}
+		expContent.getChildren().add(datePicker);
 		expContent.setMaxWidth(Double.MAX_VALUE);
 		
 		dialog.getDialogPane().setContent(expContent);
 		
 		dialog.setResultConverter(dialogButton -> {
 			if (dialogButton == okButtonType) {
+				if (!start) {
+					patient.setStatusId(statusPicker.getSelectionModel().getSelectedItem().getId());
+				}
+				
 				return datePicker.getValue();
 			} else {
 				return null;
@@ -283,7 +304,7 @@ public class PatientsView extends VBox implements Initializable {
 			LocalDate endDate = getTrialDate(patient, false);
 			if (isDateOnOrAfter(endDate, patient.getTrialStartDate()) && isDateOnOrBefore(endDate, LocalDate.now())) {
 				patient.setTrialEndDate(endDate);
-				patient.setStatusId(PatientStatus.COMPLETED_ID);
+				//patient.setStatusId(PatientStatus.COMPLETED_ID);
 				try {
 					if (model.updateOrAdd(patient)) {
 					}

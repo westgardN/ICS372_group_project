@@ -102,10 +102,11 @@ public class ClinicalStatement {
 	public static final String GET_ALL_CLINICS = "SELECT id, name, trial_id FROM clinics WHERE trial_id = ?";
 	public static final String GET_ALL_PATIENTS = "SELECT id, trial_id, start_date, end_date, status_id FROM patients WHERE trial_id = ?";
 	public static final String GET_ALL_PATIENT_STATUSES = "SELECT id, display_status FROM patient_status;";
-	public static final String GET_ALL_ACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ? AND status_id = 'ACTIVE'";
-	public static final String GET_ALL_INACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date FROM patients WHERE trial_id = ? AND status_id = 'INACTIVE'";
+	public static final String GET_ALL_END_TRIAL_PATIENT_STATUSES = "SELECT id, display_status FROM patient_status WHERE id IN ('COMPLETED', 'FAILED', 'WITHDRAWN');";
+	public static final String GET_ALL_ACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date, status_id FROM patients WHERE trial_id = ? AND status_id = 'ACTIVE'";
+	public static final String GET_ALL_INACTIVE_PATIENTS = "SELECT id, trial_id, start_date, end_date, status_id FROM patients WHERE trial_id = ? AND status_id = 'INACTIVE'";
 	public static final String GET_ALL_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings";
-	public static final String GET_PATIENT_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings WHERE patient_id = ?";
-	public static final String GET_CLINIC_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings WHERE clinic_id = ?";
+	public static final String GET_PATIENT_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND patient_id = ?";
+	public static final String GET_CLINIC_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND clinic_id = ?";
 
 }
