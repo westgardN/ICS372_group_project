@@ -3,7 +3,10 @@
  */
 package edu.metrostate.ics372.thatgroup.clinicaltrial.beans;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.Objects;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 
@@ -38,10 +41,16 @@ public class UnitValue implements Serializable, Cloneable {
 	 */
 	public static final String VALUE_FORMAT = "%s%s%s";
 	
+	public static final String PROP_UNIT = "unit";
+
+	public static final String PROP_VALUE = "value";
+	
 	private static final long serialVersionUID = 5850081309762972449L;
+	private transient PropertyChangeSupport pcs;
 	private static final int INDEX_VALUE = 0;
 	private static final int INDEX_UNIT = 1;
 	private static final String PERIOD = ".";
+
 	private Number value;
 	private String unit;
 
@@ -121,6 +130,31 @@ public class UnitValue implements Serializable, Cloneable {
 	}
 	
 	/**
+	 * Add a PropertyChangeListener to the listener list. The listener is registered
+	 * for all properties. The same listener object may be added more than once, and
+	 * will be called as many times as it is added. If listener is null, no
+	 * exception is thrown and no action is taken.
+	 * 
+	 * @param listener
+	 *            - The PropertyChangeListener to be added
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().addPropertyChangeListener(listener);
+    }
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().removePropertyChangeListener(listener);
+    }
+	
+	protected PropertyChangeSupport getPcs() {
+		if (pcs == null) {
+			pcs = new PropertyChangeSupport(this);
+		}
+		
+		return pcs;
+	}
+
+	/**
 	 * @return the number of this value.
 	 */
 	public Number getNumberValue() {
@@ -132,7 +166,11 @@ public class UnitValue implements Serializable, Cloneable {
 	 * must be a Double or Long
 	 */
 	public void setNumberValue(Number value) {
-		this.value = value;
+		Number oldValue = this.value;
+		if (!Objects.equals(oldValue, value)) {
+			this.value = value; 
+			getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
+		}
 	}
 	
 	/**
@@ -146,7 +184,11 @@ public class UnitValue implements Serializable, Cloneable {
 	 * @param unit the new unit of measurement for this value.
 	 */
 	public void setUnit(String unit) {
-		this.unit = unit;
+		String oldValue = this.unit;
+		if (!Objects.equals(oldValue, unit)) {
+			this.unit = unit; 
+			getPcs().firePropertyChange(PROP_UNIT, oldValue, this.unit);
+		}
 	}
 	
 	/* (non-Javadoc)

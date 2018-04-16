@@ -136,6 +136,10 @@ public class Patient implements Serializable {
 		getPcs().addPropertyChangeListener(listener);
     }
 	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().removePropertyChangeListener(listener);
+    }
+	
 	/**
 	 * @return the id of this patient.
 	 */

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Objects;
 
 /**
  * Represents a medical reading for a specific patient. The Reading class
@@ -30,6 +31,11 @@ import java.time.format.FormatStyle;
  *
  */
 public class Reading implements Serializable {
+	public static final String PROP_ID = "id";
+	public static final String PROP_PATIENT_ID = "patientId";
+	public static final String PROP_CLINIC_ID = "clinicId";
+	public static final String PROP_DATE = "date";
+	public static final String PROP_VALUE = "value";
 	private static final String MSG_READING_HAS_A_VALUE_OF = " has a value of ";
 	private static final String MSG_READING_TAKEN_AT = " taken at ";
 	private static final String MSG_READING_TAKEN_ON = " taken on ";
@@ -68,7 +74,6 @@ public class Reading implements Serializable {
 		pcs = new PropertyChangeSupport(this);
 	}
 
-	
 	/**
 	 * Add a PropertyChangeListener to the listener list. The listener is registered
 	 * for all properties. The same listener object may be added more than once, and
@@ -80,6 +85,10 @@ public class Reading implements Serializable {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		getPcs().addPropertyChangeListener(listener);
+    }
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().removePropertyChangeListener(listener);
     }
 	
 	protected PropertyChangeSupport getPcs() {
@@ -188,7 +197,11 @@ public class Reading implements Serializable {
 	 * @param patientId Associate this reading with the specified patientId
 	 */
 	public void setPatientId(String patientId) {
-		this.patientId = patientId;
+		if (!Objects.equals(this.patientId, patientId)) {
+			String oldValue = this.patientId;
+			this.patientId = patientId;
+			getPcs().firePropertyChange(PROP_PATIENT_ID, oldValue, this.patientId);
+		}
 	}
 
 	/**
@@ -203,7 +216,11 @@ public class Reading implements Serializable {
 	 * same patient as this reading.
 	 */
 	public void setId(String id) {
-		this.id = id;
+		if (!Objects.equals(this.id, id)) {
+			String oldValue = this.id;
+			this.id = id;
+			getPcs().firePropertyChange(PROP_ID, oldValue, this.id);
+		}
 	}
 
 	/**
@@ -217,7 +234,16 @@ public class Reading implements Serializable {
 	 * @param date the new date and time this reading was taken.
 	 */
 	public void setDate(LocalDateTime date) {
-		this.date = date;
+		if (!Objects.equals(this.date, date)) {
+			String oldValue = this.clinicId;
+			if (date != null) {
+				this.date = LocalDateTime.from(date);
+			}
+			else {
+				this.date = null;
+			}
+			getPcs().firePropertyChange(PROP_DATE, oldValue, this.date);
+		}
 	}
 
 	/**
@@ -233,7 +259,11 @@ public class Reading implements Serializable {
 	 * on the specific type of reading this is for.
 	 */
 	public void setValue(Object value) {
-		this.value = value;
+		if (!Objects.equals(this.value, value)) {
+			Object oldValue = this.value;
+			this.value = value;
+			getPcs().firePropertyChange(PROP_VALUE, oldValue, this.value);
+		}
 	}
 
 	/**
@@ -247,6 +277,10 @@ public class Reading implements Serializable {
 	 * @param clinicId the clinicId to set
 	 */
 	public void setClinicId(String clinicId) {
-		this.clinicId = clinicId;
+		if (!Objects.equals(this.clinicId, clinicId)) {
+			String oldValue = this.clinicId;
+			this.clinicId = clinicId;
+			getPcs().firePropertyChange(PROP_CLINIC_ID, oldValue, this.clinicId);
+		}
 	}
 }

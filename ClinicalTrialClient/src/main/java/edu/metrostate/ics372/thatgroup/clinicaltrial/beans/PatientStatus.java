@@ -16,7 +16,15 @@ public class PatientStatus implements Serializable {
 	 * The PROP_DISPLAY_STATUS event is fired whenever the status o is changed.
 	 */
 	public static final String PROP_DISPLAY_STATUS = "displayStatus";
+	public static final String INACTIVE_ID = "INACTIVE";
+	public static final String ACTIVE_ID = "ACTIVE";
+	public static final String WITHDRAWN_ID = "WITHDRAWN";
+	public static final String FAILED_ID = "FAILED";
+	public static final String COMPLETED_ID = "COMPLETED";
+	
 	private static final long serialVersionUID = 3590803871919635415L;
+
+
 	private String id;
 	private String displayStatus;
 	protected transient PropertyChangeSupport pcs;
@@ -47,7 +55,6 @@ public class PatientStatus implements Serializable {
 			this.id = id;
 			getPcs().firePropertyChange(PROP_STATUS_ID, oldValue, this.id);
 		}
-		this.id = id;
 	}
 	
 	/**
@@ -66,7 +73,6 @@ public class PatientStatus implements Serializable {
 			this.displayStatus = displayStatus;
 			getPcs().firePropertyChange(PROP_DISPLAY_STATUS, oldValue, this.displayStatus);
 		}
-		this.displayStatus = displayStatus;
 	}
 	
 	protected PropertyChangeSupport getPcs() {
@@ -76,10 +82,23 @@ public class PatientStatus implements Serializable {
 		return pcs;
 	}
 	
+	/**
+	 * Add a PropertyChangeListener to the listener list. The listener is registered
+	 * for all properties. The same listener object may be added more than once, and
+	 * will be called as many times as it is added. If listener is null, no
+	 * exception is thrown and no action is taken.
+	 * 
+	 * @param listener
+	 *            - The PropertyChangeListener to be added
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		getPcs().addPropertyChangeListener(listener);
     }
-
+	
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		getPcs().removePropertyChangeListener(listener);
+    }
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -87,7 +106,6 @@ public class PatientStatus implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((displayStatus == null) ? 0 : displayStatus.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
@@ -104,15 +122,7 @@ public class PatientStatus implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		PatientStatus other = (PatientStatus) obj;
-		if (displayStatus == null) {
-			if (other.displayStatus != null)
-				return false;
-		} else if (!displayStatus.equals(other.displayStatus))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (!Objects.equals(this.id, other.id))
 			return false;
 		return true;
 	}
@@ -122,7 +132,7 @@ public class PatientStatus implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "PatientStatus [id=" + id + ", displayStatus=" + displayStatus + "]";
+		return displayStatus;
 	}
 	
 	

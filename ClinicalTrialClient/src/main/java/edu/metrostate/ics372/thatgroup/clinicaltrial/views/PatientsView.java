@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Patient;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.PatientStatus;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.models.ClinicalTrialModel;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
@@ -191,18 +192,15 @@ public class PatientsView extends VBox implements Initializable {
 	 */
 	public void startPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
-//		int index = patientsProperty.indexOf(patient);
 
 		if (patient != null) {
 			LocalDate startDate = getTrialDate(patient, true);
 			if (startDate != null) {
 				patient.setTrialStartDate(startDate);
 				patient.setTrialEndDate(null);
+				patient.setStatusId(PatientStatus.ACTIVE_ID);
 				try {
 					if (model.updateOrAdd(patient)) {
-//						if (index >= 0) {
-//							patientsProperty.set(index, patient);
-//						}					
 					}
 				} catch (TrialCatalogException ex) {
 					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
@@ -272,17 +270,14 @@ public class PatientsView extends VBox implements Initializable {
 	 */
 	public void endPtTrial(ActionEvent e) {
 		Patient patient = model.getSelectedPatient();
-//		int index = patientsProperty.indexOf(patient);
 		
 		if (patient != null) {
 			LocalDate endDate = getTrialDate(patient, false);
 			if (isDateOnOrAfter(endDate, patient.getTrialStartDate()) && isDateOnOrBefore(endDate, LocalDate.now())) {
 				patient.setTrialEndDate(endDate);
+				patient.setStatusId(PatientStatus.COMPLETED_ID);
 				try {
 					if (model.updateOrAdd(patient)) {
-//						if (index >= 0) {
-//							patientsProperty.set(index, patient);
-//						}
 					}
 				} catch (TrialCatalogException ex) {
 					PopupNotification.showPopupMessage(ex.getMessage(), this.getScene());
