@@ -18,6 +18,7 @@ import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Trial;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.ClinicalTrialCatalogUtilIty;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialCatalog;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.exceptions.TrialCatalogException;
+import edu.metrostate.ics372.thatgroup.clinicaltrial.resources.Strings;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.catalog.TrialManager;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.Reading;
 import edu.metrostate.ics372.thatgroup.clinicaltrial.beans.ReadingFactory;
@@ -825,6 +826,30 @@ public class ClinicalTrialModel {
 		
 		if (catalog.exists(clinic)) {
 			answer = catalog.get(clinic);
+		}
+		
+		return answer;
+	}
+
+	public TrialCatalog getCatalog() {
+		return catalog;
+	}
+	
+	/**
+	 * Returns a reference to a patient status for the specified patient status id.
+	 * If the patient status doesn't exist the null reference is returned.
+	 *  
+	 * @param patientStatusId the patient status id whose reference we are to retrieve. Cannot be null.
+	 * 
+	 * @return the requested patient status reference or null if the patient status could not be found in this trial.
+	 * @throws TrialCatalogException indicates an error occurred while accessing the catalog.
+	 */
+	public PatientStatus getPatientStatus(String patientStatusId) throws TrialCatalogException {
+		PatientStatus patientStatus = new PatientStatus(patientStatusId, Strings.EMPTY);
+		PatientStatus answer = null;
+		
+		if (catalog.exists(patientStatus)) {
+			answer = catalog.get(patientStatus);
 		}
 		
 		return answer;

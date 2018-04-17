@@ -301,8 +301,13 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		return answer;
 	}
 	
-	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn) throws SQLException {
+	protected PreparedStatement getPreparedSelectAllActiveAndCompleteReadings(final Connection conn) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_READINGS);
+		return answer;
+	}
+
+	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn) throws SQLException {
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_ACTIVE_AND_COMPLETE_READINGS);
 		return answer;
 	}
 
@@ -1117,12 +1122,30 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	}
 
 	@Override
-	public List<Reading> getReadings() throws TrialCatalogException {
+	public List<Reading> getAllReadings() throws TrialCatalogException {
 		validateIsInit();
 		List<Reading> answer = new LinkedList<>();
 
 		try (Connection conn = getConnection();
 				PreparedStatement pstmt = getPreparedSelectAllReadings(conn);
+				ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				answer.add(loadReading(rs));
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
+	@Override
+	public List<Reading> getReadings() throws TrialCatalogException {
+		validateIsInit();
+		List<Reading> answer = new LinkedList<>();
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelectAllActiveAndCompleteReadings(conn);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadReading(rs));

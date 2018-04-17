@@ -108,5 +108,6 @@ public class ClinicalStatement {
 	public static final String GET_ALL_READINGS = "SELECT id, patient_id, clinic_id, type, date, value FROM readings";
 	public static final String GET_PATIENT_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND patient_id = ?";
 	public static final String GET_CLINIC_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND clinic_id = ?";
+	public static final String GET_ALL_ACTIVE_AND_COMPLETE_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED')";
 
 }

@@ -425,11 +425,24 @@ public interface TrialCatalog {
 	 * an error was encountered.
 	 */
 	public List<Patient> getInactivePatients() throws TrialCatalogException;
+
+	/**
+	 * Returns a List&lt;Reading&gt; of all the readings in the active trial
+	 * regardless of patient status.
+	 * 
+	 * @return a List&lt;Reading&gt; of all the readings in the active trial
+	 * regardless of patient status.
+	 * @throws TrialCatalogException indicates there is no active trial or
+	 * an error was encountered.
+	 */
+	public List<Reading> getAllReadings() throws TrialCatalogException;
 	
 	/**
 	 * Returns a List&lt;Reading&gt; of all the readings in the active trial.
+	 * Only readings for patients that are ACTIVE or COMPLETED are included.
 	 * 
 	 * @return a List&lt;Reading&gt; of all the readings in the active trial.
+	 * Only readings for patients that are ACTIVE or COMPLETED are included.
 	 * @throws TrialCatalogException indicates there is no active trial or
 	 * an error was encountered.
 	 */
