@@ -475,4 +475,28 @@ public interface TrialCatalog {
 	 * is no active trial or an error was encountered.
 	 */
 	public List<Reading> getReadings(Clinic clinic) throws TrialCatalogException;
+	
+	/**
+	 * Returns true if the specified clinic has any ACTIVE or COMPLETE patients
+	 * that have readings.
+	 * 
+	 * @param clinic the clinic to check.
+	 * @return true if the specified clinic has any ACTIVE or COMPLETE patients
+	 * that have readings.
+	 * @throws TrialCatalogException indicates that clinic is null, there
+	 * is no active trial or an error was encountered.
+	 */
+	public boolean hasReadings(Clinic clinic) throws TrialCatalogException;
+	
+	/**
+	 * Returns true if the specified patient is ACTIVE or COMPLETE and has
+	 * readings.
+	 * 
+	 * @param patient the patient to check
+	 * @return true if the specified patient is ACTIVE or COMPLETE and has
+	 * readings.
+	 * @throws TrialCatalogException indicates that patient is null, there
+	 * is no active trial or an error was encountered.
+	 */
+	public boolean hasReadings(Patient patient) throws TrialCatalogException;
 }

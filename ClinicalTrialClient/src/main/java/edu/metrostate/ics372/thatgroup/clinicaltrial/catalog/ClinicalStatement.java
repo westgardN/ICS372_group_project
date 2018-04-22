@@ -109,5 +109,7 @@ public class ClinicalStatement {
 	public static final String GET_PATIENT_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND patient_id = ?";
 	public static final String GET_CLINIC_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND clinic_id = ?";
 	public static final String GET_ALL_ACTIVE_AND_COMPLETE_READINGS = "SELECT r.id, patient_id, clinic_id, type, date, value FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED')";
+	public static final String HAS_READINGS_CLINIC = "SELECT COUNT(r.id) AS reading_count FROM readings r INNER JOIN patients p ON r.patient_id = p.id INNER JOIN clinics c ON r.clinic_id = c.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND c.id = ? AND c.trial_id = ?";
+	public static final String HAS_READINGS_PATIENT = "SELECT COUNT(r.id) AS reading_count FROM readings r INNER JOIN patients p ON r.patient_id = p.id WHERE p.status_id IN ('ACTIVE', 'COMPLETED') AND p.id = ? AND p.trial_id = ?";
 
 }

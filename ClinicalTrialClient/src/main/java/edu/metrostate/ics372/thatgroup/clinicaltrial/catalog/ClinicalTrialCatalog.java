@@ -9,20 +9,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -69,6 +66,7 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	protected static final String END_DATE = "end_date";
 	protected static final String START_DATE = "start_date";
 	protected static final String ID = "id";
+	protected static final String READING_COUNT = "reading_count";
 	protected static final String NAME = "name";
 	protected static final String TRIAL_ID = "trial_id";
 	protected static final String TYPE = "type";
@@ -1063,6 +1061,44 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				answer.add(loadPatient(rs));
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
+	@Override
+	public boolean hasReadings(Clinic clinic) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(clinic);
+		boolean answer = false;
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelect(conn, clinic.getId(), ClinicalStatement.HAS_READINGS_CLINIC);
+				ResultSet rs = pstmt.executeQuery();) {
+			if (rs.next()) {
+				answer = rs.getInt(READING_COUNT) > 0;
+			}
+		} catch (SQLException e) {
+			throw new TrialCatalogException(e.getMessage(), e);
+		}
+
+		return answer;
+	}
+
+	@Override
+	public boolean hasReadings(Patient patient) throws TrialCatalogException {
+		validateIsInit();
+		validateParam(patient);
+		boolean answer = false;
+
+		try (Connection conn = getConnection();
+				PreparedStatement pstmt = getPreparedSelect(conn, patient.getId(), ClinicalStatement.HAS_READINGS_PATIENT);
+				ResultSet rs = pstmt.executeQuery();) {
+			if (rs.next()) {
+				answer = rs.getInt(READING_COUNT) > 0;
 			}
 		} catch (SQLException e) {
 			throw new TrialCatalogException(e.getMessage(), e);
