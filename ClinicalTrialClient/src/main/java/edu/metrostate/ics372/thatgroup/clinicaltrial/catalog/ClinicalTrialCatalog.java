@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,9 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -322,16 +325,16 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_TRIAL);
 		answer.setString(1, trial.getId());
 		if (trial.getStartDate() != null) {
-			long epochMillis = trial.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			answer.setDate(2, new java.sql.Date(epochMillis));
+			long seconds = trial.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(2, seconds);
 		} else {
-			answer.setDate(2, null);
+			answer.setNull(2, java.sql.Types.INTEGER);
 		}
 		if (trial.getEndDate() != null) {
-			long epochMillis = trial.getEndDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			answer.setDate(3, new java.sql.Date(epochMillis));
+			long seconds = trial.getEndDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(3, seconds);
 		} else {
-			answer.setDate(3, null);
+			answer.setNull(3, java.sql.Types.INTEGER);
 		}
 		return answer;
 	}
@@ -346,21 +349,20 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	protected PreparedStatement getPreparedInsert(final Connection conn, Patient patient) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.INSERT_PATIENT);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		answer.setString(1, patient.getId());
 
 		if (patient.getTrialStartDate() != null) {
-			String date = patient.getTrialStartDate().format(formatter);;
-			answer.setDate(2, java.sql.Date.valueOf(date));
+			long seconds = patient.getTrialStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(2, seconds);
 		} else {
-			answer.setDate(2, null);
+			answer.setNull(2, java.sql.Types.INTEGER);
 		}
 
 		if (patient.getTrialEndDate() != null) {
-			String date = patient.getTrialEndDate().format(formatter);
-			answer.setDate(3, java.sql.Date.valueOf(date));
+			long seconds = patient.getTrialEndDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(3, seconds);
 		} else {
-			answer.setDate(3, null);
+			answer.setNull(3, java.sql.Types.INTEGER);
 		}
 
 		answer.setString(4, getActiveId());
@@ -387,11 +389,10 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setString(5, reading.getValue() != null ? reading.getValue().toString() : null);
 
 		if (reading.getDate() != null) {
-			long epochMillis = reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			
-			answer.setTimestamp(6, new Timestamp(epochMillis));
+			long seconds = reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(6, seconds);
 		} else {
-			answer.setTimestamp(6, null);
+			answer.setNull(6, java.sql.Types.INTEGER);
 		}
 
 		return answer;
@@ -407,20 +408,19 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 	protected PreparedStatement getPreparedUpdate(final Connection conn, Patient patient) throws SQLException {
 		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.UPDATE_PATIENT);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		answer.setString(1, patient.getTrialId());
 		if (patient.getTrialStartDate() != null) {
-			String date = patient.getTrialStartDate().format(formatter);
-			answer.setDate(2, java.sql.Date.valueOf(date));
+			long seconds = patient.getTrialStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(2, seconds);
 		} else {
-			answer.setDate(2, null);
+			answer.setNull(2, java.sql.Types.INTEGER);
 		}
 
 		if (patient.getTrialEndDate() != null) {
-			String date = patient.getTrialEndDate().format(formatter);
-			answer.setDate(3, java.sql.Date.valueOf(date));
+			long seconds = patient.getTrialEndDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			answer.setLong(3, seconds);
 		} else {
-			answer.setDate(3, null);
+			answer.setNull(3, java.sql.Types.INTEGER);
 		}
 		answer.setString(4, patient.getStatusId());
 		
@@ -445,11 +445,11 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setString(4, reading.getValue() != null ? reading.getValue().toString() : null);
 
 		if (reading.getDate() != null) {
-			long epochMillis = reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			long seconds = reading.getDate().toEpochSecond(ZoneOffset.UTC);
 			
-			answer.setTimestamp(5, new Timestamp(epochMillis));
+			answer.setLong(5, seconds);
 		} else {
-			answer.setTimestamp(5, null);
+			answer.setNull(5, java.sql.Types.INTEGER);
 		}
 
 		answer.setString(6, reading.getId());
@@ -490,11 +490,15 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 
 		answer.setId(rs.getString(ID));
 
-		if (rs.getDate(START_DATE) != null) {
-			answer.setStartDate(rs.getDate(START_DATE).toLocalDate());
+		if (rs.getLong(START_DATE) != 0) {
+			long seconds = rs.getLong(START_DATE);
+			LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(seconds), ZoneId.systemDefault());
+			answer.setStartDate(ldt.toLocalDate());
 		}
-		if (rs.getDate(END_DATE) != null) {
-			answer.setEndDate(rs.getDate(END_DATE).toLocalDate());
+		if (rs.getLong(END_DATE) != 0) {
+			long seconds = rs.getLong(END_DATE);
+			LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(seconds), ZoneId.systemDefault());
+			answer.setEndDate(ldt.toLocalDate());
 		}
 
 		return answer;
@@ -516,11 +520,27 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setId(rs.getString(ID));
 		answer.setTrialId(rs.getString(TRIAL_ID));
 
-		if (rs.getDate(START_DATE) != null) {
-			answer.setTrialStartDate(rs.getDate(START_DATE).toLocalDate());
+		if (rs.getLong(START_DATE) != 0) {
+			try {
+				long seconds = rs.getLong(START_DATE);
+				LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(seconds), ZoneId.systemDefault());
+				
+//				if (reading.getDate() != null) {
+//					long epochMillis = reading.getDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+//					
+//					answer.setTimestamp(6, new Timestamp(epochMillis));
+//				} else {
+//					answer.setTimestamp(6, null);
+//				}
+				answer.setTrialStartDate(ldt.toLocalDate());
+			} catch (NumberFormatException ex) {
+				
+			}
 		}
-		if (rs.getDate(END_DATE) != null) {
-			answer.setTrialEndDate(rs.getDate(END_DATE).toLocalDate());
+		if (rs.getLong(END_DATE) != 0) {
+			long seconds = rs.getLong(END_DATE);
+			LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(seconds), ZoneId.systemDefault());
+			answer.setTrialEndDate(ldt.toLocalDate());
 		}
 		answer.setStatusId(rs.getString(STATUS_ID));
 
@@ -544,14 +564,11 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 		answer.setPatientId(rs.getString(PATIENT_ID));
 		answer.setClinicId(rs.getString(CLINIC_ID));
 
-		if (rs.getDate(DATE) != null) {
-			Timestamp date = rs.getTimestamp(DATE);
-			LocalDateTime ld = null;
-			if (date != null) {
-				ld = date.toLocalDateTime();
-			}
-			if (ld != null) {
-				answer.setDate(ld);
+		if (rs.getLong(DATE) != 0) {
+			long seconds = rs.getLong(DATE);
+			LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(seconds), ZoneId.systemDefault());
+			if (ldt != null) {
+				answer.setDate(ldt);
 			}
 		}
 		answer.setValue(rs.getString(VALUE));
