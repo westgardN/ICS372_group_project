@@ -111,6 +111,7 @@ public class BloodPressure extends Reading {
 			builder.append(MSG_BLOOD_PRESSURE_ON);
 			builder.append(formattedDateTime);
 		}
+		builder.append(" at clinic with id: " + clinicId + " for patient with id: " + patientId);
 		builder.append(MSG_BLOOD_PRESSURE_IS);
 		builder.append(((BloodPressureValue)getValue()).getSystolic());
 		builder.append(MSG_BLOOD_PRESSURE_SLASH);

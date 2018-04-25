@@ -111,6 +111,7 @@ public class Weight extends Reading {
 			builder.append(MSG_WEIGHT_ON);
 			builder.append(formattedDateTime);
 		}
+		builder.append(" at clinic with id: " + clinicId + " for patient with id: " + patientId);
 		builder.append(MSG_WEIGHT_IS);
 		builder.append(getValue());
 		return builder.toString();

@@ -303,12 +303,12 @@ public class ClinicalTrialCatalog implements TrialCatalog {
 	}
 	
 	protected PreparedStatement getPreparedSelectAllActiveAndCompleteReadings(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_READINGS);
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_ACTIVE_AND_COMPLETE_READINGS);
 		return answer;
 	}
 
 	protected PreparedStatement getPreparedSelectAllReadings(final Connection conn) throws SQLException {
-		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_ACTIVE_AND_COMPLETE_READINGS);
+		PreparedStatement answer = conn.prepareStatement(ClinicalStatement.GET_ALL_READINGS);
 		return answer;
 	}
 
