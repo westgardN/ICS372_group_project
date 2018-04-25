@@ -110,6 +110,7 @@ public class Temp extends Reading {
 			builder.append(MSG_TEMP_ON);
 			builder.append(formattedDateTime);
 		}
+		builder.append(" at clinic with id: " + clinicId + " for patient with id: " + patientId);
 		builder.append(MSG_TEMP_IS);
 		builder.append(getValue());
 		return builder.toString();

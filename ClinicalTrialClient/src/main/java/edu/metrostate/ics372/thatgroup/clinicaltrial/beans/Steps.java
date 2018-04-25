@@ -104,6 +104,7 @@ public class Steps extends Reading {
 			builder.append(MSG_STEPS_ON);
 			builder.append(formattedDateTime);
 		}
+		builder.append(" at clinic with id: " + clinicId + " for patient with id: " + patientId);
 		builder.append(MSG_STEPS_IS);
 		builder.append(getValue());
 		return builder.toString();

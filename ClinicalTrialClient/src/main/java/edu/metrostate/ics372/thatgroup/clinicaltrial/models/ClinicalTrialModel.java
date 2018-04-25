@@ -216,6 +216,30 @@ public class ClinicalTrialModel {
 	}
 	
 	/**
+	 * Returns true if the specified clinic has readings.
+	 * 
+	 * @param clinic the clinic to check, cannot be null.
+	 * @return true if the specified clinic has readings.
+	 * @throws TrialCatalogException indicates that clinic
+	 * is null or an error occurred.
+	 */
+	public boolean hasReadings(Clinic clinic) throws TrialCatalogException {
+		return catalog.hasReadings(clinic);
+	}
+	
+	/**
+	 * Returns true if the specified patient has readings.
+	 * 
+	 * @param patient the patient to check, cannot be null.
+	 * @return true if the specified clinic has readings.
+	 * @throws TrialCatalogException indicates that patient
+	 * is null or an error occurred.
+	 */
+	public boolean hasReadings(Patient patient) throws TrialCatalogException {
+		return catalog.hasReadings(patient);
+	}
+	
+	/**
 	 * Sets the "selected" clinic to the specified clinic and notifies any listeners
 	 * of this change. Typically the selected clinic is set in response to a UI event
 	 * where the user selects a clinic from a list and that list then notifies this
